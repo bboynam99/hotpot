@@ -239,6 +239,17 @@ function hidepages() {
 	$('main').hide();
 }
 
+
+function recoveABottom(){
+	document.getElementById("ahome").style.borderBottomColor = "transparent";
+	document.getElementById("areward").style.borderBottomColor = "transparent";
+	document.getElementById("afarms").style.borderBottomColor = "transparent";
+	document.getElementById("aexchange").style.borderBottomColor = "transparent";
+	document.getElementById("agacha").style.borderBottomColor = "transparent";
+	document.getElementById("aabout").style.borderBottomColor = "transparent";
+}
+
+
 function nav(classname) {
 	hidepages();
 	$('body').removeClass('approved');
@@ -252,7 +263,18 @@ function nav(classname) {
 		$('main.' + classname).show();
 		updateAllTokens();
 	}
+	if(classname === "home"){
+		$("#infodiv").show();
+	}else{
+		$("#infodiv").hide();
+	}
+	recoveABottom();
+	let aa = "a"+classname;
+	//border-bottom-color: rgba(255, 255, 255, .25);
+	document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
+
 }
+
 var mm_tron = new $.mm_tron({
 	contract_address: "",
 	precision: 100000000000000000

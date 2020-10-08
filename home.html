@@ -68,7 +68,7 @@
 </head>
 
 <style>
-	
+
 </style>
 
 <body class="text-center">
@@ -119,24 +119,27 @@
 				<div class="inner">
 					<h3 class="masthead-brand" onclick="nav('home')">HotPot Dex</h3>
 					<nav class="nav nav-masthead justify-content-center">
-						<a class="nav-link" href="#home" onclick="nav('home')" data-lang="home">HOME</a>
-						<a class="nav-link" href="#farm" onclick="nav('farms')" data-lang="farm">FARM</a>
-						<a class="nav-link" href="#tiket" onclick="nav('ticket')" data-lang="ticket">TICKET</a>
-						<a class="nav-link" href="#bonus" onclick="nav('bonus')" data-lang="bonus">BONUS</a>
-						<a class="nav-link" href="#exchange" onclick="nav('exchange')" data-lang="exchange">EXCHANGE</a>
-						<a class="nav-link" href="#about" onclick="nav('about')" data-lang="about">ABOUT</a>
+						<a id="ahome" class="nav-link" href="#home" onclick="nav('home')" data-lang="home">HOME</a>
+						<a id="afarms" class="nav-link" href="#farm" onclick="nav('farms')" data-lang="farm">FARM</a>
+						<a id="agacha" class="nav-link" href="#tiket" onclick="nav('gacha')" data-lang="ticket">GACHA</a>
+						<a id="areward" class="nav-link" href="#bonus" onclick="nav('reward')" data-lang="bonus">BONUS</a>
+						<a id="aexchange" class="nav-link" href="#exchange" onclick="nav('exchange')" data-lang="exchange">EXCHANGE</a>
+						<a id="aabout" class="nav-link" href="#about" onclick="nav('about')" data-lang="about">ABOUT</a>
 						<a class="nav-link" href="#" onclick="changelang()" id="changelang">EN</a>
 					</nav>
 				</div>
 			</header>
-			<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
-				Stake Anytime, Unstake Anytime, Get Rewards Instantly.</h3>
-			<h3 class="mt-2 cover-container" data-lang="string_info2">
-				Keep updating contract token.
-			</h3>
-			<h3 class="mt-2 cover-container" data-lang="string_info3">
-				Fork Sun's token and pool contract and Open sourced.
-			</h3>
+			<div id="infodiv">
+				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
+					Stake Anytime, Unstake Anytime, Get Rewards Instantly.</h3>
+				<h3 class="mt-2 cover-container" data-lang="string_info2">
+					Keep updating contract token.
+				</h3>
+				<h3 class="mt-2 cover-container" data-lang="string_info3">
+					Fork Sun's token and pool contract and Open sourced.
+				</h3>
+			</div>
+			
 			<button onclick="uploadReword()" hidden>Upload Reward</button>
 			<button onclick="test()" hidden>Test </button>
 
@@ -159,7 +162,7 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 							<H3 class="card-text "><span class="ticketbalance">0</span> <span
 									data-lang="ticketdw">TICKET</span></H3>
-							<a href="#farms" onclick="sell()" class="card-link btn btn-primary btn-lg"
+							<a href="#farms" onclick="nav('gacha')"  class="card-link btn btn-primary btn-lg"
 								data-lang="getticket">GACHA</a>
 						</div>
 					</div>
@@ -176,21 +179,20 @@
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalreward">Total Reward</h6>
 							<H3 class="card-text totalreward">-.----</H3>
-							<a target="_blank"
-								href="#"
-								class="card-link btn btn-primary btn-lg" data-lang="reward">Reward</a>
+							<a href="#reward" onclick="nav('reward')" class="card-link btn btn-primary btn-lg"
+								data-lang="reward">Reward</a>
 						</div>
 					</div>
 					<div class="card swapcard hide web3true">
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalticket">TOTAL TICKET</h6>
 							<H3 class="card-text ">
-								<span class="ticketbalance">0</span> 
+								<span class="ticketbalance">0</span>
 								<span data-lang="ticketdw">TICKET</span>
 							</H3>
-							<a href="#farms" onclick="sell()" class="card-link btn btn-primary btn-lg"
+							<a href="#exchange" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
 								data-lang="gotoexhange">EXCHANGE</a>
-							
+
 						</div>
 					</div>
 					<div class="card hide web3true swapcard2">
@@ -215,7 +217,8 @@
 					</div>
 					<div class="card hide web3true swapcard2">
 						<div class="card-body">
-							<h6 class="card-subtitle mb-2 text-warning" data-lang="ticketprice">Ticket Average Price</h6>
+							<h6 class="card-subtitle mb-2 text-warning" data-lang="ticketprice">Ticket Average Price
+							</h6>
 							<H3 class="card-text mcap">$<span>1200.00 </span> </H3>
 						</div>
 					</div>
@@ -245,7 +248,94 @@
 				<p class="aboutp" data-lang="about5">
 					分红 v0.1 版本，WWT将作为头矿进行挖矿，并对WWT持有者进行空投。
 				</p>
+			</main>
 
+
+			<main role="main" class="inner cover gacha" STYLE="DISPLAY:NONE">
+				<div class="card swapcard  web3true">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="totalticket">TOTAL TICKET</h6>
+						<H3 class="card-text ">
+							<span class="ticketbalance">0</span>
+							<span data-lang="ticketdw">TICKET</span>
+						</H3>
+						<p>当前会员卡抽中概率：1/8</p>
+						<p>极品：金色会员卡概率：1/32</p>
+						<p>紫金会员卡概率：1/128</p>
+						<p>（流通20张后概率降低为：1/16）</p>
+					</div>
+				</div>
+				<div class="card swapcard  web3true">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
+						<H3 class="card-text "><span class="ticketbalance">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+						<a href="#farms" onclick="gacha(1)" class="card-link btn btn-primary btn-lg"
+							data-lang="pull1">抽卡</a>
+						<a href="#farms" onclick="ngacha(10)" class="card-link btn btn-primary btn-lg"
+							data-lang="pull10">十连抽</a>
+						<p style="margin-top: 9%;">抽一次：100HotPot</p>
+						<p>十连抽95折：950HotPot</p>
+					</div>
+				</div>
+
+				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
+				
+				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
+				
+				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
+
+			</main>
+
+			<main role="main" class="inner cover exchange" STYLE="DISPLAY:NONE">
+				
+				<div class="card swapcard  web3true">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
+						<H3 class="card-text "><span class="ticketbalance">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+					
+						<p>普通会员卡：0张</p>
+						<p>金色会员卡：0张</p>
+						<p>紫金会员卡：0张</p>
+					</div>
+				</div>
+
+				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
+				
+				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
+				
+				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
+
+			</main>
+
+
+			<main role="main" class="inner cover reward" STYLE="DISPLAY:NONE">
+				<div class="card hide web3true swapcard">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="totalreward">Total Reward</h6>
+						<H3 class="card-text totalreward">-.----</H3>
+						<a target="_blank" href="#" class="card-link btn btn-primary btn-lg"
+							data-lang="reward">Reward</a>
+					</div>
+				</div>
+				<div class="card swapcard  web3true">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
+						<H3 class="card-text "><span class="ticketbalance">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+					
+						<p>普通会员卡：0张</p>
+						<p>金色会员卡：0张</p>
+						<p>紫金会员卡：0张</p>
+					</div>
+				</div>
+
+				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
+				
+				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
+				
+				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
 
 			</main>
 
