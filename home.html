@@ -13,19 +13,20 @@
 	<link rel=" preconnect" href="https://raw.githubusercontent.com" crossorigin>
 
 	<link rel="icon" href="images/hotpoticon.png">
+	
+	<script src="js/ethcontracts.js" crossorigin="anonymous"></script>
+	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
+	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
 
+    <script type="text/javascript" src="js/web3.min.js"></script>
+    <script type="text/javascript" src="js/truffle-contract.js"></script>
 	<link href="styles/googleapis.css" rel="stylesheet">
 	<meta name="viewport" content="width=500, initial-scale=1">
 
-
 	<link rel="stylesheet" href="styles/bootstrap.min.css" crossorigin="anonymous">
 
-	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
-
-	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="js/ethcontracts.js?version=0.1"></script>
-	<script src="js/tronutil.js?version=0.1"></script>
-	<script src="js/maineth.js?version=0.1"></script>
+	
+	<script src="js/App.js?version=0.1"></script>
 	<link rel='stylesheet' href='styles/styles.css' />
 
 	<style>
@@ -199,7 +200,7 @@
 					<div class="card swapcard hide web3true">
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
-							<H3 class="card-text "><span class="ticketbalance">0</span> <span
+							<H3 class="card-text "><span class="myticketbalance">0</span> <span
 									data-lang="ticketdw">TICKET</span></H3>
 							<a href="#farms" onclick="nav('gacha')" class="card-link btn btn-primary btn-lg"
 								data-lang="getticket">GACHA</a>
@@ -307,11 +308,13 @@
 				<div class="card swapcard  web3true">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
-						<H3 class="card-text "><span class="ticketbalance">0</span> <span
+						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
-						<a href="#farms" onclick="gacha(1)" class="card-link btn btn-primary btn-lg"
+						<a href="#farms" id="approve" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
+								data-lang="approve">授权</a>		
+						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()" class="card-link btn btn-primary btn-lg"
 							data-lang="pull1">抽卡</a>
-						<a href="#farms" onclick="ngacha(10)" class="card-link btn btn-primary btn-lg"
+						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="ngacha(10)" class="card-link btn btn-primary btn-lg"
 							data-lang="pull10">十连抽</a>
 						<p style="margin-top: 9%;">抽一次：100HotPot</p>
 						<p>十连抽95折：950HotPot</p>
@@ -378,7 +381,7 @@
 				<div class="card swapcard  web3true">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
-						<H3 class="card-text "><span class="ticketbalance">0</span> <span
+						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
 
 						<p>普通会员卡：1张(未使用1张)</p>
@@ -508,7 +511,9 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="wwtclaim">WWT CLAIM</h6>
 							<H3 class="card-text rewardbalance">-.----</H3>
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
-								data-lang="claim">CLAIM</a>
+								data-lang="claimfree">CLAIM</a>
+								<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
+								data-lang="claimnft">CLAIM</a>
 						</div>
 					</div>
 					<div class="card hide web3true  col-md-6 col-12">
