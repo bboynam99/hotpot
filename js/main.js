@@ -247,6 +247,7 @@ function recoveABottom(){
 	document.getElementById("aexchange").style.borderBottomColor = "transparent";
 	document.getElementById("agacha").style.borderBottomColor = "transparent";
 	document.getElementById("aabout").style.borderBottomColor = "transparent";
+	document.getElementById("ame").style.borderBottomColor = "transparent";
 }
 
 
@@ -272,6 +273,12 @@ function nav(classname) {
 	let aa = "a"+classname;
 	//border-bottom-color: rgba(255, 255, 255, .25);
 	document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
+
+	if(classname == "home"){
+		$("#ticketinfo").hide();
+	}else{
+		$("#ticketinfo").show();
+	}
 
 }
 

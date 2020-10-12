@@ -25,8 +25,43 @@
 	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script src="js/contract.js?version=0.1"></script>
 	<script src="js/tronutil.js?version=0.1"></script>
-	<script src="js/main.js?version=0.1"></script>
+	<script src="js/maineth.js?version=0.1"></script>
 	<link rel='stylesheet' href='styles/styles.css' />
+
+	<style>
+		.membercard {
+			width: 500px;
+			height: 300px;
+			margin: 0;
+			padding: 0;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
+			-ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
+			background-size: 100% 100%;
+			-moz-background-size: cover;
+			-webkit-background-size: cover;
+			background: url("images/memberbg2.png")
+		}
+
+		.memberno {
+			color: grey;
+			text-align: end;
+			float: inline-end;
+		}
+
+		.memberdate {
+			color: grey;
+		}
+
+		.memberavailable {
+			color: wheat;
+		}
+
+		.membertime {
+			color: grey;
+		}
+	</style>
 	<script>
 		(function ($) {
 			$.fn.animateNumbers = function (stop, commas, duration, ease) {
@@ -121,9 +156,13 @@
 					<nav class="nav nav-masthead justify-content-center">
 						<a id="ahome" class="nav-link" href="#home" onclick="nav('home')" data-lang="home">HOME</a>
 						<a id="afarms" class="nav-link" href="#farm" onclick="nav('farms')" data-lang="farm">FARM</a>
-						<a id="agacha" class="nav-link" href="#tiket" onclick="nav('gacha')" data-lang="ticket">GACHA</a>
-						<a id="areward" class="nav-link" href="#bonus" onclick="nav('reward')" data-lang="bonus">BONUS</a>
-						<a id="aexchange" class="nav-link" href="#exchange" onclick="nav('exchange')" data-lang="exchange">EXCHANGE</a>
+						<a id="agacha" class="nav-link" href="#tiket" onclick="nav('gacha')"
+							data-lang="ticket">GACHA</a>
+						<a id="areward" class="nav-link" href="#bonus" onclick="nav('reward')"
+							data-lang="bonus">BONUS</a>
+						<a id="aexchange" class="nav-link" href="#exchange" onclick="nav('exchange')"
+							data-lang="exchange">EXCHANGE</a>
+						<a id="ame" class="nav-link" href="#me" onclick="nav('me')" data-lang="me">MY</a>
 						<a id="aabout" class="nav-link" href="#about" onclick="nav('about')" data-lang="about">ABOUT</a>
 						<a class="nav-link" href="#" onclick="changelang()" id="changelang">EN</a>
 					</nav>
@@ -139,7 +178,7 @@
 					Fork Sun's token and pool contract and Open sourced.
 				</h3>
 			</div>
-			
+
 			<button onclick="uploadReword()" hidden>Upload Reward</button>
 			<button onclick="test()" hidden>Test </button>
 
@@ -162,7 +201,7 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 							<H3 class="card-text "><span class="ticketbalance">0</span> <span
 									data-lang="ticketdw">TICKET</span></H3>
-							<a href="#farms" onclick="nav('gacha')"  class="card-link btn btn-primary btn-lg"
+							<a href="#farms" onclick="nav('gacha')" class="card-link btn btn-primary btn-lg"
 								data-lang="getticket">GACHA</a>
 						</div>
 					</div>
@@ -191,7 +230,7 @@
 								<span data-lang="ticketdw">TICKET</span>
 							</H3>
 							<a href="#exchange" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
-								data-lang="gotoexhange">EXCHANGE</a>
+								data-lang="gotoexchange">EXCHANGE</a>
 
 						</div>
 					</div>
@@ -260,9 +299,9 @@
 							<span data-lang="ticketdw">TICKET</span>
 						</H3>
 						<p>当前会员卡抽中概率：1/8</p>
-						<p>极品：金色会员卡概率：1/32</p>
+						<p>其中：金色会员卡概率：1/32</p>
 						<p>紫金会员卡概率：1/128</p>
-						<p>（流通20张后概率降低为：1/16）</p>
+						<p>（流通10张后概率降低为：1/16）</p>
 					</div>
 				</div>
 				<div class="card swapcard  web3true">
@@ -278,37 +317,53 @@
 						<p>十连抽95折：950HotPot</p>
 					</div>
 				</div>
-
-				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
-				
-				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
-				
-				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
-
 			</main>
+
 
 			<main role="main" class="inner cover exchange" STYLE="DISPLAY:NONE">
-				
-				<div class="card swapcard  web3true">
-					<div class="card-body">
-						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
-						<H3 class="card-text "><span class="ticketbalance">0</span> <span
-								data-lang="ticketdw">TICKET</span></H3>
-					
-						<p>普通会员卡：0张</p>
-						<p>金色会员卡：0张</p>
-						<p>紫金会员卡：0张</p>
-					</div>
+
+
+				<div>
+					<p>售卖</p>
+					<table border="1">
+						<tr>
+							<td>编号</td>
+							<td>等级</td>
+							<td>状态</td>
+							<td>价格</td>
+							<td>购买</td>
+						</tr>
+						<tr>
+							<td>0001</td>
+							<td>普通</td>
+							<td>可用</td>
+							<td>100.0</td>
+							<td><a href="#" onclick="buy()">购买</a></td>
+						</tr>
+						<tr>
+							<td>0002</td>
+							<td>金卡</td>
+							<td>恢复中</td>
+							<td>200.0</td>
+							<td><a href="#" onclick="buy()">购买</a></td>
+						</tr>
+					</table>
 				</div>
 
-				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
-				
-				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
-				
-				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
-
+				<div>
+					<p>借贷</p>
+					<table border="1">
+						<tr>
+							<td>row 1, cell 1</td>
+							<td>row 1, cell 2</td>
+						</tr>
+						<tr>
+							<td>row 2, cell 1</td>
+							<td>row 2, cell 2</td>
+						</tr>
+					</table>
+				</div>
 			</main>
-
 
 			<main role="main" class="inner cover reward" STYLE="DISPLAY:NONE">
 				<div class="card hide web3true swapcard">
@@ -317,6 +372,7 @@
 						<H3 class="card-text totalreward">-.----</H3>
 						<a target="_blank" href="#" class="card-link btn btn-primary btn-lg"
 							data-lang="reward">Reward</a>
+						<p style="margin-top: 5%;">当前普通会员卡可领取分红：<span>100.0</span></p>
 					</div>
 				</div>
 				<div class="card swapcard  web3true">
@@ -324,20 +380,24 @@
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="ticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
-					
-						<p>普通会员卡：0张</p>
-						<p>金色会员卡：0张</p>
-						<p>紫金会员卡：0张</p>
+
+						<p>普通会员卡：1张(未使用1张)</p>
+						<p>金色会员卡：0张(未使用0张)</p>
+						<p>紫金会员卡：0张(未使用0张)</p>
 					</div>
 				</div>
 
-				<p style="margin-top: 5%;">当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
-				
-				<p>分红：金色会员卡和紫金会员卡分红分别提高20%和50%。</p>
-				
-				<p>挖矿：挖矿每日免费提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别提高3倍、4倍和5倍。</p>
-
 			</main>
+
+			<main role="main" class="inner cover me" STYLE="DISPLAY:NONE">
+				<div class="membercard">
+					<span class="memberavailable">Avaliable</span>
+					<span class="membertime">Recharge: <span>2h:30m:30s</span></span>
+					<span class="memberno">NO. <span>0001</span></span>
+					<span class="memberdate">Date : <span>09/10 2020</span></span>
+				</div>
+			</main>
+
 
 			<main role="main" class="inner cover farms " style="display:none">
 				<div class="cover-container mx-auto" style="max-width: 62em;">
@@ -476,6 +536,16 @@
 					</div>
 				</div>
 			</main>
+
+			<div id="ticketinfo" style="display:none">
+				<p style="margin-top: 0%;">实时数据：当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
+
+				<p>分红：会员卡每日可领取分红，金卡和紫金卡分红提高20%和50%。当前普卡抽卡概率1/8，下一阶段概率降为1/16。</p>
+
+				<p>挖矿：挖矿每日免费提取额度3%（1周创世挖矿后降为2%），普通、金色和紫金会员卡挖矿提取额度分别为9%，12%和15%。</p>
+
+				<p>注意：1张会员卡在24小时内，分红和挖矿只能选择一个，谨慎选择。</p>
+			</div>
 		</div>
 	</div>
 
