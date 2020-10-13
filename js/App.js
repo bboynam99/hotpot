@@ -7,6 +7,8 @@ App = {
     contracts: {},
 
     init: function () {
+        const chainId = ChainId.MAINNET
+        console.log("chainId="+chainId);
         return App.initWeb3();
     },
 
