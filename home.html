@@ -215,7 +215,7 @@
 								class="card-link btn btn-primary btn-lg" data-lang="buy">BUY</a>
 						</div>
 					</div>
-					<div class="card hide web3true swapcard">
+					<div class="card hide web3true swapcard" hidden>
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalreward">Total Reward</h6>
 							<H3 class="card-text totalreward">-.----</H3>
@@ -223,7 +223,7 @@
 								data-lang="reward">Reward</a>
 						</div>
 					</div>
-					<div class="card swapcard hide web3true">
+					<div class="card swapcard hide web3true" hidden>
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalticket">TOTAL TICKET</h6>
 							<H3 class="card-text ">
@@ -255,14 +255,14 @@
 							<H3 class="card-text mcap"><span>266.00 </span>HotPot</H3>
 						</div>
 					</div>
-					<div class="card hide web3true swapcard2">
+					<div class="card hide web3true swapcard2" hidden>
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="ticketprice">Ticket Average Price
 							</h6>
 							<H3 class="card-text mcap">$<span>1200.00 </span> </H3>
 						</div>
 					</div>
-					<div class="card hide web3true swapcard2">
+					<div class="card hide web3true swapcard2" hidden>
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="ticketrent">Ticket Rent Price</h6>
 							<H3 class="card-text mcap">$<span>120.00</span>/<span data-lang="day">Day</span> </H3>
@@ -545,9 +545,9 @@
 			<div id="ticketinfo" style="display:none">
 				<p style="margin-top: 0%;">实时数据：当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
 
-				<p>分红：会员卡每日可领取分红，金卡和紫金卡分红提高20%和50%。当前普卡抽卡概率1/8，下一阶段概率降为1/16。</p>
+				<p>分红：会员卡每日可领取分红，金卡和紫金卡分红提高20%和40%。当前普卡抽卡概率1/8，下一阶段概率降为1/16。</p>
 
-				<p>挖矿：挖矿每日免费提取额度3%（1周创世挖矿后降为2%），普通、金色和紫金会员卡挖矿提取额度分别为9%，12%和15%。</p>
+				<p>挖矿：挖矿每日提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别为9%，12%和15%。</p>
 
 				<p>注意：1张会员卡在24小时内，分红和挖矿只能选择一个，谨慎选择。</p>
 			</div>
@@ -564,7 +564,7 @@
 				<br /><br />
 				<a href="https://twitter.com/FinanceWwt" target="_blank">Twitter</a>&mdash;
 				<a href="https://t.me/wwtfinance" target="_blank">Telegram</a>&mdash;
-				<a href="http://docs.hotpot-dex.com/" target="_blank" data-lang="whitepaper">Whitepaper</a>
+				<a id="awhitepaper" href="http://docs.hotpot-dex.com/" target="_blank" data-lang="whitepaper">Whitepaper</a>
 		</div>
 	</footer>
 	<style>
@@ -580,9 +580,11 @@
 			if (new_lang == 0) {
 				tmp_lang = 'zh';
 				$('body').removeClass('en').addClass('zh');
+				$("#awhitepaper").attr('href',"http://docs.hotpot-dex.com/chinese");
 			} else {
 				tmp_lang = 'en';
 				$('body').removeClass('zh').addClass('en');
+				$("#awhitepaper").attr('href',"http://docs.hotpot-dex.com/");
 			}
 			jQuery.i18n.properties({//加载资浏览器语言对应的资源文件
 				name: 'strings', //资源文件名称
