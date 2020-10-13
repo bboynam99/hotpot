@@ -1,4 +1,4 @@
-import { ChainId } from '../node_modules/uniswap/sdk'
+import { ChainId } from 'node_modules/uniswap/sdk'
 console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
 
 App = {
