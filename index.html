@@ -28,7 +28,7 @@
                     <p class="title" data-v-fae5bece="" data-lang="intro0">Build The Most Popular NFT Exchange & Rental</p>
                     <p class="desc" data-v-fae5bece="" data-lang="intro1">HotPot-Dex is an open source and non-custodial decentralized NFT Exchange. The exchange's currency is 100% mined! No pre-mine, no founder shares, no VC interests.
                     </p>
-                    <div class="btn" data-v-fae5bece="" ><a style="text-decoration: none;" target="_self" href="home.html"data-lang="launch" >Launch App</a></div>
+                    <div class="btn" data-v-fae5bece="" ><a style="text-decoration: none;" target="_self" href="home.html?lang=en" id="aopen" data-lang="launch" >Launch App</a></div>
                     <div class="time-wrapper" data-v-fae5bece="" style="display: none;">
                         <!--v-if--><span class="fuliTime" data-v-fae5bece="">00</span><span class="fuliPoint"
                             data-v-fae5bece="">Hour: </span><span class="fuliTime" data-v-fae5bece="">00</span><span
@@ -51,9 +51,11 @@ var language_pack = {
         if(new_lang == 0){
             tmp_lang = 'zh';
             $('body').removeClass('en').addClass('zh');
+            $("#aopen").attr('href',"home.html?lang=en");
         }else{
             tmp_lang = 'en';
             $('body').removeClass('zh').addClass('en');
+            $("#aopen").attr('href',"home.html?lang=zh");
         }
         jQuery.i18n.properties({
             name: 'strings', 

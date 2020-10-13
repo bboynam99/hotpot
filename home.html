@@ -13,19 +13,19 @@
 	<link rel=" preconnect" href="https://raw.githubusercontent.com" crossorigin>
 
 	<link rel="icon" href="images/hotpoticon.png">
-	
+
 	<script src="js/ethcontracts.js" crossorigin="anonymous"></script>
 	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
 	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-    <script type="text/javascript" src="js/web3.min.js"></script>
-    <script type="text/javascript" src="js/truffle-contract.js"></script>
+	<script type="text/javascript" src="js/web3.min.js"></script>
+	<script type="text/javascript" src="js/truffle-contract.js"></script>
 	<link href="styles/googleapis.css" rel="stylesheet">
 	<meta name="viewport" content="width=500, initial-scale=1">
 
 	<link rel="stylesheet" href="styles/bootstrap.min.css" crossorigin="anonymous">
 
-	
+
 	<script src="js/App.js?version=0.1"></script>
 	<link rel='stylesheet' href='styles/styles.css' />
 
@@ -311,11 +311,11 @@
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
 						<a href="#farms" id="approve" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
-								data-lang="approve">授权</a>		
-						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()" class="card-link btn btn-primary btn-lg"
-							data-lang="pull1">抽卡</a>
-						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="ngacha(10)" class="card-link btn btn-primary btn-lg"
-							data-lang="pull10">十连抽</a>
+							data-lang="approve">授权</a>
+						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()"
+							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
+						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="ngacha(10)"
+							class="card-link btn btn-primary btn-lg" data-lang="pull10">十连抽</a>
 						<p style="margin-top: 9%;">抽一次：100HotPot</p>
 						<p>十连抽95折：950HotPot</p>
 					</div>
@@ -512,7 +512,7 @@
 							<H3 class="card-text rewardbalance">-.----</H3>
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
 								data-lang="claimfree">CLAIM</a>
-								<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
+							<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
 								data-lang="claimnft">CLAIM</a>
 						</div>
 					</div>
@@ -564,7 +564,8 @@
 				<br /><br />
 				<a href="https://twitter.com/FinanceWwt" target="_blank">Twitter</a>&mdash;
 				<a href="https://t.me/wwtfinance" target="_blank">Telegram</a>&mdash;
-				<a id="awhitepaper" href="http://docs.hotpot-dex.com/" target="_blank" data-lang="whitepaper">Whitepaper</a>
+				<a id="awhitepaper" href="http://docs.hotpot-dex.com/" target="_blank"
+					data-lang="whitepaper">Whitepaper</a>
 		</div>
 	</footer>
 	<style>
@@ -580,11 +581,11 @@
 			if (new_lang == 0) {
 				tmp_lang = 'zh';
 				$('body').removeClass('en').addClass('zh');
-				$("#awhitepaper").attr('href',"http://docs.hotpot-dex.com/chinese");
+				$("#awhitepaper").attr('href', "http://docs.hotpot-dex.com/chinese");
 			} else {
 				tmp_lang = 'en';
 				$('body').removeClass('zh').addClass('en');
-				$("#awhitepaper").attr('href',"http://docs.hotpot-dex.com/");
+				$("#awhitepaper").attr('href', "http://docs.hotpot-dex.com/");
 			}
 			jQuery.i18n.properties({//加载资浏览器语言对应的资源文件
 				name: 'strings', //资源文件名称
@@ -602,8 +603,28 @@
 			self.now_lang = new_lang;
 		}
 	}
+
+	function getSearchString(key, Url) {
+		var str = Url;
+		str = str.substring(1, str.length); // 获取URL中?之后的字符（去掉第一位的问号）
+		// 以&分隔字符串，获得类似name=xiaoli这样的元素数组
+		var arr = str.split("&");
+		var obj = new Object();
+		// 将每一个数组元素以=分隔并赋给obj对象
+		for (var i = 0; i < arr.length; i++) {
+			var tmp_arr = arr[i].split("=");
+			obj[decodeURIComponent(tmp_arr[0])] = decodeURIComponent(tmp_arr[1]);
+		}
+		return obj[key];
+	}
+
 	$(document).ready(function () {
-		language_pack.loadProperties(0);
+		var search = window.location.search;
+		var lang = getSearchString('lang', search); 
+		if(lang==="en")
+			language_pack.loadProperties(0);
+		else
+			language_pack.loadProperties(1);
 	});
 
 	function changelang() {
