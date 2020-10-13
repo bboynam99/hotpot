@@ -1,4 +1,4 @@
-const UNISWAP = require('uniswap/sdk')
+const UNISWAP = require('@uniswap/sdk')
 console.log(`The chainId of mainnet is ${UNISWAP.ChainId.MAINNET}.`)
 App = {
     web3Provider: null,
