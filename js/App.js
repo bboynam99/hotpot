@@ -204,11 +204,6 @@ App = {
     },
 };
 
-$(function () {
-    $(window).load(function () {
-        App.init();
-    });
-});
 
 Stake = {
     initpooldata: function (name) {
@@ -301,7 +296,7 @@ Market = {
 }
 
 Reward = {
-    
+
 }
 
 
@@ -367,3 +362,9 @@ Number.prototype.toFixedSpecial = function (n) {
     return str;
 };
 
+
+$(function () {
+    $(window).load(function () {
+        App.init();
+    });
+});
