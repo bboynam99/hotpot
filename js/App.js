@@ -1,14 +1,11 @@
-import { ChainId } from 'node_modules/uniswap/sdk'
-console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
-
+const UNISWAP = require('uniswap/sdk')
+console.log(`The chainId of mainnet is ${UNISWAP.ChainId.MAINNET}.`)
 App = {
     web3Provider: null,
     defaultAccount: null,
     contracts: {},
 
     init: function () {
-        const chainId = ChainId.MAINNET
-        console.log("chainId="+chainId);
         return App.initWeb3();
     },
 
