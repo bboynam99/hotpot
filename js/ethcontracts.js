@@ -14,6 +14,8 @@ var stakePoolAddress = {}
 
 var stakeERCAddress = {}
 
+var stakeInfos = {}
+
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
@@ -65,7 +67,6 @@ var ganacheStakeERC = {
     "hotpot":"",
     "hotpot/eth":""
 }
-
 
 function setChainId(chainId){
     if (chainId === "0x1") {
@@ -132,13 +133,3 @@ var allTokens = [
     "hotpot",
     "hotpot/eth",
 ]
-
-var pools = {
-    "WWT/TRX": createToken("WWT/TRX", "TLYRrVeGXKkZyZXweo7yDZqWDPq1DpdFVu", "TMr5kifkZVfGqWgcuofvYYgECTFhxGL6Bo"),
-    "WWT": createToken("WWT", "TUHVUsg8hvR4TxmWAbfvKTKwGdrqArmYsv", "TLfG1ogM21DVYKL8UqTmLksjkHccMa6BhS"),
-    "USDT": createToken("USDT", "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", "TGEA1ML342FLHw2t3g9Fr631Cnbnw61rm8"),
-    "PEARL": createToken("PEARL", "TGbu32VEGpS4kDmjrmn5ZZJgUyHQiaweoq", "TWmK7fBMpyKn9nHwtZrKzkXgT3LnhexETD"),
-    "COLA": createToken("COLA", "TSNWgunSeGUQqBKK4bM31iLw3bn9SBWWTG", "TJUXaE6Be69QsRL8doAHN2YWWXFjH2qG6s"),
-    "SSK": createToken("SSK", "TW1sqqq7UphAqGNHDXSLXsEainYHJuQeyC", "TX1AxuHk8LL4Rxyb7pR3i2kpBg64tR3cWA"),
-    "SUN": createToken("SUN", "TKkeiboTkxXKJpbmVFbv4a8ov5rAfRDMf9", "TBXJaSvyYxRMfBY2fXWsqim3XoH61qHouP"),
-}

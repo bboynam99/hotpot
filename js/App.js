@@ -1,3 +1,6 @@
+import { ChainId } from '../node_modules/uniswap/sdk'
+console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
+
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -123,6 +126,19 @@ App = {
             // Use our contract to retieve and mark the adopted pets.
             return App.getNFTMarket();
         });
+        $.getJSON('contracts/StakePool.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            var TutorialTokenArtifact = data;
+            App.contracts.StakePool = TruffleContract(TutorialTokenArtifact);
+
+            // Set the provider for our contract.
+            App.contracts.StakePool.setProvider(App.web3Provider);
+            App.contracts.StakePool.numberFormat = "BigNumber";
+            // Use our contract to retieve and mark the adopted pets.
+            return App.getStakePools();
+        });
+
+        
     },
     getNFTMarket: function () {
 
@@ -132,6 +148,24 @@ App = {
     },
     getLoan: function () {
 
+    },
+    getStakePools: function () {
+        // allTokens
+        var count = allTokens.length;
+        for(var i=0;i<count;i++){
+            var lpName = allTokens[i];
+            var poolAddress = stakePoolAddress[lpName];
+            var lpAddress = stakeERCAddress[lpName];
+            stakeInfos[lpName] = createToken(lpName, lpAddress, poolAddress);
+
+            //lp  --- uni/eth usdt/eth hotpot/eth
+            //none lp --- usdt hotpot
+
+            //1.get info of lp token
+
+            //2.get info of lp stake pool
+
+        }
     },
 
     getBalances: function () {
