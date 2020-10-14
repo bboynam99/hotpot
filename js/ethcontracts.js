@@ -143,6 +143,8 @@ function createToken(name, address, poolAddress) {
 
     oTempToken.allowance = 0;
 
+    oTempToken.rewardRate = 0;
+
     return oTempToken;
 }
 
