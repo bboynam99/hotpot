@@ -14,10 +14,14 @@ var stakePoolAddress = {}
 
 var stakeERCAddress = {}
 
+var stakeERCContract={}
+
+//createToken
 var stakeInfos = {}
 
 var univ2PairsAddress = {}
 
+//createPairInfo
 var univ2PairInfo={}
 
 var mainContracts = {
@@ -74,8 +78,8 @@ var ganacheStakeERC = {
 
 var mainUniPairs = {
     "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
-    "uni/eth":"",
-    "hotpot/eth":""
+    "uni/eth":"0xd3d2e2692501a5c9ca623199d38826e513033a17",
+    "hotpot/eth":"0x32ce7e48debdccbfe0cd037cc89526e4382cb81b"
 }
 
 function setChainId(chainId){
@@ -99,6 +103,8 @@ function setChainId(chainId){
 //name,address,poolAddress,weight,poolTotalStake,userStake,userBalance
 function createToken(name, address, poolAddress) {
     var oTempToken = new Object;
+    //contract instance of this token's stake pool
+    oTempToken.instance=null;
 
     //用来质押的代币名称
     oTempToken.name = name;
@@ -135,7 +141,8 @@ function createToken(name, address, poolAddress) {
     //该矿池的APY
     oTempToken.apy = 0;
 
-    oTempToken.poolContract = null;
+    oTempToken.allowance = 0;
+
     return oTempToken;
 }
 
@@ -152,10 +159,17 @@ function createPairInfo(address) {
 
     pair.reserve1=null;
 
+    pair.totalSupply = 0;
+
+    //by eth
+    pair.lpPrice=0;
+
+    pair.decimals=0;
+
     return pair;
 }
 
-var allTokens = [
+var allPoolTokens = [
     "usdt",
     "eth/usdt",
     "uni/eth",

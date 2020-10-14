@@ -147,32 +147,77 @@ App = {
             return App.getUniV2Pairs();
         });
     },
-    getUniV2Pairs:function(){
-        for(var i=0;i<allTokens.length;i++){
-            var token = allTokens[i];
-            if(token==="usdt"||token==="hotpot"){
+    getUniV2Pairs: function () {
+        for (var i = 0; i < allPoolTokens.length; i++) {
+            var token = allPoolTokens[i];
+            if (token === "usdt" || token === "hotpot") {
                 // getUniV2Token(token);
-            }else{
+            } else {
                 App.getUniV2Pair(token);
             }
+            App.getStakeERCInfo(token);
         }
     },
-    getUniV2Token:function(token){
-
+    getStakeERCInfo: function (token) {
+        App.contracts.HotPot.at(stakeERCAddress[token])
+            .then(function (instance) {
+                stakeERCContract[token] = instance;
+                return instance.balanceOf(defaultAccount);
+            })
+            .then(function(result){
+                stakeInfos[token].userBalance = result;
+                return stakeERCContract[token].decimals();
+            })
+            .then(function(result){
+                stakeInfos[token].decimals = result;
+                return stakeERCContract[token].allowance(defaultAccount,stakePoolAddress[token]);
+            })
+            .then(function(result){
+                stakeInfos[token].allowance = result;
+            });
     },
-    getUniV2Pair:function(pair){
+    getUniV2Pair: function (pair) {
         univ2PairInfo[pair] = createPairInfo(pair);
         App.contracts.UniV2Pair.at(univ2PairsAddress[pair])
-        .then(function(instance){
-            univ2PairInfo[pair].contractInstance = instance;
-            return instance.getReserves();
-        })
-        .then(function(result){
-            // console.log("price="+result.c[0]);
-            var reserve0 = result[0];
-            var reserve1 = result[1];
-            var bn = new BigNumber(reserve0);
-        });
+            .then(function (instance) {
+                univ2PairInfo[pair].contractInstance = instance;
+                return instance.getReserves();
+            })
+            .then(function (result) {
+                // console.log("price="+result.c[0]);
+                var reserve0 = result[0];
+                var reserve1 = result[1];
+
+                univ2PairInfo[pair].reserve0 = reserve0;
+                univ2PairInfo[pair].reserve1 = reserve1;
+
+                return univ2PairInfo[pair].contractInstance.totalSupply();
+            })
+            .then(function (result) {
+                univ2PairInfo[pair].totalSupply = result;
+                if (pair === "eth/usdt") {
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.times(2).div(univ2PairInfo[pair].totalSupply);
+                } else {
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.times(2).div(univ2PairInfo[pair].totalSupply);
+                }
+                console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
+                return univ2PairInfo[pair].contractInstance.decimals();
+            })
+            .then(function (result) {
+                univ2PairInfo[pair].decimals = result;
+                App.checkAllUni();
+            });
+    },
+    checkAllUni: function () {
+        for (var i = 0; i < allPoolTokens.length; i++) {
+            var token = allPoolTokens[i];
+            if (token != "usdt" && token != "hotpot") {
+                if (univ2PairInfo[token].lpPrice == 0) {
+                    return
+                }
+            }
+        }
+        Stake.initStakePool();
     },
     getNFTMarket: function () {
 
@@ -184,13 +229,13 @@ App = {
 
     },
     getStakePools: function () {
-        // allTokens
-        var count = allTokens.length;
-        for(var i=0;i<count;i++){
-            var lpName = allTokens[i];
-            var poolAddress = stakePoolAddress[lpName];
-            var lpAddress = stakeERCAddress[lpName];
-            stakeInfos[lpName] = createToken(lpName, lpAddress, poolAddress);
+        // allPoolTokens
+        var count = allPoolTokens.length;
+        for (var i = 0; i < count; i++) {
+            var poolToken = allPoolTokens[i];
+            var poolAddress = stakePoolAddress[poolToken];
+            var lpAddress = stakeERCAddress[poolToken];
+            stakeInfos[poolToken] = createToken(poolToken, lpAddress, poolAddress);
 
             //lp  --- uni/eth usdt/eth hotpot/eth
             //none lp --- usdt hotpot
@@ -271,9 +316,45 @@ App = {
             });
     },
 };
+// let totalStake = await poolContract.totalSupply().call();
+//             // console.log("totalStake=" + totalStake);
+//             $('.totalstake').text((totalStake / Math.pow(10, stakeDecimals)).toFixedSpecial(4) + " " + pools[currentPagePoolID].name);
+//             pools[name].poolTotalStake = totalStake;
 
+//             let userStake = await poolContract.balanceOf(walletAddress).call();
+//             // console.log("userStake=" + userStake);
+//             pools[name].userStake = userStake;
+//             $('.stakedbalance').text((userStake / Math.pow(10, stakeDecimals)).toFixedSpecial(4) + " " + pools[currentPagePoolID].name);
+
+//             $('#stakeToken').text(pools[name].name + " ");
+
+//             let earned = await poolContract.earned(walletAddress).call();
+//             pools[name].userEarn = earned;
 
 Stake = {
+    initStakePool: function () {
+        console.log("initStakePool");
+        for (var i = 0; i < allPoolTokens.length; i++) {
+            var poolName = allPoolTokens[i];
+            var poolAddress = stakePoolAddress[poolName];
+            App.contract.StakePool.at(poolAddress)
+                .then(function (instance) {
+                    stakeInfos[poolName].instance = instance;
+                    return instance.totalSupply();
+                })
+                .then(function (result) {
+                    stakeInfos[poolName].poolTotalStake = result;
+                    return instance.balanceOf(defaultAccount);
+                })
+                .then(function (result) {
+                    stakeInfos[poolName].userStake = result;
+                    return instance.earned(defaultAccount);
+                })
+                .then(function (result) {
+                    stakeInfos[poolName].userEarn = result;
+                });
+        }
+    },
     initpooldata: function (name) {
         console.log("initpooldata:" + name);
         async function triggercontract() {
@@ -394,7 +475,6 @@ function nav(classname) {
         $('main.pool').show();
     } else {
         $('main.' + classname).show();
-        // updateAllTokens();
     }
     if (classname === "home") {
         $("#infodiv").show();
