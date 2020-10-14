@@ -1,5 +1,3 @@
-const UNISWAP = require('@uniswap/sdk')
-console.log(`The chainId of mainnet is ${UNISWAP.ChainId.MAINNET}.`)
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -61,7 +59,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.HotPot.setProvider(App.web3Provider);
-            App.contracts.HotPot.numberFormat = "BigNumber";
+            // App.contracts.HotPot.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getBalances();
         });
@@ -73,7 +71,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.NFTHotPot.setProvider(App.web3Provider);
-            App.contracts.NFTHotPot.numberFormat = "BigNumber";
+            // App.contracts.NFTHotPot.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getNFTBalances();
         });
@@ -85,7 +83,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.Reward.setProvider(App.web3Provider);
-            App.contracts.Reward.numberFormat = "BigNumber";
+            // App.contracts.Reward.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getReward();
         });
@@ -97,7 +95,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.Gacha.setProvider(App.web3Provider);
-            App.contracts.Gacha.numberFormat = "BigNumber";
+            // App.contracts.Gacha.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getGacha();
         });
@@ -109,7 +107,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.Loan.setProvider(App.web3Provider);
-            App.contracts.Loan.numberFormat = "BigNumber";
+            // App.contracts.Loan.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getLoan();
         });
@@ -121,7 +119,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.NFTMarket.setProvider(App.web3Provider);
-            App.contracts.NFTMarket.numberFormat = "BigNumber";
+            // App.contracts.NFTMarket.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getNFTMarket();
         });
@@ -132,12 +130,49 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.StakePool.setProvider(App.web3Provider);
-            App.contracts.StakePool.numberFormat = "BigNumber";
+            // App.contracts.StakePool.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getStakePools();
         });
 
-        
+        $.getJSON('contracts/UniV2Pair.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            var TutorialTokenArtifact = data;
+            App.contracts.UniV2Pair = TruffleContract(TutorialTokenArtifact);
+
+            // Set the provider for our contract.
+            App.contracts.UniV2Pair.setProvider(App.web3Provider);
+            // App.contracts.UniV2Pair.numberFormat = "BigNumber";
+            // Use our contract to retieve and mark the adopted pets.
+            return App.getUniV2Pairs();
+        });
+    },
+    getUniV2Pairs:function(){
+        for(var i=0;i<allTokens.length;i++){
+            var token = allTokens[i];
+            if(token==="usdt"||token==="hotpot"){
+                // getUniV2Token(token);
+            }else{
+                App.getUniV2Pair(token);
+            }
+        }
+    },
+    getUniV2Token:function(token){
+
+    },
+    getUniV2Pair:function(pair){
+        univ2PairInfo[pair] = createPairInfo(pair);
+        App.contracts.UniV2Pair.at(univ2PairsAddress[pair])
+        .then(function(instance){
+            univ2PairInfo[pair].contractInstance = instance;
+            return instance.getReserves();
+        })
+        .then(function(result){
+            // console.log("price="+result.c[0]);
+            var reserve0 = result[0];
+            var reserve1 = result[1];
+            var bn = new BigNumber(reserve0);
+        });
     },
     getNFTMarket: function () {
 

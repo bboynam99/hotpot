@@ -16,6 +16,10 @@ var stakeERCAddress = {}
 
 var stakeInfos = {}
 
+var univ2PairsAddress = {}
+
+var univ2PairInfo={}
+
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
@@ -68,12 +72,19 @@ var ganacheStakeERC = {
     "hotpot/eth":""
 }
 
+var mainUniPairs = {
+    "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+    "uni/eth":"",
+    "hotpot/eth":""
+}
+
 function setChainId(chainId){
     if (chainId === "0x1") {
         console.log("connect main");
         contractAddress = mainContracts;
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
+        univ2PairsAddress = mainUniPairs;
     } else if (chainId === "0x4") {
         console.log("connect rinkeby");
     } else if (chainId === "0x29a") {
@@ -123,7 +134,25 @@ function createToken(name, address, poolAddress) {
 
     //该矿池的APY
     oTempToken.apy = 0;
+
+    oTempToken.poolContract = null;
     return oTempToken;
+}
+
+function createPairInfo(address) {
+    var pair = new Object;
+    pair.address = address;
+    pair.contractInstance = null;
+
+    pair.token0=null;
+
+    pair.token1=null;
+
+    pair.reserve0=null;
+
+    pair.reserve1=null;
+
+    return pair;
 }
 
 var allTokens = [
