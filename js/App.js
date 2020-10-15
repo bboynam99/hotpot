@@ -341,6 +341,31 @@ App = {
 };
 
 Stake = {
+    generateUniFactory:function(){
+        $.getJSON('contracts/UniswapFatory.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            var TutorialTokenArtifact = data;
+            App.contracts.UniFactory = TruffleContract(TutorialTokenArtifact);
+
+            // Set the provider for our contract.
+            App.contracts.UniFactory.setProvider(App.web3Provider);
+            // App.contracts.Loan.numberFormat = "BigNumber";
+            // Use our contract to retieve and mark the adopted pets.
+            return Stake.generateUniHotpotPair();
+        });
+    },
+    generateUniHotpotPair:function(){
+        App.contracts.UniFactory.at(uniFactoryAddress)
+        .then(function(instance){
+            return instance.createPair(stakeERCAddress['hotpot'],ethAddress)
+        })
+        .then(function(result){
+            stakeERCAddress['hotpot/eth']=result.c[0];
+        })
+        .then(function(){
+            
+        });
+    },
     initpooldata: function (name) {
         $('.farmname').text(pools[name].name + ' pool');
         currentPagePoolID = name;

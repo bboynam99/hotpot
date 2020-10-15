@@ -16622,6 +16622,70 @@
     "version": "0.6.2+commit.bacdbe57.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "GachaNothing",
+          "type": "event"
+        },
+        "0xf1fdafe85c8e689e94a05437caf59e85e24ded6101fd5edf045c1e98befb2dc8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint8",
+              "name": "_grade",
+              "type": "uint8"
+            }
+          ],
+          "name": "GachaTicket",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xbA1a281033242F006c87dF416186bE0fD2B2A09c",
+      "transactionHash": "0x1f7a97add7bd1bb04ba9b98960d77d76d7ec4ce67b80a053c81f56d2362e89c8"
+    },
     "5777": {
       "events": {
         "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
@@ -16683,12 +16747,12 @@
         }
       },
       "links": {},
-      "address": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
-      "transactionHash": "0xf906833b039ef9d508e266f6cabe5f2eb733f9f1fe7c55f0635abe2423205ea7"
+      "address": "0x100F4b9b8b1aA0542eab968e818B16d7BB934E04",
+      "transactionHash": "0xf140a1fce4bf843953b22aa2e360aafd5ca05b1c2647a43942ab8ebcfae8875e"
     }
   },
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-12T07:13:08.250Z",
+  "updatedAt": "2020-10-15T06:16:29.521Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

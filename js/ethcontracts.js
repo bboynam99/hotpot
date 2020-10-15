@@ -1,13 +1,3 @@
-var nft = "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F";
-var hotpot = "0x1091cF23823b1F6172e9AB362052fAc20b296e0E";
-var gacha = "0x8264cB34e0cB675a9a7a863B6301f16512570130";
-var stakepool = "0x65C74F67bF32e633AbeE501E757812513b1E8abd";
-var loan = "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7";
-var market = "0xAcbda85F41362768834144Ab24B9103f3A524E08";
-var reward = "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3";
-
-var usdt = "0x789B419dFA4Ad42C09454Ec7927C4A7BdD96dfed";
-
 var contractAddress = {}
 
 var stakePoolAddress = {}
@@ -21,8 +11,12 @@ var stakeInfos = {}
 
 var univ2PairsAddress = {}
 
+var ethAddress;
+
 //createPairInfo
 var univ2PairInfo={}
+
+var uniFactoryAddress = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
 
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
@@ -30,6 +24,16 @@ var mainContracts = {
     "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
     "stakepool": "0x65C74F67bF32e633AbeE501E757812513b1E8abd",
     "loan": "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7",
+    "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
+    "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
+}
+
+var ropstenContracts = {
+    "nft": "0x51aF31f225CC758f0F189fd694c174Fd3439AB6C",
+    "hotpot": "0xEE35F1Aa6F2ea8eEE669671c852D879b17eB8AF8",
+    "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
+    "stakepool": "0x65C74F67bF32e633AbeE501E757812513b1E8abd",
+    "loan": "0xFCD912C39E3eF3b835E1dD55c2c0d7BF4EEEd47e",
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
 }
@@ -45,6 +49,14 @@ var ganacheContracts = {
 }
 
 var mainPool = {
+    "usdt":"",
+    "eth/usdt":"",
+    "uni/eth":"",
+    "hotpot":"",
+    "hotpot/eth":""
+}
+
+var ropstenPool = {
     "usdt":"",
     "eth/usdt":"",
     "uni/eth":"",
@@ -68,6 +80,14 @@ var mainStakeERC = {
     "hotpot/eth":""
 }
 
+var ropstenStakeERC = {
+    "usdt":"",
+    "eth/usdt":"",
+    "uni/eth":"",
+    "hotpot":"",
+    "hotpot/eth":""
+}
+
 var ganacheStakeERC = {
     "usdt":"",
     "eth/usdt":"",
@@ -82,6 +102,13 @@ var mainUniPairs = {
     "hotpot/eth":"0x32ce7e48debdccbfe0cd037cc89526e4382cb81b"
 }
 
+//fake pairs
+var ropstenUniPairs = {
+    "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",
+    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",
+    "hotpot/eth":"0x98A608D3f29EebB496815901fcFe8eCcC32bE54a"
+}
+
 function setChainId(chainId){
     if (chainId === "0x1") {
         console.log("connect main");
@@ -89,7 +116,16 @@ function setChainId(chainId){
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
         univ2PairsAddress = mainUniPairs;
-    } else if (chainId === "0x4") {
+        ethAddress="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
+    }else if(chainId === "0x3"){
+        console.log("connect ropsten")
+        contractAddress = ropstenContracts;
+        stakePoolAddress = ropstenPool;
+        stakeERCAddress = ropstenStakeERC;
+        univ2PairsAddress = ropstenUniPairs;
+        ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
+    }
+     else if (chainId === "0x4") {
         console.log("connect rinkeby");
     } else if (chainId === "0x29a") {
         console.log("connect ganache");

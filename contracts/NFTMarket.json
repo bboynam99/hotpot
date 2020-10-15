@@ -22156,6 +22156,107 @@
     "version": "0.6.2+commit.bacdbe57.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x6e16e8064e3c8254cef11e01e152416398602d7e8785f743f1c2f93a9a15ff35": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_seller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_price",
+              "type": "uint256"
+            }
+          ],
+          "name": "Listed",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xa078c4190abe07940190effc1846be0ccf03ad6007bc9e93f9697d0b460befbb": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_buyer",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_seller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_price",
+              "type": "uint256"
+            }
+          ],
+          "name": "Swapped",
+          "type": "event"
+        },
+        "0xd1b3de83f2e838a8b6eb09447f2316d7bfd1a64d0059abe8f1160f490616fd83": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_seller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Unlisted",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x611D9F03C2E8189a8Bb9435138b40c0B88Ca27E6",
+      "transactionHash": "0xb2604c76273aa06d736eed589180454e44efd65cedb97d5a9f09ab7f687d60fa"
+    },
     "5777": {
       "events": {
         "0x6e16e8064e3c8254cef11e01e152416398602d7e8785f743f1c2f93a9a15ff35": {
@@ -22254,12 +22355,12 @@
         }
       },
       "links": {},
-      "address": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
-      "transactionHash": "0xd5a2c97e848e8cf35a8ab10b0e5c9805a331f5c285cc787b435df2773b134bd4"
+      "address": "0x6EDBC456f58DF38881322f34224e30f4bB54C23f",
+      "transactionHash": "0xad25175709d9e2d98123f2ee171183b275660da9a99b9e3ed8ef53cc6eb9688c"
     }
   },
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-12T07:13:08.263Z",
+  "updatedAt": "2020-10-15T06:16:29.533Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
