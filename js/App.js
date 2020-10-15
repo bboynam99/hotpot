@@ -2,7 +2,7 @@ App = {
     web3Provider: null,
     defaultAccount: null,
     contracts: {},
-
+    erc20Contract:null,
     init: function () {
         return App.initWeb3();
     },
@@ -59,6 +59,7 @@ App = {
 
             // Set the provider for our contract.
             App.contracts.HotPot.setProvider(App.web3Provider);
+            erc20Contract =  App.contracts.HotPot;
             // App.contracts.HotPot.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getBalances();
@@ -159,7 +160,7 @@ App = {
         }
     },
     getStakeERCInfo: function (token) {
-        App.contracts.HotPot.at(stakeERCAddress[token])
+        erc20Contract.at(stakeERCAddress[token])
             .then(function (instance) {
                 stakeERCContract[token] = instance;
                 return instance.balanceOf(App.defaultAccount);
