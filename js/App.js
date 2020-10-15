@@ -179,10 +179,14 @@ App = {
     getUniV2Pair: function (pair) {
         console.log("getUniV2Pair="+pair);
         univ2PairInfo[pair] = createPairInfo(pair);
-        App.contracts.UniV2Pair.at(univ2PairsAddress[pair])
+        App.contracts.UniV2Pair.at(stakeERCAddress[pair])
             .then(function (instance) {
                 univ2PairInfo[pair].contractInstance = instance;
-                return instance.getReserves();
+                return univ2PairInfo[pair].contractInstance.decimals();
+            })
+            .then(function(result){
+                univ2PairInfo[pair].decimals = result;
+                return univ2PairInfo[pair].contractInstance.getReserves();
             })
             .then(function (result) {
                 // console.log("price="+result.c[0]);
@@ -196,16 +200,12 @@ App = {
             })
             .then(function (result) {
                 univ2PairInfo[pair].totalSupply = result;
-                if (pair === "eth/usdt") {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.times(2).div(univ2PairInfo[pair].totalSupply);
+                if (pair === "eth/usdt" && !testFlag) {
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10,18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10,univ2PairInfo[pair].decimals)));
                 } else {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.times(2).div(univ2PairInfo[pair].totalSupply);
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10,18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10,univ2PairInfo[pair].decimals)));
                 }
                 console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
-                return univ2PairInfo[pair].contractInstance.decimals();
-            })
-            .then(function (result) {
-                univ2PairInfo[pair].decimals = result;
                 App.checkAllUni();
             });
     },
@@ -223,17 +223,21 @@ App = {
     },
     calTokenPrice: function () {
         var ethusdt = univ2PairInfo["eth/usdt"];
-        var vEth = ethusdt.reserve0;
-        var vUsdt = ethusdt.reserve1;
+        var vEth = ethusdt.reserve0.div(Math.pow(10,18));
+        var vUsdt = ethusdt.reserve1.div(Math.pow(10,6));
+        if(testFlag){
+            vEth = ethusdt.reserve1.div(Math.pow(10,18));
+            vUsdt = ethusdt.reserve0.div(Math.pow(10,6));
+        }
 
         var priceEth = vUsdt.div(vEth);
 
         var hotpoteth = univ2PairInfo["hotpot/eth"];
-        var vHot = hotpoteth.reserve0;
-        var vE = hotpoteth.reserve1;
+        var vHot = hotpoteth.reserve0.div(Math.pow(10,18));
+        var vE = hotpoteth.reserve1.div(Math.pow(10,18));
 
         var priceHot = vE.div(vHot).times(priceEth);
-
+        console.log("eth price="+priceEth+",hot price="+priceHot);
         //usdt
         stakeInfos["usdt"].price = 1;
         stakeInfos["hotpot"].price = priceHot;
@@ -242,7 +246,10 @@ App = {
             if (name != "usdt" && name != "hotpot") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
+            console.log("stake token price name:"+name+",price="+stakeInfos[name].price);
         }
+        Stake.initStakePool();
+        Stake.getAllPoolBalance();
     },
     getNFTMarket: function () {
 
@@ -270,7 +277,7 @@ App = {
             //2.get info of lp stake pool
 
         }
-        Stake.initStakePool();
+        
     },
 
     getBalances: function () {
@@ -280,7 +287,12 @@ App = {
             .then(function (instance) {
                 App.contracts.HotPot = instance;
                 console.log("get HotPot");
-                return instance.decimals();
+                return instance.totalSupply();
+            })
+            .then(function(result){
+                console.log("total supply="+result);
+                balanceOfHotpot['total'] = result;
+                return App.contracts.HotPot.decimals();
             })
             .then(function (result) {
                 var decimals = result.c[0];
@@ -341,9 +353,39 @@ App = {
             });
     },
 };
-
+var count=0;
 Stake = {
-    
+
+    getAllPoolBalance:function(){
+        for(var i=0;i<allPoolTokens.length;i++){
+            var token = allPoolTokens[i];
+            Stake.getSinglePoolBalance(token);
+        }
+    },
+    getSinglePoolBalance:function(name){
+        var poolAddress = stakePoolAddress[name];
+        App.contracts.HotPot.balanceOf(poolAddress)
+            .then(function(result){
+                console.log("pool balance name="+name+",balance="+result);
+                balanceOfHotpot[name] = result;
+                count++;
+                if(count==5){
+                    Stake.calTotalCirculation();
+                }    
+            });
+    },
+    calTotalCirculation:function(){
+        var total = balanceOfHotpot['total'];
+        for(var i=0;i<allPoolTokens.length;i++){
+            var token = allPoolTokens[i];
+            // var poolAddress = stakePoolAddress[token];
+            total = total.minus(balanceOfHotpot[token]);
+        }
+        total = total.div(Math.pow(10,18));
+        console.log("calTotalCirculation="+total);
+        $("#totalcir").text(total);
+    },
+
     generateUniFactory: function () {
         $.getJSON('contracts/UniswapFatory.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
@@ -380,12 +422,13 @@ Stake = {
         var stakeDecimals = token.decimals;
         let totalStake = token.poolTotalStake;
         // console.log("totalStake=" + totalStake);
-        $('.totalstake').text((totalStake / Math.pow(10, stakeDecimals)).toFixedSpecial(4));
-        pools[name].poolTotalStake = totalStake;
+
+        $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))).toFixedSpecial(4));
+        // pools[name].poolTotalStake = totalStake;
 
         let userStake = token.userStake;
         // console.log("userStake=" + userStake);
-        $('.stakedbalance').text((userStake / Math.pow(10, stakeDecimals)).toFixedSpecial(4));
+        $('.stakedbalance').text((userStake.div( Math.pow(10, stakeDecimals))).toFixedSpecial(4));
 
         $('#stakeToken').text(name + " ");
 
@@ -424,17 +467,21 @@ Stake = {
                 stakeInfos[poolName].userEarn = result;
                 return stakeInfos[poolName].instance.rewardRate();
             })
-            .then(function (result) {
+            .then(function(result){
                 console.log("rewardRate2:"+poolName);
                 stakeInfos[poolName].rewardRate = result;
+                // return stakeInfos[poolName].instance.decimals();
+            })
+            .then(function (result) {
+                // stakeInfos[poolName].decimals = result;
                 Stake.updateAPY(poolName);
             });
     },
     updateAPY: function (name) {
-        // console.log("updateapy " + name + ",address=" + pools[name].poolAddress);
-        var hotpotDecimals = stakeInfos["hotpot"].decimals;
+        console.log("updateapy " + name);
+        var hotpotDecimals = knownTokens["hotpot"].decimals;
         //池子每s产出wwt数量
-        let rewardRate = stakeInfos[name].rewardRate;
+        let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10,hotpotDecimals));
         rewardRate = rewardRate.div(Math.pow(10, hotpotDecimals));
 
         //每s能挖出的wwt总价格
@@ -444,7 +491,7 @@ Stake = {
         let stakeToken = stakeInfos[name];
         let totalStake = stakeToken.poolTotalStake;
 
-        let totalStakePrice = totalStake / Math.pow(10, stakeToken.decimals) * stakeToken.price;
+        let totalStakePrice = totalStake .div( Math.pow(10, stakeToken.decimals)) .mul( stakeToken.price);
 
         console.log("updateapy token price=" + stakeToken.price);
 
@@ -577,6 +624,21 @@ Number.prototype.toFixedSpecial = function (n) {
 
 $(function () {
     $(window).load(function () {
+        initTokens();
         App.init();
     });
 });
+
+function initTokens(){
+    knownTokens['usdt']=createTokenInfo('usdt');
+    knownTokens['usdt'].decimals = 6;
+
+    knownTokens['eth']=createTokenInfo('eth');
+    knownTokens['eth'].decimals = 18;
+
+    knownTokens['uni']=createTokenInfo('uni');
+    knownTokens['uni'].decimals = 18;
+
+    knownTokens['hotpot']=createTokenInfo('hotpot');
+    knownTokens['hotpot'].decimals = 18;
+}
