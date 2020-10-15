@@ -84,7 +84,7 @@ var ropstenStakeERC = {
     "usdt":"",
     "eth/usdt":"",
     "uni/eth":"",
-    "hotpot":"",
+    "hotpot":"0x5F5F353DEF50B7F5258c0Ff3eF710c3199859CB8",
     "hotpot/eth":""
 }
 

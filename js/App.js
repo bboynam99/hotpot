@@ -341,7 +341,7 @@ App = {
 };
 
 Stake = {
-    generateUniFactory:function(){
+    generateUniFactory: function () {
         $.getJSON('contracts/UniswapFatory.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             var TutorialTokenArtifact = data;
@@ -354,17 +354,15 @@ Stake = {
             return Stake.generateUniHotpotPair();
         });
     },
-    generateUniHotpotPair:function(){
+    generateUniHotpotPair: function () {
         App.contracts.UniFactory.at(uniFactoryAddress)
-        .then(function(instance){
-            return instance.createPair(stakeERCAddress['hotpot'],ethAddress)
-        })
-        .then(function(result){
-            stakeERCAddress['hotpot/eth']=result.c[0];
-        })
-        .then(function(){
-            
-        });
+            .then(function (instance) {
+                return instance.createPair(stakeERCAddress['hotpot'], ethAddress)
+            })
+            .then(function (result) {
+                console.log("createPair="+result.c[0]);
+                // stakeERCAddress['hotpot/eth'] = result.c[0];
+            });
     },
     initpooldata: function (name) {
         $('.farmname').text(pools[name].name + ' pool');
@@ -386,7 +384,7 @@ Stake = {
         // console.log("userStake=" + userStake);
         $('.stakedbalance').text((userStake / Math.pow(10, stakeDecimals)).toFixedSpecial(4));
 
-        $('#stakeToken').text(name +" ");
+        $('#stakeToken').text(name + " ");
 
         let earned = token.earned;
         earned = (earned / Math.pow(10, stakeInfos["hotpot"].decimals)).toFixedSpecial(4);
