@@ -162,7 +162,7 @@ App = {
         App.contracts.HotPot.at(stakeERCAddress[token])
             .then(function (instance) {
                 stakeERCContract[token] = instance;
-                return instance.balanceOf(defaultAccount);
+                return instance.balanceOf(App.defaultAccount);
             })
             .then(function (result) {
                 stakeInfos[token].userBalance = result;
@@ -170,13 +170,14 @@ App = {
             })
             .then(function (result) {
                 stakeInfos[token].decimals = result;
-                return stakeERCContract[token].allowance(defaultAccount, stakePoolAddress[token]);
+                return stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token]);
             })
             .then(function (result) {
                 stakeInfos[token].allowance = result;
             });
     },
     getUniV2Pair: function (pair) {
+        console.log("getUniV2Pair="+pair);
         univ2PairInfo[pair] = createPairInfo(pair);
         App.contracts.UniV2Pair.at(univ2PairsAddress[pair])
             .then(function (instance) {
@@ -218,7 +219,7 @@ App = {
             }
         }
         App.calTokenPrice();
-        Stake.initStakePool();
+        
     },
     calTokenPrice: function () {
         var ethusdt = univ2PairInfo["eth/usdt"];
@@ -269,6 +270,7 @@ App = {
             //2.get info of lp stake pool
 
         }
+        Stake.initStakePool();
     },
 
     getBalances: function () {
@@ -341,6 +343,7 @@ App = {
 };
 
 Stake = {
+    
     generateUniFactory: function () {
         $.getJSON('contracts/UniswapFatory.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
@@ -365,7 +368,7 @@ Stake = {
             });
     },
     initpooldata: function (name) {
-        $('.farmname').text(pools[name].name + ' pool');
+        $('.farmname').text(name + ' FARM');
         currentPagePoolID = name;
 
         let token = stakeInfos[name];
@@ -394,34 +397,44 @@ Stake = {
         console.log("initStakePool");
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            var poolAddress = stakePoolAddress[poolName];
-            App.contract.StakePool.at(poolAddress)
-                .then(function (instance) {
-                    stakeInfos[poolName].instance = instance;
-                    return instance.totalSupply();
-                })
-                .then(function (result) {
-                    stakeInfos[poolName].poolTotalStake = result;
-                    return stakeInfos[poolName].instance.balanceOf(defaultAccount);
-                })
-                .then(function (result) {
-                    stakeInfos[poolName].userStake = result;
-                    return stakeInfos[poolName].instance.earned(defaultAccount);
-                })
-                .then(function (result) {
-                    stakeInfos[poolName].userEarn = result;
-                    return stakeInfos[poolName].instance.rewardRate();
-                })
-                .then(function (result) {
-                    stakeInfos[poolName].rewardRate = result;
-                });
+            Stake.initSinglePool(poolName);
         }
+    },
+    initSinglePool:function(poolName){
+        var poolAddress = stakePoolAddress[poolName];
+        console.log("poolname="+poolName);
+        App.contracts.StakePool.at(poolAddress)
+            .then(function (instance) {
+                console.log("totalSupply:"+poolName);
+                stakeInfos[poolName].instance = instance;
+                return instance.totalSupply();
+            })
+            .then(function (result) {
+                console.log("balanceOf:"+poolName);
+                stakeInfos[poolName].poolTotalStake = result;
+                return stakeInfos[poolName].instance.balanceOf(App.defaultAccount);
+            })
+            .then(function (result) {
+                console.log("earned:"+poolName);
+                stakeInfos[poolName].userStake = result;
+                return stakeInfos[poolName].instance.earned(App.defaultAccount);
+            })
+            .then(function (result) {
+                console.log("rewardRate:"+poolName);
+                stakeInfos[poolName].userEarn = result;
+                return stakeInfos[poolName].instance.rewardRate();
+            })
+            .then(function (result) {
+                console.log("rewardRate2:"+poolName);
+                stakeInfos[poolName].rewardRate = result;
+                Stake.updateAPY(poolName);
+            });
     },
     updateAPY: function (name) {
         // console.log("updateapy " + name + ",address=" + pools[name].poolAddress);
         var hotpotDecimals = stakeInfos["hotpot"].decimals;
         //池子每s产出wwt数量
-        let rewardRate = stakeInfos[name].rewardRate();
+        let rewardRate = stakeInfos[name].rewardRate;
         rewardRate = rewardRate.div(Math.pow(10, hotpotDecimals));
 
         //每s能挖出的wwt总价格
@@ -433,7 +446,7 @@ Stake = {
 
         let totalStakePrice = totalStake / Math.pow(10, stakeToken.decimals) * stakeToken.price;
 
-        // console.log("updateapy token price=" + stakeToken.price);
+        console.log("updateapy token price=" + stakeToken.price);
 
         //每s，每u能产出的产率
         let aps = 1;
@@ -442,7 +455,7 @@ Stake = {
 
         let apy = aps * 60 * 60 * 24 * 365;
 
-        // console.log("totalStakePrice="+totalStakePrice+",apy="+apy);
+        console.log("totalStakePrice="+totalStakePrice+",apy="+apy);
 
         stakeToken.apy = apy;
 
@@ -450,12 +463,20 @@ Stake = {
         if (totalStakePrice == 0) {
             apyStr = "Infinity %";
         }
+        // "eth/usdt",
+        // "uni/eth",
+        // "hotpot",
+        // "hotpot/eth",
+
+        if(name=="eth/usdt")name="ethusdt";
+        if(name=="uni/eth")name="unieth";
+        if(name=="hotpot/eth")name="hotpoteth";
 
         var apyp = ".poolyield" + name;
         // if (name === "WWT/TRX") {
         //     apyp = ".poolyieldWWTTRX";
         // }
-        // console.log("apy str="+apyStr);
+        console.log("apy str="+apyStr);
         $(apyp).animateNumbers(apyStr);
     }
 }

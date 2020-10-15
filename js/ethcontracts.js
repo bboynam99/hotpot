@@ -22,27 +22,24 @@ var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
     "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
-    "stakepool": "0x65C74F67bF32e633AbeE501E757812513b1E8abd",
     "loan": "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7",
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
 }
 
 var ropstenContracts = {
-    "nft": "0x51aF31f225CC758f0F189fd694c174Fd3439AB6C",
-    "hotpot": "0xEE35F1Aa6F2ea8eEE669671c852D879b17eB8AF8",
-    "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
-    "stakepool": "0x65C74F67bF32e633AbeE501E757812513b1E8abd",
-    "loan": "0xFCD912C39E3eF3b835E1dD55c2c0d7BF4EEEd47e",
-    "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
-    "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
+    "nft": "0xF0B81d9b69F8F31fB12aBE3f65A0b26B3855EA8B",
+    "hotpot": "0x5F5F353DEF50B7F5258c0Ff3eF710c3199859CB8",
+    "gacha": "0x66651d7d171367d1641ddeeab8332FB2773DCF99",
+    "loan": "0x6eFD34051A519C83a34c88eeC3E6dF4C412c00aE",
+    "market": "0x7DCB044D7D8AF2D6ABfB7B1eC497493147E3FECe",
+    "reward": "0x359Ce203647031e0bc9C9135f7CA4Ae1eb26073E",
 }
 
 var ganacheContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
     "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
-    "stakepool": "0x65C74F67bF32e633AbeE501E757812513b1E8abd",
     "loan": "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7",
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
@@ -57,11 +54,11 @@ var mainPool = {
 }
 
 var ropstenPool = {
-    "usdt":"",
-    "eth/usdt":"",
-    "uni/eth":"",
-    "hotpot":"",
-    "hotpot/eth":""
+    "usdt":"0x5Be34889FFEB5a4da4FBF66F5DC33A15A516ff83",
+    "eth/usdt":"0x6d4765f7E143A9d9c14B29936f38b9CaFf966eA5",
+    "uni/eth":"0x22E11d3A47Be9A0c73101Cf0b7EF157b0e92149F",
+    "hotpot":"0x1d766fa76C555c79dB162A738c4782c083642D9E",
+    "hotpot/eth":"0x0A2eF64D457AE65fA81748F6b3F150710a7e3b6e"
 }
 
 var ganachePool = {
@@ -81,11 +78,11 @@ var mainStakeERC = {
 }
 
 var ropstenStakeERC = {
-    "usdt":"",
-    "eth/usdt":"",
-    "uni/eth":"",
+    "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",
+    "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",
+    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",
     "hotpot":"0x5F5F353DEF50B7F5258c0Ff3eF710c3199859CB8",
-    "hotpot/eth":""
+    "hotpot/eth":"0xCdaF6Ec7bFE04A3cEce52436B39BE0A2c2F85aDc"
 }
 
 var ganacheStakeERC = {
