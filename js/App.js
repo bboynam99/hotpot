@@ -423,17 +423,17 @@ Stake = {
         let totalStake = token.poolTotalStake;
         // console.log("totalStake=" + totalStake);
 
-        $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))).toFixedSpecial(4));
+        $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))));
         // pools[name].poolTotalStake = totalStake;
 
         let userStake = token.userStake;
         // console.log("userStake=" + userStake);
-        $('.stakedbalance').text((userStake.div( Math.pow(10, stakeDecimals))).toFixedSpecial(4));
+        $('.stakedbalance').text((userStake.div( Math.pow(10, stakeDecimals))));
 
         $('#stakeToken').text(name + " ");
 
         let earned = token.earned;
-        earned = (earned / Math.pow(10, stakeInfos["hotpot"].decimals)).toFixedSpecial(4);
+        earned = (earned / Math.pow(10, stakeInfos["hotpot"].decimals));
         $('.rewardbalance').text(earned);
     },
     initStakePool: function () {
@@ -582,7 +582,7 @@ function nav(classname) {
     if (classname.indexOf('pool') === 0) {
         $('#singlepool').show();
         currentPagePoolID = classname.slice(4);
-        Stake.initpooldata(currentPagePoolID);
+        // Stake.initpooldata(currentPagePoolID);
         $('main.pool').show();
     } else {
         $('main.' + classname).show();
@@ -593,14 +593,16 @@ function nav(classname) {
         $("#infodiv").hide();
     }
     recoveABottom();
-    let aa = "a" + classname;
-    //border-bottom-color: rgba(255, 255, 255, .25);
-    document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
 
     if (classname == "home") {
         $("#ticketinfo").hide();
     } else {
         $("#ticketinfo").show();
+    }
+    if (classname.indexOf('pool') != 0) {
+        let aa = "a" + classname;
+        //border-bottom-color: rgba(255, 255, 255, .25);
+        document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
     }
 }
 
