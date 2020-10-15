@@ -582,7 +582,7 @@ function nav(classname) {
     if (classname.indexOf('pool') === 0) {
         $('#singlepool').show();
         currentPagePoolID = classname.slice(4);
-        // Stake.initpooldata(currentPagePoolID);
+        Stake.initpooldata(currentPagePoolID);
         $('main.pool').show();
     } else {
         $('main.' + classname).show();
