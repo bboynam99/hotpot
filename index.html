@@ -4,8 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-	<script src="js/jquery.min.js"
-		crossorigin="anonymous"></script>
+    <script src="js/jquery.min.js" crossorigin="anonymous"></script>
 
     <link rel="icon" href="images/hotpoticon.png">
     <meta name="viewport"
@@ -22,13 +21,18 @@
                         data-v-fae5bece=""><span style="color: white;font-size: 50px;">HotPot-Dex</span></div>
                 <div class="content" data-v-fae5bece="">
                     <div data-v-fae5bece="" style="position: relative;">
-                        <a onclick="changelang()" id="changelang" href="#"  class="audit-report" data-v-fae5bece="">EN</a>
+                        <a onclick="changelang()" id="changelang" href="#" class="audit-report"
+                            data-v-fae5bece="">EN</a>
                         <!--v-if-->
                     </div>
-                    <p class="title" data-v-fae5bece="" data-lang="intro0">Build The Most Popular NFT Exchange & Rental</p>
-                    <p class="desc" data-v-fae5bece="" data-lang="intro1">HotPot-Dex is an open source and non-custodial decentralized NFT Exchange. The exchange's currency is 100% mined! No pre-mine, no founder shares, no VC interests.
+                    <p class="title" data-v-fae5bece="" data-lang="intro0">Build The Most Popular NFT Exchange & Rental
                     </p>
-                    <div class="btn" data-v-fae5bece="" ><a style="text-decoration: none;" target="_self" href="home.html?lang=en" id="aopen" data-lang="launch" >Launch App</a></div>
+                    <p class="desc" data-v-fae5bece="" data-lang="intro1">HotPot-Dex is an open source and non-custodial
+                        decentralized NFT Exchange. The exchange's currency is 100% mined! No pre-mine, no founder
+                        shares, no VC interests.
+                    </p>
+                    <div class="btn" data-v-fae5bece=""><a style="text-decoration: none;" target="_self"
+                            href="home.html?lang=en" id="aopen" data-lang="launch">Launch App</a></div>
                     <div class="time-wrapper" data-v-fae5bece="" style="display: none;">
                         <!--v-if--><span class="fuliTime" data-v-fae5bece="">00</span><span class="fuliPoint"
                             data-v-fae5bece="">Hour: </span><span class="fuliTime" data-v-fae5bece="">00</span><span
@@ -43,49 +47,53 @@
 </body>
 <script src="js/jquery.i18n.properties-1.0.9.js"></script>
 <script>
-var language_pack = {
-    now_lang : 0, // 0:ch,1:en
-    loadProperties : function(new_lang){
-        var self = this;
-        var tmp_lang = '';
-        if(new_lang == 0){
-            tmp_lang = 'zh';
-            $('body').removeClass('en').addClass('zh');
-            $("#aopen").attr('href',"home.html?lang=en");
-        }else{
-            tmp_lang = 'en';
-            $('body').removeClass('zh').addClass('en');
-            $("#aopen").attr('href',"home.html?lang=zh");
-        }
-        jQuery.i18n.properties({
-            name: 'strings', 
-            path:'language/', 
-            language: tmp_lang,
-            cache: false,
-            mode:'map',
-            callback: function() {
-                for(var i in $.i18n.map){
-                    $('[data-lang="'+i+'"]').text($.i18n.map[i]);
-                }
-                document.title = $.i18n.map['string_title'];
-            }
-        });
-        self.now_lang = new_lang;
-    }
-}
-$(document).ready(function(){
-    language_pack.loadProperties(0);
-});
+    
 
-function changelang(){
-        var new_lang;
-        if(language_pack.now_lang == 0){
-			new_lang = 1;
-			$("#changelang").text("中");
-        }else{
-			new_lang = 0;
-			$("#changelang").text("EN");
+    var language_pack = {
+        now_lang: 0, // 0:ch,1:en
+        loadProperties: function (new_lang) {
+            var self = this;
+            var tmp_lang = '';
+            if (new_lang == 0) {
+                tmp_lang = 'zh';
+                $('body').removeClass('en').addClass('zh');
+                $("#aopen").attr('href', "home.html?lang=zh");
+            } else {
+                tmp_lang = 'en';
+                $('body').removeClass('zh').addClass('en');
+                $("#aopen").attr('href', "home.html?lang=en");
+            }
+            jQuery.i18n.properties({
+                name: 'strings',
+                path: 'language/',
+                language: tmp_lang,
+                cache: false,
+                mode: 'map',
+                callback: function () {
+                    for (var i in $.i18n.map) {
+                        $('[data-lang="' + i + '"]').text($.i18n.map[i]);
+                    }
+                    document.title = $.i18n.map['string_title'];
+                }
+            });
+            self.now_lang = new_lang;
         }
+    }
+    $(document).ready(function () {
+        var lang = document.cookie;
+        language_pack.loadProperties(lang);
+    });
+
+    function changelang() {
+        var new_lang;
+        if (language_pack.now_lang == 0) {
+            new_lang = 1;
+            $("#changelang").text("中");
+        } else {
+            new_lang = 0;
+            $("#changelang").text("EN");
+        }
+        document.cookie = new_lang;
         language_pack.loadProperties(new_lang);
     }
 </script>

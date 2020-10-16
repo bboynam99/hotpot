@@ -125,6 +125,11 @@ App = {
         return App.initContract();
     },
     initContract: function () {
+        $.getJSON('contracts/StakePool.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            App.contracts.StakePool = web3.eth.contract(data.abi);
+            return App.getStakePools();
+        });
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.HotPot = web3.eth.contract(data.abi);
@@ -161,12 +166,8 @@ App = {
 
             return App.getNFTMarket();
         });
-        $.getJSON('contracts/StakePool.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            App.contracts.StakePool = web3.eth.contract(data.abi);
-            return App.getStakePools();
-        });
-            $.getJSON('contracts/UniV2Pair.json', function (data) {
+
+        $.getJSON('contracts/UniV2Pair.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.UniV2Pair = web3.eth.contract(data.abi);
             return App.getUniV2Pairs();
@@ -468,6 +469,7 @@ Stake = {
     checkTotalStaked:function(){
         var totalPrice = 0;
         for(var i=0;i<allPoolTokens.length;i++){
+            var poolName = allPoolTokens[i];
             var stake = stakeInfos[poolName].poolTotalStake;
             if(stake==0){
                 return;
@@ -546,6 +548,8 @@ Stake = {
         // }
         console.log("apy str=" + apyStr);
         $(apyp).animateNumbers(apyStr);
+
+        $("#divloading").hide();
     }
 }
 

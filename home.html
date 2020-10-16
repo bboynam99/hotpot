@@ -18,11 +18,11 @@
 	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
 	<script src="js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-	<script type="text/javascript" src="dist/dist.js"></script>	
+	<script type="text/javascript" src="dist/dist.js"></script>
 
 	<script type="text/javascript" src="js/bignumber.min.js"></script>
 	<script type="text/javascript" src="js/truffle-contract.js"></script>
-	
+
 	<link href="styles/googleapis.css" rel="stylesheet">
 	<meta name="viewport" content="width=500, initial-scale=1">
 
@@ -105,7 +105,71 @@
 </head>
 
 <style>
+	.spinner {
+		margin: 5px auto;
+		width: 50px;
+		height: 60px;
+		text-align: center;
+		font-size: 10px;
+	}
 
+	.spinner>div {
+		background-color: #67CF22;
+		height: 100%;
+		width: 6px;
+		display: inline-block;
+
+		-webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+		animation: stretchdelay 1.2s infinite ease-in-out;
+	}
+
+	.spinner .rect2 {
+		-webkit-animation-delay: -1.1s;
+		animation-delay: -1.1s;
+	}
+
+	.spinner .rect3 {
+		-webkit-animation-delay: -1.0s;
+		animation-delay: -1.0s;
+	}
+
+	.spinner .rect4 {
+		-webkit-animation-delay: -0.9s;
+		animation-delay: -0.9s;
+	}
+
+	.spinner .rect5 {
+		-webkit-animation-delay: -0.8s;
+		animation-delay: -0.8s;
+	}
+
+	@-webkit-keyframes stretchdelay {
+
+		0%,
+		40%,
+		100% {
+			-webkit-transform: scaleY(0.4)
+		}
+
+		20% {
+			-webkit-transform: scaleY(1.0)
+		}
+	}
+
+	@keyframes stretchdelay {
+
+		0%,
+		40%,
+		100% {
+			transform: scaleY(0.4);
+			-webkit-transform: scaleY(0.4);
+		}
+
+		20% {
+			transform: scaleY(1.0);
+			-webkit-transform: scaleY(1.0);
+		}
+	}
 </style>
 
 <body class="text-center">
@@ -159,7 +223,7 @@
 					<nav class="nav nav-masthead justify-content-center">
 						<a id="ahome" class="nav-link" href="#home" onclick="nav('home')" data-lang="home">HOME</a>
 						<a id="afarms" class="nav-link" href="#farm" onclick="nav('farms')" data-lang="farm">FARM</a>
-						<a id="agacha" class="nav-link" href="#tiket" onclick="nav('gacha')"
+						<a id="agacha" class="nav-link" href="#ticket" onclick="nav('gacha')"
 							data-lang="ticket">GACHA</a>
 						<a id="areward" class="nav-link" href="#bonus" onclick="nav('reward')"
 							data-lang="bonus">BONUS</a>
@@ -181,9 +245,16 @@
 					Fork Sun's token and pool contract and Open sourced.
 				</h3>
 			</div>
-
-			<button onclick="uploadReword()" hidden>Upload Reward</button>
-			<button onclick="test()" hidden>Test </button>
+			<div id="divloading">
+				<div class="spinner">
+					<div class="rect1"></div>
+					<div class="rect2"></div>
+					<div class="rect3"></div>
+					<div class="rect4"></div>
+					<div class="rect5"></div>
+				</div>
+				<div data-lang="loading">链上数据加载中...</div>
+			</div>
 
 			<main role="main" class="inner cover pt-2 home mt-4">
 				<p class="lead"></p>
@@ -294,7 +365,7 @@
 
 
 			<main role="main" class="inner cover gacha" STYLE="DISPLAY:NONE">
-				<div class="card swapcard  web3true">
+				<div class="card swapcard  web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="totalticket">TOTAL TICKET</h6>
 						<H3 class="card-text ">
@@ -302,12 +373,10 @@
 							<span data-lang="ticketdw">TICKET</span>
 						</H3>
 						<p>当前会员卡抽中概率：1/8</p>
-						<p>其中：金色会员卡概率：1/32</p>
-						<p>紫金会员卡概率：1/128</p>
 						<p>（流通10张后概率降低为：1/16）</p>
 					</div>
 				</div>
-				<div class="card swapcard  web3true">
+				<div class="card swapcard  web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
@@ -318,8 +387,7 @@
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="ngacha(10)"
 							class="card-link btn btn-primary btn-lg" data-lang="pull10">十连抽</a>
-						<p style="margin-top: 9%;">抽一次：100HotPot</p>
-						<p>十连抽95折：950HotPot</p>
+
 					</div>
 				</div>
 			</main>
@@ -415,8 +483,8 @@
 							</div>
 							<h6 class="card-subtitle mb-2 text-warning">HotPot/ETH UniV2-LP</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldhotpoteth">---.-%</span></H3>
-							<a href="#poolhotpot/eth" onclick="nav('poolhotpot/eth')" class="card-link btn btn-primary btn-lg"
-								data-lang="farm">
+							<a href="#poolhotpot/eth" onclick="nav('poolhotpot/eth')"
+								class="card-link btn btn-primary btn-lg" data-lang="farm">
 								Farm
 							</a>
 							<a href="https://info.uniswap.org/home" target="_blank"
@@ -488,8 +556,8 @@
 							</div>
 							<h6 class="card-subtitle mb-2 text-warning">ETH/USDT UniV2-LP</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldethusdt">---.-%</span></H3>
-							<a href="#pooleth/usdt" onclick="nav('pooleth/usdt')" class="card-link btn btn-primary btn-lg"
-								data-lang="farm">
+							<a href="#pooleth/usdt" onclick="nav('pooleth/usdt')"
+								class="card-link btn btn-primary btn-lg" data-lang="farm">
 								Farm
 							</a>
 							<a href="https://info.uniswap.org/pair/0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
@@ -624,11 +692,11 @@
 
 	$(document).ready(function () {
 		var search = window.location.search;
-		var lang = getSearchString('lang', search); 
-		if(lang==="en")
-			language_pack.loadProperties(0);
-		else
+		var lang = getSearchString('lang', search);
+		if (lang === "en")
 			language_pack.loadProperties(1);
+		else
+			language_pack.loadProperties(0);
 	});
 
 	function changelang() {
