@@ -2330,15 +2330,15 @@ App = {
             console.log("chainid=" + window.ethereum.chainId);
             var chainId = window.ethereum.chainId;
             // Use the mainnet
-            const network = "mainnet";
+            // const network = "mainnet";
 
             // Specify your own API keys
             // Each is optional, and if you omit it the default
             // API key for that service will be used.
-            const provider = ethers.getDefaultProvider(network, {
-                etherscan: 'IXP277PKS6ZT4DU5RWZ5ACQW5567IW22K6',
-            });
-            ethers.providers = provider;
+            // const provider = ethers.getDefaultProvider(network, {
+            //     etherscan: 'IXP277PKS6ZT4DU5RWZ5ACQW5567IW22K6',
+            // });
+            // ethers.providers = provider;
 
             ETHENV.init(chainId);
         }
@@ -2358,7 +2358,8 @@ App = {
         console.log("current account=" + ethereum.selectedAddress);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
-        return App.initUniSDK();
+        return App.initContract();
+        // return App.initUniSDK();
     },
     initUniSDK: async function () {
         var chain = ChainId.ROPSTEN;
@@ -2416,169 +2417,113 @@ App = {
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.HotPot = web3.eth.contract(data.abi);
-            // var TutorialTokenArtifact = data;
-            // App.contracts.HotPot = TruffleContract(TutorialTokenArtifact);
-
-            // // Set the provider for our contract.
-            // App.contracts.HotPot.setProvider(App.web3Provider);
-            // erc20Contract = App.contracts.HotPot;
-            // App.contracts.HotPot.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
+            erc20Contract = web3.eth.contract(data.abi);
             return App.getBalances();
         });
 
         $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-
-// creation of contract object
-        App.contracts.NFTHotPot = web3.eth.contract(data.abi);
-
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            // var TutorialTokenArtifact = data;
-            // App.contracts.NFTHotPot = TruffleContract(TutorialTokenArtifact);
-
-            // Set the provider for our contract.
-            // App.contracts.NFTHotPot.setProvider(App.web3Provider);
-            // App.contracts.NFTHotPot.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
+            App.contracts.NFTHotPot = web3.eth.contract(data.abi);
             return App.getNFTBalances();
         });
 
         $.getJSON('contracts/Reward.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.Reward = web3.eth.contract(data.abi);
-            // var TutorialTokenArtifact = data;
-            // App.contracts.Reward = TruffleContract(TutorialTokenArtifact);
-
-            // // Set the provider for our contract.
-            // App.contracts.Reward.setProvider(App.web3Provider);
-            // App.contracts.Reward.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
             return App.getReward();
         });
 
         $.getJSON('contracts/Gacha.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.Gacha = web3.eth.contract(data.abi);
-            // var TutorialTokenArtifact = data;
-            // App.contracts.Gacha = TruffleContract(TutorialTokenArtifact);
-
-            // // Set the provider for our contract.
-            // App.contracts.Gacha.setProvider(App.web3Provider);
-            // App.contracts.Gacha.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
             return App.getGacha();
         });
 
         $.getJSON('contracts/Loan.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.Loan = web3.eth.contract(data.abi);
-            // var TutorialTokenArtifact = data;
-            // App.contracts.Loan = TruffleContract(TutorialTokenArtifact);
-
-            // // Set the provider for our contract.
-            // App.contracts.Loan.setProvider(App.web3Provider);
-            // App.contracts.Loan.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
             return App.getLoan();
         });
 
         $.getJSON('contracts/NFTMarket.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.NFTMarket = TruffleContract(TutorialTokenArtifact);
+            App.contracts.NFTMarket = web3.eth.contract(data.abi);
 
-            // Set the provider for our contract.
-            App.contracts.NFTMarket.setProvider(App.web3Provider);
-            // App.contracts.NFTMarket.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
             return App.getNFTMarket();
         });
         $.getJSON('contracts/StakePool.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.StakePool = web3.eth.contract(data.abi);
-            // var TutorialTokenArtifact = data;
-            // App.contracts.StakePool = TruffleContract(TutorialTokenArtifact);
-
-            // // Set the provider for our contract.
-            // App.contracts.StakePool.setProvider(App.web3Provider);
-            // App.contracts.StakePool.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
             return App.getStakePools();
         });
+            $.getJSON('contracts/UniV2Pair.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            App.contracts.UniV2Pair = web3.eth.contract(data.abi);
+            return App.getUniV2Pairs();
+        });
 
-        // $.getJSON('contracts/UniV2Pair.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     var TutorialTokenArtifact = data;
-        //     App.contracts.UniV2Pair = TruffleContract(TutorialTokenArtifact);
-
-        //     // Set the provider for our contract.
-        //     App.contracts.UniV2Pair.setProvider(App.web3Provider);
-        //     // App.contracts.UniV2Pair.numberFormat = "BigNumber";
-        //     // Use our contract to retieve and mark the adopted pets.
-        //     return App.getUniV2Pairs();
-        // });
     },
-    // getUniV2Pairs: function () {
-    //     for (var i = 0; i < allPoolTokens.length; i++) {
-    //         var token = allPoolTokens[i];
-    //         if (token === "usdt" || token === "hotpot") {
-    //             // getUniV2Token(token);
-    //         } else {
-    //             // App.getUniV2Pair(token);
-    //         }
-    //         // App.getStakeERCInfo(token);
-    //     }
-    // },
+    getUniV2Pairs: function () {
+        for (var i = 0; i < allPoolTokens.length; i++) {
+            var token = allPoolTokens[i];
+            console.log("getUniV2Pairs "+token);
+            if (token === "usdt" || token === "hotpot") {
+                // getUniV2Token(token);
+            } else {
+                App.getUniV2Pair(token);
+            }
+            App.getStakeERCInfo(token);
+        }
+    },
     getStakeERCInfo: function (token) {
-        erc20Contract.at(stakeERCAddress[token])
-            .then(function (instance) {
-                stakeERCContract[token] = instance;
-                return instance.balanceOf(App.defaultAccount);
-            })
-            .then(function (result) {
-                stakeInfos[token].userBalance = result;
-                return stakeERCContract[token].decimals();
-            })
-            .then(function (result) {
+        if(stakeERCAddress[token]==null || stakeERCAddress[token]==""){
+            return;
+        }
+        stakeERCContract[token] = erc20Contract.at(stakeERCAddress[token]);
+        console.log("getStakeERCInfo token="+token);
+        stakeERCContract[token].balanceOf(App.defaultAccount,function(e,result){
+            stakeInfos[token].userBalance = result;
+            console.log("getStakeERCInfo balance="+result+",name="+token);
+            stakeERCContract[token].decimals(function(e,result){
                 stakeInfos[token].decimals = result;
-                return stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token]);
-            })
-            .then(function (result) {
-                stakeInfos[token].allowance = result;
+                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token],function(e,result){
+                    console.log("getStakeERCInfo allowance="+result+",name="+token);
+                    stakeInfos[token].allowance = result;
+                });
             });
+        });
     },
     getUniV2Pair: function (pair) {
         console.log("getUniV2Pair=" + pair);
         univ2PairInfo[pair] = createPairInfo(pair);
-        App.contracts.UniV2Pair.at(stakeERCAddress[pair])
-            .then(function (instance) {
-                univ2PairInfo[pair].contractInstance = instance;
-                return univ2PairInfo[pair].contractInstance.decimals();
-            })
-            .then(function (result) {
-                univ2PairInfo[pair].decimals = result;
-                return univ2PairInfo[pair].contractInstance.getReserves();
-            })
-            .then(function (result) {
-                // console.log("price="+result.c[0]);
+        if(stakeERCAddress[pair]==null ||stakeERCAddress[pair]==""){
+            return;
+        }
+        univ2PairInfo[pair].contractInstance = App.contracts.UniV2Pair.at(stakeERCAddress[pair]);
+
+        univ2PairInfo[pair].contractInstance.decimals(function(e,result){
+            console.log("getUniV2Pair decimals="+result+",name="+pair);
+            univ2PairInfo[pair].decimals = result;
+            univ2PairInfo[pair].contractInstance.getReserves(function(e,result){
+                console.log("getUniV2Pair getReserves="+result+",name="+pair);
                 var reserve0 = result[0];
                 var reserve1 = result[1];
 
                 univ2PairInfo[pair].reserve0 = reserve0;
                 univ2PairInfo[pair].reserve1 = reserve1;
 
-                return univ2PairInfo[pair].contractInstance.totalSupply();
-            })
-            .then(function (result) {
-                univ2PairInfo[pair].totalSupply = result;
-                if (pair === "eth/usdt" && !testFlag) {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
-                } else {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
-                }
-                console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
-                App.checkAllUni();
+                univ2PairInfo[pair].contractInstance.totalSupply(function(e,result){
+                    console.log("getUniV2Pair totalSupply="+result+",name="+pair);
+                    univ2PairInfo[pair].totalSupply = result;
+                    if (pair === "eth/usdt" && !testFlag) {
+                        univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
+                    } else {
+                        univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
+                    }
+                    console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
+                    App.checkAllUni();
+                });
             });
+        });
     },
     checkAllUni: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -2590,9 +2535,9 @@ App = {
             }
         }
         App.calTokenPrice();
-
     },
     calTokenPrice: function () {
+        console.log("calTokenPrice");
         var ethusdt = univ2PairInfo["eth/usdt"];
         var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
         var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
@@ -2620,7 +2565,6 @@ App = {
             console.log("stake token price name:" + name + ",price=" + stakeInfos[name].price);
         }
         Stake.initStakePool();
-        Stake.getAllPoolBalance();
     },
     getNFTMarket: function () {
 
@@ -2639,16 +2583,7 @@ App = {
             var poolAddress = stakePoolAddress[poolToken];
             var lpAddress = stakeERCAddress[poolToken];
             stakeInfos[poolToken] = createToken(poolToken, lpAddress, poolAddress);
-
-            //lp  --- uni/eth usdt/eth hotpot/eth
-            //none lp --- usdt hotpot
-
-            //1.get info of lp token
-
-            //2.get info of lp stake pool
-
         }
-
     },
 
     getBalances: function () {
@@ -2672,30 +2607,6 @@ App = {
             Stake.getAllPoolBalance();
         });
 
-        
-        // App.contracts.HotPot.at(contractAddress.hotpot)
-        //     .then(function (instance) {
-        //         console.log("hotpot instance："+getTime())
-        //         App.contracts.HotPot = instance;
-        //         balanceOfHotpot['total'] = 1000000*10**18;
-        //         return App.contracts.HotPot.balanceOf(App.defaultAccount);
-        //     }).then(function (result) {
-        //         balance = result;
-        //         console.log("balance=" + balance+":"+getTime());
-        //         $('#mybalance').text(balance.div( Math.pow(10, 18)));
-        //         return App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha);
-        //     }).then(function (result) {
-        //         var allowance = result.c[0];
-        //         console.log("allowance=" + allowance+":"+getTime());
-        //         if (allowance == 0) {
-
-        //         } else {
-        //             $("#pull1").show();
-        //             $("#pull10").show();
-        //             $("#approve").hide();
-        //         }
-        //         return App.getNFTBalances();
-        //     });
     },
     getNFTBalances: function () {
         console.log("getNFTBalances"+":"+getTime());
@@ -2764,6 +2675,7 @@ Stake = {
         }
     },
     getSinglePoolBalance: function (name) {
+        console.log("getSinglePoolBalance name="+name);
         var poolAddress = stakePoolAddress[name];
         App.contracts.HotPot.balanceOf(poolAddress,function(e,result){
                 console.log("pool balance name=" + name + ",balance=" + result);
@@ -2778,7 +2690,6 @@ Stake = {
         var total = balanceOfHotpot['total'];
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            // var poolAddress = stakePoolAddress[token];
             total = total.minus(balanceOfHotpot[token]);
         }
         total = total.div(Math.pow(10, 18));
@@ -2846,36 +2757,23 @@ Stake = {
     initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
         console.log("poolname=" + poolName);
-        App.contracts.StakePool.at(poolAddress)
-            .then(function (instance) {
-                console.log("totalSupply:" + poolName);
-                stakeInfos[poolName].instance = instance;
-                return instance.totalSupply();
-            })
-            .then(function (result) {
-                console.log("balanceOf:" + poolName);
-                stakeInfos[poolName].poolTotalStake = result;
-                return stakeInfos[poolName].instance.balanceOf(App.defaultAccount);
-            })
-            .then(function (result) {
-                console.log("earned:" + poolName);
+        stakeInfos[poolName].instance = App.contracts.StakePool.at(poolAddress);
+        stakeInfos[poolName].instance.totalSupply(function(e,result){
+            console.log("totalSupply pool="+poolName+",totalSupply:" + result);
+            stakeInfos[poolName].poolTotalStake = result;
+            stakeInfos[poolName].instance.balanceOf(App.defaultAccount,function(e,result){
+                console.log("totalSupply pool="+poolName+",balanceOf:" + result);
                 stakeInfos[poolName].userStake = result;
-                return stakeInfos[poolName].instance.earned(App.defaultAccount);
-            })
-            .then(function (result) {
-                console.log("rewardRate:" + poolName);
-                stakeInfos[poolName].userEarn = result;
-                return stakeInfos[poolName].instance.rewardRate();
-            })
-            .then(function (result) {
-                console.log("rewardRate2:" + poolName);
-                stakeInfos[poolName].rewardRate = result;
-                // return stakeInfos[poolName].instance.decimals();
-            })
-            .then(function (result) {
-                // stakeInfos[poolName].decimals = result;
-                Stake.updateAPY(poolName);
+                stakeInfos[poolName].instance.earned(App.defaultAccount,function(e,result){
+                    stakeInfos[poolName].userEarn = result;
+                    stakeInfos[poolName].instance.rewardRate(function(e,result){
+                        console.log("totalSupply pool="+poolName+",rewardRate:" + result);
+                        stakeInfos[poolName].rewardRate = result;
+                        Stake.updateAPY(poolName);
+                    });
+                });
             });
+        });
     },
     updateAPY: function (name) {
         console.log("updateapy " + name);
