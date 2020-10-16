@@ -767,6 +767,9 @@ function recoveABottom() {
     document.getElementById("ame").style.borderBottomColor = "transparent";
 }
 
+window.nav = (classname) =>{
+    nav(classname);
+}
 
 function nav(classname) {
     hidepages();
