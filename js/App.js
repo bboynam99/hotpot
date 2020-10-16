@@ -1,12 +1,19 @@
 const UNISWAP = require('@uniswap/sdk')
+const Fetcher = UNISWAP.Fetcher;
+const ChainId = UNISWAP.ChainId;
+const Token = UNISWAP.Token;
+const Route = UNISWAP.Route;
+const WETH = UNISWAP.WETH;
+const ethers = require('ethers');
 
 App = {
     web3Provider: null,
     defaultAccount: null,
     contracts: {},
-    erc20Contract:null,
+    erc20Contract: null,
     init: function () {
-        console.log(`The chainId of mainnet is ${UNISWAP.ChainId.MAINNET}.`)
+        console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
+
         return App.initWeb3();
     },
 
@@ -33,12 +40,23 @@ App = {
             });
             console.log("chainid=" + window.ethereum.chainId);
             var chainId = window.ethereum.chainId;
-            setChainId(chainId);
+            // Use the mainnet
+            const network = "mainnet";
+
+            // Specify your own API keys
+            // Each is optional, and if you omit it the default
+            // API key for that service will be used.
+            const provider = ethers.getDefaultProvider(network, {
+                etherscan: 'IXP277PKS6ZT4DU5RWZ5ACQW5567IW22K6',
+            });
+            ethers.providers = provider;
+
+            ETHENV.init(chainId);
         }
         return App.initWallet();
     },
-
     initWallet: async function () {
+        console.log("initWallet");
         if (web3 != null) {
             $('body').addClass('web3');
         }
@@ -51,30 +69,86 @@ App = {
         console.log("current account=" + ethereum.selectedAddress);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
+        return App.initUniSDK();
+    },
+    initUniSDK: async function () {
+        var chain = ChainId.ROPSTEN;
+        var chainId = ETHENV.chainId;
+        if (chainId === "0x1") {
+            chain = ChainId.MAINNET;
+        } else if (chainId === "0x3") {
+            chain = ChainId.ROPSTEN;
+        }
+        else if (chainId === "0x4") {
+            chain = ChainId.RINKEBY;
+        } else if (chainId === "0x29a") {
+        }
+        console.log("dai start" + (new Date()).getTime());
+        for (var i = 0; i < initToken.length; i++) {
+            var name = initToken[i];
+            var t = knownTokens[name];
+            if (t.address == null || t.address == "") {
+                continue;
+            }
+            const token = new Token(chain, t.address, t.decimals);
+
+            // note that you may want/need to handle this async code differently,
+            // for example if top-level await is not an option
+            const pair = await Fetcher.fetchPairData(token, WETH[token.chainId])
+
+            const route = new Route([pair], WETH[token.chainId])
+
+            const route2 = new Route([pair], token);
+            // console.log("name="+name);
+            // console.log(route.midPrice.toSignificant(6)+":"+ (new Date()).getTime()) // 201.306
+            // console.log(route2.midPrice.toSignificant(6)+":"+ (new Date()).getTime()) // 201.306
+            if (name === 'usdt') {
+                ETHENV.ethPrice = route.midPrice;
+                console.log("eth price=" + ETHENV.ethPrice.toSignificant(6));
+            }
+            t.price = route2.midPrice;
+        }
+
+        for (var i = 0; i < initToken.length; i++) {
+            var name = initToken[i];
+            var t = knownTokens[name];
+            if (t.price == 0) {
+                continue;
+            }
+            t.price = t.price.multiply(ETHENV.ethPrice);
+            console.log("name=" + name + ",price=" + t.price.toSignificant(6) + "," + (new Date()).getTime());
+
+            var s = t.price.scalar.numerator;
+            console.log("s="+s);
+        }
         return App.initContract();
     },
-
     initContract: function () {
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.HotPot = TruffleContract(TutorialTokenArtifact);
+            App.contracts.HotPot = web3.eth.contract(data.abi);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.HotPot = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.HotPot.setProvider(App.web3Provider);
-            erc20Contract =  App.contracts.HotPot;
+            // // Set the provider for our contract.
+            // App.contracts.HotPot.setProvider(App.web3Provider);
+            // erc20Contract = App.contracts.HotPot;
             // App.contracts.HotPot.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getBalances();
         });
 
         $.getJSON('contracts/NFTokenHotPot.json', function (data) {
+
+// creation of contract object
+        App.contracts.NFTHotPot = web3.eth.contract(data.abi);
+
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.NFTHotPot = TruffleContract(TutorialTokenArtifact);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.NFTHotPot = TruffleContract(TutorialTokenArtifact);
 
             // Set the provider for our contract.
-            App.contracts.NFTHotPot.setProvider(App.web3Provider);
+            // App.contracts.NFTHotPot.setProvider(App.web3Provider);
             // App.contracts.NFTHotPot.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getNFTBalances();
@@ -82,11 +156,12 @@ App = {
 
         $.getJSON('contracts/Reward.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.Reward = TruffleContract(TutorialTokenArtifact);
+            App.contracts.Reward = web3.eth.contract(data.abi);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.Reward = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.Reward.setProvider(App.web3Provider);
+            // // Set the provider for our contract.
+            // App.contracts.Reward.setProvider(App.web3Provider);
             // App.contracts.Reward.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getReward();
@@ -94,11 +169,12 @@ App = {
 
         $.getJSON('contracts/Gacha.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.Gacha = TruffleContract(TutorialTokenArtifact);
+            App.contracts.Gacha = web3.eth.contract(data.abi);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.Gacha = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.Gacha.setProvider(App.web3Provider);
+            // // Set the provider for our contract.
+            // App.contracts.Gacha.setProvider(App.web3Provider);
             // App.contracts.Gacha.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getGacha();
@@ -106,11 +182,12 @@ App = {
 
         $.getJSON('contracts/Loan.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.Loan = TruffleContract(TutorialTokenArtifact);
+            App.contracts.Loan = web3.eth.contract(data.abi);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.Loan = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.Loan.setProvider(App.web3Provider);
+            // // Set the provider for our contract.
+            // App.contracts.Loan.setProvider(App.web3Provider);
             // App.contracts.Loan.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getLoan();
@@ -129,39 +206,40 @@ App = {
         });
         $.getJSON('contracts/StakePool.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.StakePool = TruffleContract(TutorialTokenArtifact);
+            App.contracts.StakePool = web3.eth.contract(data.abi);
+            // var TutorialTokenArtifact = data;
+            // App.contracts.StakePool = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.StakePool.setProvider(App.web3Provider);
+            // // Set the provider for our contract.
+            // App.contracts.StakePool.setProvider(App.web3Provider);
             // App.contracts.StakePool.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
             return App.getStakePools();
         });
 
-        $.getJSON('contracts/UniV2Pair.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.UniV2Pair = TruffleContract(TutorialTokenArtifact);
+        // $.getJSON('contracts/UniV2Pair.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     var TutorialTokenArtifact = data;
+        //     App.contracts.UniV2Pair = TruffleContract(TutorialTokenArtifact);
 
-            // Set the provider for our contract.
-            App.contracts.UniV2Pair.setProvider(App.web3Provider);
-            // App.contracts.UniV2Pair.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
-            return App.getUniV2Pairs();
-        });
+        //     // Set the provider for our contract.
+        //     App.contracts.UniV2Pair.setProvider(App.web3Provider);
+        //     // App.contracts.UniV2Pair.numberFormat = "BigNumber";
+        //     // Use our contract to retieve and mark the adopted pets.
+        //     return App.getUniV2Pairs();
+        // });
     },
-    getUniV2Pairs: function () {
-        for (var i = 0; i < allPoolTokens.length; i++) {
-            var token = allPoolTokens[i];
-            if (token === "usdt" || token === "hotpot") {
-                // getUniV2Token(token);
-            } else {
-                // App.getUniV2Pair(token);
-            }
-            // App.getStakeERCInfo(token);
-        }
-    },
+    // getUniV2Pairs: function () {
+    //     for (var i = 0; i < allPoolTokens.length; i++) {
+    //         var token = allPoolTokens[i];
+    //         if (token === "usdt" || token === "hotpot") {
+    //             // getUniV2Token(token);
+    //         } else {
+    //             // App.getUniV2Pair(token);
+    //         }
+    //         // App.getStakeERCInfo(token);
+    //     }
+    // },
     getStakeERCInfo: function (token) {
         erc20Contract.at(stakeERCAddress[token])
             .then(function (instance) {
@@ -181,14 +259,14 @@ App = {
             });
     },
     getUniV2Pair: function (pair) {
-        console.log("getUniV2Pair="+pair);
+        console.log("getUniV2Pair=" + pair);
         univ2PairInfo[pair] = createPairInfo(pair);
         App.contracts.UniV2Pair.at(stakeERCAddress[pair])
             .then(function (instance) {
                 univ2PairInfo[pair].contractInstance = instance;
                 return univ2PairInfo[pair].contractInstance.decimals();
             })
-            .then(function(result){
+            .then(function (result) {
                 univ2PairInfo[pair].decimals = result;
                 return univ2PairInfo[pair].contractInstance.getReserves();
             })
@@ -205,9 +283,9 @@ App = {
             .then(function (result) {
                 univ2PairInfo[pair].totalSupply = result;
                 if (pair === "eth/usdt" && !testFlag) {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10,18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10,univ2PairInfo[pair].decimals)));
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
                 } else {
-                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10,18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10,univ2PairInfo[pair].decimals)));
+                    univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
                 }
                 console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
                 App.checkAllUni();
@@ -223,25 +301,25 @@ App = {
             }
         }
         App.calTokenPrice();
-        
+
     },
     calTokenPrice: function () {
         var ethusdt = univ2PairInfo["eth/usdt"];
-        var vEth = ethusdt.reserve0.div(Math.pow(10,18));
-        var vUsdt = ethusdt.reserve1.div(Math.pow(10,6));
-        if(testFlag){
-            vEth = ethusdt.reserve1.div(Math.pow(10,18));
-            vUsdt = ethusdt.reserve0.div(Math.pow(10,6));
+        var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
+        var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
+        if (testFlag) {
+            vEth = ethusdt.reserve1.div(Math.pow(10, 18));
+            vUsdt = ethusdt.reserve0.div(Math.pow(10, 6));
         }
 
         var priceEth = vUsdt.div(vEth);
 
         var hotpoteth = univ2PairInfo["hotpot/eth"];
-        var vHot = hotpoteth.reserve0.div(Math.pow(10,18));
-        var vE = hotpoteth.reserve1.div(Math.pow(10,18));
+        var vHot = hotpoteth.reserve0.div(Math.pow(10, 18));
+        var vE = hotpoteth.reserve1.div(Math.pow(10, 18));
 
         var priceHot = vE.div(vHot).times(priceEth);
-        console.log("eth price="+priceEth+",hot price="+priceHot);
+        console.log("eth price=" + priceEth + ",hot price=" + priceHot);
         //usdt
         stakeInfos["usdt"].price = 1;
         stakeInfos["hotpot"].price = priceHot;
@@ -250,7 +328,7 @@ App = {
             if (name != "usdt" && name != "hotpot") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
-            console.log("stake token price name:"+name+",price="+stakeInfos[name].price);
+            console.log("stake token price name:" + name + ",price=" + stakeInfos[name].price);
         }
         Stake.initStakePool();
         Stake.getAllPoolBalance();
@@ -281,35 +359,19 @@ App = {
             //2.get info of lp stake pool
 
         }
-        
+
     },
 
     getBalances: function () {
-        console.log('Getting balances...');
+        console.log('Getting balances...'+getTime());
+        App.contracts.HotPot = App.contracts.HotPot.at(contractAddress.hotpot);
 
-        App.contracts.HotPot.at(contractAddress.hotpot)
-            .then(function (instance) {
-                App.contracts.HotPot = instance;
-                console.log("get HotPot");
-                return instance.totalSupply();
-            })
-            .then(function(result){
-                console.log("total supply="+result);
-                balanceOfHotpot['total'] = result;
-                return App.contracts.HotPot.decimals();
-            })
-            .then(function (result) {
-                var decimals = result.c[0];
-                console.log("decimals=" + decimals);
-                return App.contracts.HotPot.balanceOf(App.defaultAccount);
-            }).then(function (result) {
-                balance = result.c[0];
-                console.log("balance=" + balance);
-                $('.balance').text((balance / Math.pow(10, 18)).toFixedSpecial(2) + ' HotPot');
-                return App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha);
-            }).then(function (result) {
+        // call constant function
+        App.contracts.HotPot.balanceOf(App.defaultAccount,function(e,result){
+            balanceOfHotpot['total'] = new BigNumber(1000000*10**18);
+            $('#mybalance').text(result.div( Math.pow(10, 18)));
+            App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha,function(e,result){
                 var allowance = result.c[0];
-                console.log("allowance=" + allowance);
                 if (allowance == 0) {
 
                 } else {
@@ -318,75 +380,120 @@ App = {
                     $("#approve").hide();
                 }
             });
+            Stake.getAllPoolBalance();
+        });
+
+        
+        // App.contracts.HotPot.at(contractAddress.hotpot)
+        //     .then(function (instance) {
+        //         console.log("hotpot instance："+getTime())
+        //         App.contracts.HotPot = instance;
+        //         balanceOfHotpot['total'] = 1000000*10**18;
+        //         return App.contracts.HotPot.balanceOf(App.defaultAccount);
+        //     }).then(function (result) {
+        //         balance = result;
+        //         console.log("balance=" + balance+":"+getTime());
+        //         $('#mybalance').text(balance.div( Math.pow(10, 18)));
+        //         return App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha);
+        //     }).then(function (result) {
+        //         var allowance = result.c[0];
+        //         console.log("allowance=" + allowance+":"+getTime());
+        //         if (allowance == 0) {
+
+        //         } else {
+        //             $("#pull1").show();
+        //             $("#pull10").show();
+        //             $("#approve").hide();
+        //         }
+        //         return App.getNFTBalances();
+        //     });
     },
     getNFTBalances: function () {
-        console.log("getNFTBalances");
-        App.contracts.NFTHotPot.at(contractAddress.nft)
-            .then(function (instance) {
-                App.contracts.NFTHotPot = instance;
-                return instance.balanceOf(App.defaultAccount);
-            })
-            .then(function (result) {
-                var balance = result.c[0];
-                console.log("nft balance=" + balance);
-                $(".ticketbalance").text(balance);
-                return App.contracts.NFTHotPot.totalSupply();
-            })
-            .then(function (result) {
-                var total = result.c[0];
-                console.log("nft total=" + total);
-                $(".ticketbalance").text(total);
-                return App.contracts.NFTHotPot.balanceOf(App.defaultAccount);
-            }).then(function (result) {
-                var b = result.c[0];
-                console.log("myticketbalance=" + b);
-                $(".myticketbalance").text(b);
-            });
+        console.log("getNFTBalances"+":"+getTime());
+        // initiate contract for an address
+        var myContractInstance = App.contracts.NFTHotPot.at(contractAddress.nft);
+
+        // call constant function
+        myContractInstance.balanceOf(App.defaultAccount,function(error,result){
+            console.log("getNFTBalances balanceOf="+result+":"+getTime()) // '0x25434534534'
+            $(".myticketbalance").text(result);
+        });
+
+
+        // App.contracts.NFTHotPot.at(contractAddress.nft)
+        //     .then(function (instance) {
+        //         App.contracts.NFTHotPot = instance;
+        //         return instance.balanceOf(App.defaultAccount);
+        //     }).then(function (result) {
+        //         var b = result;
+        //         console.log("myticketbalance=" + b+":"+getTime());
+        //         $(".myticketbalance").text(b);
+        //     });
+            // .then(function (result) {
+            //     var balance = result.c[0];
+            //     console.log("nft balance=" + balance);
+            //     $(".ticketbalance").text(balance);
+            //     return App.contracts.NFTHotPot.totalSupply();
+            // })
+            // .then(function (result) {
+            //     var total = result.c[0];
+            //     console.log("nft total=" + total);
+            //     $(".ticketbalance").text(total);
+            //     return App.contracts.NFTHotPot.balanceOf(App.defaultAccount);
+            // }).then(function (result) {
+            //     var b = result.c[0];
+            //     console.log("myticketbalance=" + b);
+            //     $(".myticketbalance").text(b);
+            // });
     },
     getReward: function () {
-        console.log("getReward");
-        App.contracts.Reward.at(contractAddress.reward)
-            .then(function (instance) {
-                App.contracts.Reward = instance;
-                return instance.getBalance();
-            })
-            .then(function (result) {
-                var b = result.c[0];
-                console.log("balance=" + b);
-                $(".totalreward").text((b / Math.pow(10, 18)).toFixedSpecial(2) + ' HotPot');
-            });
+        console.log("getReward"+":"+getTime());
+        var myContractInstance = App.contracts.Reward.at(contractAddress.reward);
+
+        // call constant function
+        myContractInstance.getBalance(function(error,result){
+            console.log("reward balanceOf="+result+":"+getTime()) // '0x25434534534'
+        });
+        // App.contracts.Reward.at(contractAddress.reward)
+        //     .then(function (instance) {
+        //         App.contracts.Reward = instance;
+        //         return instance.getBalance();
+        //     })
+        //     .then(function (result) {
+        //         var b = result.c[0];
+        //         console.log("reward balance=" + b+":"+getTime());
+        //         $(".totalreward").text((b / Math.pow(10, 18)).toFixedSpecial(2) + ' HotPot');
+        //     });
     },
 };
-var count=0;
+var count = 0;
 Stake = {
-
-    getAllPoolBalance:function(){
-        for(var i=0;i<allPoolTokens.length;i++){
+    getAllPoolBalance: function () {
+        for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             Stake.getSinglePoolBalance(token);
         }
     },
-    getSinglePoolBalance:function(name){
+    getSinglePoolBalance: function (name) {
         var poolAddress = stakePoolAddress[name];
-        App.contracts.HotPot.balanceOf(poolAddress)
-            .then(function(result){
-                console.log("pool balance name="+name+",balance="+result);
+        App.contracts.HotPot.balanceOf(poolAddress,function(e,result){
+                console.log("pool balance name=" + name + ",balance=" + result);
                 balanceOfHotpot[name] = result;
                 count++;
-                if(count==5){
+                if (count == 5) {
                     Stake.calTotalCirculation();
-                }    
-            });
+                }
+        });
     },
-    calTotalCirculation:function(){
+    calTotalCirculation: function () {
         var total = balanceOfHotpot['total'];
-        for(var i=0;i<allPoolTokens.length;i++){
+        for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             // var poolAddress = stakePoolAddress[token];
             total = total.minus(balanceOfHotpot[token]);
         }
-        total = total.div(Math.pow(10,18));
-        console.log("calTotalCirculation="+total);
+        total = total.div(Math.pow(10, 18));
+        console.log("calTotalCirculation=" + total);
         $("#totalcir").text(total);
     },
 
@@ -409,7 +516,7 @@ Stake = {
                 return instance.createPair(stakeERCAddress['hotpot'], ethAddress)
             })
             .then(function (result) {
-                console.log("createPair="+result.c[0]);
+                console.log("createPair=" + result.c[0]);
                 // stakeERCAddress['hotpot/eth'] = result.c[0];
             });
     },
@@ -432,7 +539,7 @@ Stake = {
 
         let userStake = token.userStake;
         // console.log("userStake=" + userStake);
-        $('.stakedbalance').text((userStake.div( Math.pow(10, stakeDecimals))));
+        $('.stakedbalance').text((userStake.div(Math.pow(10, stakeDecimals))));
 
         $('#stakeToken').text(name + " ");
 
@@ -447,32 +554,32 @@ Stake = {
             Stake.initSinglePool(poolName);
         }
     },
-    initSinglePool:function(poolName){
+    initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
-        console.log("poolname="+poolName);
+        console.log("poolname=" + poolName);
         App.contracts.StakePool.at(poolAddress)
             .then(function (instance) {
-                console.log("totalSupply:"+poolName);
+                console.log("totalSupply:" + poolName);
                 stakeInfos[poolName].instance = instance;
                 return instance.totalSupply();
             })
             .then(function (result) {
-                console.log("balanceOf:"+poolName);
+                console.log("balanceOf:" + poolName);
                 stakeInfos[poolName].poolTotalStake = result;
                 return stakeInfos[poolName].instance.balanceOf(App.defaultAccount);
             })
             .then(function (result) {
-                console.log("earned:"+poolName);
+                console.log("earned:" + poolName);
                 stakeInfos[poolName].userStake = result;
                 return stakeInfos[poolName].instance.earned(App.defaultAccount);
             })
             .then(function (result) {
-                console.log("rewardRate:"+poolName);
+                console.log("rewardRate:" + poolName);
                 stakeInfos[poolName].userEarn = result;
                 return stakeInfos[poolName].instance.rewardRate();
             })
-            .then(function(result){
-                console.log("rewardRate2:"+poolName);
+            .then(function (result) {
+                console.log("rewardRate2:" + poolName);
                 stakeInfos[poolName].rewardRate = result;
                 // return stakeInfos[poolName].instance.decimals();
             })
@@ -485,7 +592,7 @@ Stake = {
         console.log("updateapy " + name);
         var hotpotDecimals = knownTokens["hotpot"].decimals;
         //池子每s产出wwt数量
-        let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10,hotpotDecimals));
+        let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10, hotpotDecimals));
         rewardRate = rewardRate.div(Math.pow(10, hotpotDecimals));
 
         //每s能挖出的wwt总价格
@@ -495,7 +602,7 @@ Stake = {
         let stakeToken = stakeInfos[name];
         let totalStake = stakeToken.poolTotalStake;
 
-        let totalStakePrice = totalStake .div( Math.pow(10, stakeToken.decimals)) .mul( stakeToken.price);
+        let totalStakePrice = totalStake.div(Math.pow(10, stakeToken.decimals)).mul(stakeToken.price);
 
         console.log("updateapy token price=" + stakeToken.price);
 
@@ -506,7 +613,7 @@ Stake = {
 
         let apy = aps * 60 * 60 * 24 * 365;
 
-        console.log("totalStakePrice="+totalStakePrice+",apy="+apy);
+        console.log("totalStakePrice=" + totalStakePrice + ",apy=" + apy);
 
         stakeToken.apy = apy;
 
@@ -519,15 +626,15 @@ Stake = {
         // "hotpot",
         // "hotpot/eth",
 
-        if(name=="eth/usdt")name="ethusdt";
-        if(name=="uni/eth")name="unieth";
-        if(name=="hotpot/eth")name="hotpoteth";
+        if (name == "eth/usdt") name = "ethusdt";
+        if (name == "uni/eth") name = "unieth";
+        if (name == "hotpot/eth") name = "hotpoteth";
 
         var apyp = ".poolyield" + name;
         // if (name === "WWT/TRX") {
         //     apyp = ".poolyieldWWTTRX";
         // }
-        console.log("apy str="+apyStr);
+        console.log("apy str=" + apyStr);
         $(apyp).animateNumbers(apyStr);
     }
 }
@@ -578,7 +685,7 @@ function recoveABottom() {
     document.getElementById("ame").style.borderBottomColor = "transparent";
 }
 
-window.nav = (classname) =>{
+window.nav = (classname) => {
     nav(classname);
 }
 
@@ -633,21 +740,10 @@ Number.prototype.toFixedSpecial = function (n) {
 
 $(function () {
     $(window).load(function () {
-        initTokens();
         App.init();
     });
 });
 
-function initTokens(){
-    knownTokens['usdt']=createTokenInfo('usdt');
-    knownTokens['usdt'].decimals = 6;
-
-    knownTokens['eth']=createTokenInfo('eth');
-    knownTokens['eth'].decimals = 18;
-
-    knownTokens['uni']=createTokenInfo('uni');
-    knownTokens['uni'].decimals = 18;
-
-    knownTokens['hotpot']=createTokenInfo('hotpot');
-    knownTokens['hotpot'].decimals = 18;
+function getTime(){
+    return (new Date()).getTime();
 }

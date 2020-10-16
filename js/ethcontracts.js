@@ -73,9 +73,9 @@ var ganachePool = {
 }
 
 var mainStakeERC = {
-    "usdt":"",
-    "eth/usdt":"",
-    "uni/eth":"",
+    "usdt":"0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+    "uni/eth":"0xd3d2e2692501a5c9ca623199d38826e513033a17",
     "hotpot":"",
     "hotpot/eth":""
 }
@@ -116,12 +116,14 @@ function setChainId(chainId){
         contractAddress = mainContracts;
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
+        TokenAddress = mainTokenAddress;
         ethAddress="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
     }else if(chainId === "0x3"){
         console.log("connect ropsten")
         contractAddress = ropstenContracts;
         stakePoolAddress = ropstenPool;
         stakeERCAddress = ropstenStakeERC;
+        TokenAddress = ropstenTokenAddress;
         ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
     }
      else if (chainId === "0x4") {
@@ -220,12 +222,50 @@ function createTokenInfo(name){
     var token = new Object;
     token.name = name;
     token.decimals = 18;
+    token.address = null;
+    token.price = 0;
     return token;
 }
 
 var initToken=[
     'usdt',
     'hotpot',
-    'eth',
     'uni'
 ]
+
+var TokenAddress = {}
+
+var mainTokenAddress={
+    'usdt':"0xdac17f958d2ee523a2206206994597c13d831ec7",
+    'hotpot':"",
+    "uni":"0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+}
+
+var ropstenTokenAddress={
+    'usdt':"",
+    'hotpot':"",
+    "uni":""
+}
+
+ETHENV = {
+    Tokens:{},
+    //chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
+    chainId:null,
+    ethPrice:0,
+
+    init:function(_chainId){
+        setChainId(_chainId);
+        ETHENV.chainId = _chainId;
+        knownTokens['usdt'] = createTokenInfo('usdt');
+        knownTokens['usdt'].decimals = 6;
+        knownTokens['usdt'].address = TokenAddress['usdt'];
+
+        knownTokens['uni'] = createTokenInfo('uni');
+        knownTokens['uni'].decimals = 18;
+        knownTokens['uni'].address = TokenAddress['uni'];
+
+        knownTokens['hotpot'] = createTokenInfo('hotpot');
+        knownTokens['hotpot'].decimals = 18;
+        knownTokens['hotpot'].address = TokenAddress['hotpot'];
+    }
+}
