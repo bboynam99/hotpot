@@ -30,40 +30,6 @@
 
 	<link rel='stylesheet' href='styles/styles.css' />
 
-	<style>
-		.membercard {
-			width: 500px;
-			height: 300px;
-			margin: 0;
-			padding: 0;
-			background-repeat: no-repeat;
-			background-attachment: fixed;
-			filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
-			-ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
-			background-size: 100% 100%;
-			-moz-background-size: cover;
-			-webkit-background-size: cover;
-			background: url("images/memberbg2.png")
-		}
-
-		.memberno {
-			color: grey;
-			text-align: end;
-			float: inline-end;
-		}
-
-		.memberdate {
-			color: grey;
-		}
-
-		.memberavailable {
-			color: wheat;
-		}
-
-		.membertime {
-			color: grey;
-		}
-	</style>
 	<script>
 		(function ($) {
 			$.fn.animateNumbers = function (stop, commas, duration, ease) {
@@ -104,77 +70,8 @@
 	</script>
 </head>
 
-<style>
-	.spinner {
-		margin: 5px auto;
-		width: 50px;
-		height: 60px;
-		text-align: center;
-		font-size: 10px;
-	}
-
-	.spinner>div {
-		background-color: #67CF22;
-		height: 100%;
-		width: 6px;
-		display: inline-block;
-
-		-webkit-animation: stretchdelay 1.2s infinite ease-in-out;
-		animation: stretchdelay 1.2s infinite ease-in-out;
-	}
-
-	.spinner .rect2 {
-		-webkit-animation-delay: -1.1s;
-		animation-delay: -1.1s;
-	}
-
-	.spinner .rect3 {
-		-webkit-animation-delay: -1.0s;
-		animation-delay: -1.0s;
-	}
-
-	.spinner .rect4 {
-		-webkit-animation-delay: -0.9s;
-		animation-delay: -0.9s;
-	}
-
-	.spinner .rect5 {
-		-webkit-animation-delay: -0.8s;
-		animation-delay: -0.8s;
-	}
-
-	@-webkit-keyframes stretchdelay {
-
-		0%,
-		40%,
-		100% {
-			-webkit-transform: scaleY(0.4)
-		}
-
-		20% {
-			-webkit-transform: scaleY(1.0)
-		}
-	}
-
-	@keyframes stretchdelay {
-
-		0%,
-		40%,
-		100% {
-			transform: scaleY(0.4);
-			-webkit-transform: scaleY(0.4);
-		}
-
-		20% {
-			transform: scaleY(1.0);
-			-webkit-transform: scaleY(1.0);
-		}
-	}
-</style>
-
 <body class="text-center">
 	<button onclick="Stake.generateUniFactory()" hidden>部署</button>
-	<div id="div1" hidden></div>
 	<div class="content">
 		<div class="alert_content" id="alertdiv"></div>
 
@@ -235,6 +132,11 @@
 					</nav>
 				</div>
 			</header>
+			<a target="_blank" href="#" id="toprightmsg"  STYLE="DISPLAY:NONE">消息发送中...</a>
+			<a id="globalmsg" target="_blank" href="http://etherscan.com/"  STYLE="DISPLAY:NONE">
+				<span data-lang="congratulations" >恭喜</span>
+				<span id="gachauser">XXX</span>
+				<span data-lang="congratulations1">抽中会员卡！</span></a>
 			<div id="infodiv">
 				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
 					Stake Anytime, Unstake Anytime, Get Rewards Instantly.</h3>
@@ -363,9 +265,8 @@
 				</p>
 			</main>
 
-
 			<main role="main" class="inner cover gacha" STYLE="DISPLAY:NONE">
-				<div class="card swapcard  web3true" style="height: 170px !important;">
+				<div class="card swapcard  web3true" style="height: 200px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="totalticket">TOTAL TICKET</h6>
 						<H3 class="card-text ">
@@ -376,7 +277,7 @@
 						<p>（流通10张后概率降低为：1/16）</p>
 					</div>
 				</div>
-				<div class="card swapcard  web3true" style="height: 170px !important;">
+				<div class="card swapcard  web3true" style="height: 200px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
@@ -385,9 +286,9 @@
 							data-lang="approve">授权</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
-						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="ngacha(10)"
+						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="Gacha.pull10()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull10">十连抽</a>
-
+						<p style="margin-top: 3%;">抽一次100HotPot，10连抽95折，950HotPot</p>
 					</div>
 				</div>
 			</main>
@@ -454,9 +355,9 @@
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
 
-						<p>普通会员卡：1张(未使用1张)</p>
-						<p>金色会员卡：0张(未使用0张)</p>
-						<p>紫金会员卡：0张(未使用0张)</p>
+						<p>普通会员卡：<span id="grade1num">0</span>张(未使用<span id="grade1unuse">0</span>张)</p>
+						<p>金色会员卡：<span id="grade2num">0</span>张(未使用<span id="grade2unuse">0</span>张)</p>
+						<p>紫金会员卡：<span id="grade3num">0</span>张(未使用<span id="grade3unuse">0</span>张)</p>
 					</div>
 				</div>
 

@@ -138,6 +138,7 @@ body {
 .swapcard,
 .swapcard2 {
 	display: inline-block;
+	vertical-align: top;
 	width: 300px;
 	height: 240px;
 	margin: 10px;
@@ -251,11 +252,28 @@ body {
 	right: 40px;
 	bottom: 50px;
 	_position: absolute;
-	_top: expression(eval(document.documentElement.scrollBottom+250));
+	_top: expression(eval(document.documentElement.scrollBottom+250))
 }
 
+#toprightmsg{
+	background-color: #e44541;
+	border-radius:30px;
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	position: fixed;
+	right: 70px;
+	top: 100px;
+	_position: absolute;
+}
 
-
+#globalmsg{
+	background-color: #e44541;
+	border-radius:30px;
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
 
 
 		/*
@@ -373,4 +391,104 @@ body {
 		.mastfoot {
 			margin-top: 50px;
 			color: rgba(255, 255, 255, .5);
+		}
+
+
+		.membercard {
+			width: 500px;
+			height: 300px;
+			margin: 0;
+			padding: 0;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
+			-ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/memberbg2.jpg', sizingMethod='scale');
+			background-size: 100% 100%;
+			-moz-background-size: cover;
+			-webkit-background-size: cover;
+			background: url("images/memberbg2.png")
+		}
+
+		.memberno {
+			color: grey;
+			text-align: end;
+			float: inline-end;
+		}
+
+		.memberdate {
+			color: grey;
+		}
+
+		.memberavailable {
+			color: wheat;
+		}
+
+		.membertime {
+			color: grey;
+		}
+
+		.spinner {
+			margin: 5px auto;
+			width: 50px;
+			height: 60px;
+			text-align: center;
+			font-size: 10px;
+		}
+	
+		.spinner>div {
+			background-color: #67CF22;
+			height: 100%;
+			width: 6px;
+			display: inline-block;
+	
+			-webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+			animation: stretchdelay 1.2s infinite ease-in-out;
+		}
+	
+		.spinner .rect2 {
+			-webkit-animation-delay: -1.1s;
+			animation-delay: -1.1s;
+		}
+	
+		.spinner .rect3 {
+			-webkit-animation-delay: -1.0s;
+			animation-delay: -1.0s;
+		}
+	
+		.spinner .rect4 {
+			-webkit-animation-delay: -0.9s;
+			animation-delay: -0.9s;
+		}
+	
+		.spinner .rect5 {
+			-webkit-animation-delay: -0.8s;
+			animation-delay: -0.8s;
+		}
+	
+		@-webkit-keyframes stretchdelay {
+	
+			0%,
+			40%,
+			100% {
+				-webkit-transform: scaleY(0.4)
+			}
+	
+			20% {
+				-webkit-transform: scaleY(1.0)
+			}
+		}
+	
+		@keyframes stretchdelay {
+	
+			0%,
+			40%,
+			100% {
+				transform: scaleY(0.4);
+				-webkit-transform: scaleY(0.4);
+			}
+	
+			20% {
+				transform: scaleY(1.0);
+				-webkit-transform: scaleY(1.0);
+			}
 		}
