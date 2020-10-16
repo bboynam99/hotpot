@@ -1,9 +1,12 @@
+const UNISWAP = require('@uniswap/sdk')
+
 App = {
     web3Provider: null,
     defaultAccount: null,
     contracts: {},
     erc20Contract:null,
     init: function () {
+        console.log(`The chainId of mainnet is ${UNISWAP.ChainId.MAINNET}.`)
         return App.initWeb3();
     },
 
@@ -154,9 +157,9 @@ App = {
             if (token === "usdt" || token === "hotpot") {
                 // getUniV2Token(token);
             } else {
-                App.getUniV2Pair(token);
+                // App.getUniV2Pair(token);
             }
-            App.getStakeERCInfo(token);
+            // App.getStakeERCInfo(token);
         }
     },
     getStakeERCInfo: function (token) {
