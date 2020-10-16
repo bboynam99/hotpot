@@ -2924,7 +2924,7 @@ UserNFT = {
                     var nft = UserNFT.createNFTInfo(result,App.defaultAccount);
                     UserNFT.nftInfos[result] = nft;
                     UserNFT.getNFTInfo(result);
-                    UserNFT.getUseTime(result);
+                    // UserNFT.getUseTime(result);
                 });
             }
         });
@@ -2941,33 +2941,56 @@ UserNFT = {
         App.contracts.NFTHotPot.getGrade(id,function(e,result){
             console.log("get grade id="+id+",grade="+result);
             UserNFT.nftInfos[id].grade = result; 
+            if(result==1){
+                $("#grade1num").text(parseInt($("#grade1num").text())+1);
+            }else if(result==2){
+                $("#grade2num").text(parseInt($("#grade2num").text())+1);
+            }else if(result==3){
+                $("#grade3num").text(parseInt($("#grade3num").text())+1);
+            }
+            UserNFT.getUseTime(id);
         });
     },
     getUseTime:function(id){
         App.contracts.NFTHotPot.getUseTime(id,function(e,result){
             console.log("get use time id="+id+",time="+result);
             UserNFT.nftInfos[id].usetime = result; 
-            UserNFT.updateNFTInfo();
-        });
-    },
-    updateNFTInfo:function(){
-        if(UserNFT.nftIds.length==userBalance){
-            // grade1num
-            //grade1unuse
-            for(var i=0;i<userBalance;i++){
-                var id = UserNFT.nftIds[i];
-                var nft = UserNFT.nftInfos[id];
-                console.log("updateNFTInfo id="+id);
-                if(nft.grade==1){
-                    $("#grade1num").text(parseInt($("#grade1num").text())+1);
-                }else if(nft.grade==2){
-                    $("#grade2num").text(parseInt($("#grade2num").text())+1);
-                }else if(nft.grade==3){
-                    $("#grade3num").text(parseInt($("#grade3num").text())+1);
+            var endTime = result + 86400;
+            var now = (new Date()).getTime()/1000;
+            var grade = UserNFT.nftInfos[id].grade;
+            //it is not available now
+            if(endTime > now){
+
+            }else{
+                if(grade==1){
+                    $("#grade1unuse").text(parseInt($("#grade1unuse").text())+1);
+                }else if(grade==2){
+                    $("#grade2unuse").text(parseInt($("#grade2unuse").text())+1);
+                }else if(grade==3){
+                    $("#grade3unuse").text(parseInt($("#grade3unuse").text())+1);
                 }
             }
-        }
-    }
+
+        });
+    },
+    // updateNFTInfo:function(){
+    //     if(UserNFT.nftIds.length==userBalance){
+    //         // grade1num
+    //         //grade1unuse
+    //         for(var i=0;i<userBalance;i++){
+    //             var id = UserNFT.nftIds[i];
+    //             var nft = UserNFT.nftInfos[id];
+    //             console.log("updateNFTInfo id="+id);
+    //             if(nft.grade==1){
+    //                 $("#grade1num").text(parseInt($("#grade1num").text())+1);
+    //             }else if(nft.grade==2){
+    //                 $("#grade2num").text(parseInt($("#grade2num").text())+1);
+    //             }else if(nft.grade==3){
+    //                 $("#grade3num").text(parseInt($("#grade3num").text())+1);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 
