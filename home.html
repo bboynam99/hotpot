@@ -284,7 +284,7 @@
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
-						<a href="#farms" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
+						<a href="#farms" id="approvegacha" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
 							data-lang="approvegacha">APPROVE</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
@@ -512,9 +512,9 @@
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="tokenclaim">HOTPOT CLAIM</h6>
 							<H3 class="card-text rewardbalance">-.----</H3>
-							<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
+							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimFree()"
 								data-lang="claimfree">CLAIM</a>
-							<a href="#" class="card-link btn btn-primary btn-lg" onclick="claimReward()"
+							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimNFT()"
 								data-lang="claimnft">CLAIM</a>
 						</div>
 					</div>
@@ -523,7 +523,7 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalstake">Total Staked</h6>
 							<H3 class="card-text totalstake">-.----</H3>
 							<div class="not-approved-spend">
-								<a href="#" class="card-link btn btn-primary btn-lg" onclick="approve()"
+								<a href="#" class="card-link btn btn-primary btn-lg" id="approvestake" onclick="Stake.approve()"
 									data-lang="approvestake">APPROVE STAKE</a>
 							</div>
 							<div class="approved-spend">

@@ -5,7 +5,7 @@ const Token = UNISWAP.Token;
 const Route = UNISWAP.Route;
 const WETH = UNISWAP.WETH;
 const ethers = require('ethers');
-
+var currentPagePoolID="";
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -197,9 +197,12 @@ App = {
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].decimals(function (e, result) {
                 stakeInfos[token].decimals = result;
-                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                App.contracts.HotPot.allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = result;
+                    if(currentPagePoolID!=""){
+                        Stake.initpooldata(currentPagePoolID);
+                    }
                 });
             });
         });
@@ -286,25 +289,46 @@ App = {
     },
     getStakePools: function () {
         // allPoolTokens
-        var count = allPoolTokens.length;
-        for (var i = 0; i < count; i++) {
+        for (var i = 0; i < allPoolTokens.length; i++) {
             var poolToken = allPoolTokens[i];
             var poolAddress = stakePoolAddress[poolToken];
             var lpAddress = stakeERCAddress[poolToken];
             stakeInfos[poolToken] = createToken(poolToken, lpAddress, poolAddress);
         }
     },
+    checkApproval:function(){
+        console.log("checkApproval");
+        App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
+            var allowance = result.c[0];
+            if (allowance == 0) {
 
+            } else {
+                $("#pull1").show();
+                $("#pull10").show();
+                $("#approvegacha").hide();
+            }
+        });
+        if(currentPagePoolID!=""){
+            var token = currentPagePoolID;
+            App.contracts.HotPot.allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
+                stakeInfos[token].allowance = result;
+                if(currentPagePoolID!=""){
+                    Stake.initpooldata(currentPagePoolID);
+                }
+            });
+        }
+    },
     getBalances: function () {
         console.log('Getting balances...' + getTime());
         App.contracts.HotPot = App.contracts.HotPot.at(contractAddress.hotpot);
-
 
         // watch for an event with {some: 'args'}
         App.contracts.HotPot.Approval({ owner: App.defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
-                // hideTopMsg();
+                hideTopMsg();
+                App.checkApproval();
             }
         });
 
@@ -319,7 +343,7 @@ App = {
                 } else {
                     $("#pull1").show();
                     $("#pull10").show();
-                    $("#approve").hide();
+                    $("#approvegacha").hide();
                 }
             });
             Stake.getAllPoolBalance();
@@ -341,6 +365,36 @@ App = {
 };
 var count = 0;
 Stake = {
+    approve:function(){
+        console.log("stake approve:"+currentPagePoolID);
+        if(currentPagePoolID!=""){
+            App.contracts.HotPot.approve(stakePoolAddress[currentPagePoolID], web3.toHex(Math.pow(10, 30)), function (e, result) {
+                if (e) {
+                    console.log("stake approve error " + e);
+                } else {
+                    var url = "https://etherscan.io/tx/"+result;
+                    if(ETHENV.chainId=='0x1'){
+                        url = "https://etherscan.io/tx/"+result;
+                    }else if(ETHENV.chainId=='0x3'){
+                        url = "https://ropsten.etherscan.io/tx/"+result;
+                    }
+                    showTopMsg("Pending...",0,url);    
+                }
+            });
+        }
+    },
+    //currentPagePoolID
+    claimFree:function(){
+
+    },
+    claimNFT:function(){
+        if(UserNFT.nftIds.length==0){
+            //$.i18n.map[i]
+            toastAlert($.i18n.map['nocard']);
+        }else{
+            showTable(true);
+        }
+    },
     getAllPoolBalance: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
@@ -588,12 +642,17 @@ Gacha = {
         });
     },
     approve: function () {
-        showTopMsg("Pending...");
         App.contracts.HotPot.approve(contractAddress.gacha, web3.toHex(Math.pow(10, 30)), function (e, result) {
             if (e) {
-                console.log("GachaTicket error " + e);
+                console.log("Gacha approve error " + e);
             } else {
-                
+                var url = "https://etherscan.io/tx/"+result;
+                if(ETHENV.chainId=='0x1'){
+                    url = "https://etherscan.io/tx/"+result;
+                }else if(ETHENV.chainId=='0x3'){
+                    url = "https://ropsten.etherscan.io/tx/"+result;
+                }
+                showTopMsg("Pending...",0,url);    
             }
         });
     }
@@ -609,7 +668,8 @@ Reward = {
     },
     claim:function(){
         if(UserNFT.nftIds.length==0){
-            toastAlert("No Available Member Card!");
+            //$.i18n.map[i]
+            toastAlert($.i18n.map['nocard']);
         }else{
             showTable(true);
         }
@@ -691,7 +751,7 @@ UserNFT = {
         });
     },
     initNFTTable:function(){
-        
+
     }
 }
 
@@ -717,7 +777,7 @@ window.nav = (classname) => {
 function nav(classname) {
     hidepages();
     $('body').removeClass('approved');
-
+    currentPagePoolID = "";
     if (classname.indexOf('pool') === 0) {
         $('#singlepool').show();
         currentPagePoolID = classname.slice(4);
