@@ -17,6 +17,7 @@
 	<script src="js/ethcontracts.js" crossorigin="anonymous"></script>
 	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
 
+
 	<script type="text/javascript" src="dist/dist.js"></script>
 
 	<script type="text/javascript" src="js/nft.js"></script>
@@ -86,7 +87,7 @@
 			</div>　　
 			<input name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" id="stakeInput">
 			<button onclick="Stake.maxStake()">MAX</button>
-			
+
 			<div id="stakediv">
 				<a data-lang="stake" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Stake.stakeSure()"
 					class="card-link btn btn-primary btn-lg">
@@ -94,8 +95,8 @@
 				</a>
 			</div>
 			<div id="withdrawdiv">
-				<a data-lang="withdraw" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Stake.withdrawSure()"
-					class="card-link btn btn-primary btn-lg">
+				<a data-lang="withdraw" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
+					onclick="Stake.withdrawSure()" class="card-link btn btn-primary btn-lg">
 					Withdraw
 				</a>
 			</div>
@@ -285,8 +286,8 @@
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
-						<a href="#farms" id="approvegacha" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
-							data-lang="approvegacha">APPROVE</a>
+						<a href="#farms" id="approvegacha" onclick="Gacha.approve()"
+							class="card-link btn btn-primary btn-lg" data-lang="approvegacha">APPROVE</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="Gacha.pull10()"
@@ -300,43 +301,57 @@
 			<main role="main" class="inner cover exchange" STYLE="DISPLAY:NONE">
 				<div>
 					<p>售卖</p>
-					<table border="1">
-						<tr>
-							<td>编号</td>
-							<td>等级</td>
-							<td>状态</td>
-							<td>价格</td>
-							<td>购买</td>
-						</tr>
-						<tr>
-							<td>0001</td>
-							<td>普通</td>
-							<td>可用</td>
-							<td>100.0</td>
-							<td><a href="#" onclick="buy()">购买</a></td>
-						</tr>
-						<tr>
-							<td>0002</td>
-							<td>金卡</td>
-							<td>恢复中</td>
-							<td>200.0</td>
-							<td><a href="#" onclick="buy()">购买</a></td>
-						</tr>
-					</table>
 				</div>
 
 				<div>
 					<p>借贷</p>
-					<table border="1">
-						<tr>
-							<td>row 1, cell 1</td>
-							<td>row 1, cell 2</td>
-						</tr>
-						<tr>
-							<td>row 2, cell 1</td>
-							<td>row 2, cell 2</td>
-						</tr>
-					</table>
+					<div class="table-users">
+						<div class="header">Users</div>
+
+						<table cellspacing="0">
+							<tr>
+								<th>Picture</th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Phone</th>
+								<th width="230">Comments</th>
+							</tr>
+
+							<tr>
+								<td><img src="https://i.picsum.photos/id/1005/100/100.jpg" alt="" /></td>
+								<td>Jane Doe</td>
+								<td>jane.doe@foo.com</td>
+								<td>01 800 2000</td>
+								<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
+							</tr>
+
+							<tr>
+								<td><img src="https://i.picsum.photos/id/1027/100/100.jpg" alt="" /></td>
+								<td>John Doe</td>
+								<td>john.doe@foo.com</td>
+								<td>01 800 2000</td>
+								<td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque,
+									nesciunt rerum perferendis, inventore.</td>
+							</tr>
+
+							<tr>
+								<td><img src="https://i.picsum.photos/id/64/100/100.jpg" alt="" /></td>
+								<td>Jane Smith</td>
+								<td>jane.smith@foo.com</td>
+								<td>01 800 2000</td>
+								<td> Culpa praesentium unde pariatur fugit eos recusandae voluptas.</td>
+							</tr>
+
+							<tr>
+								<td><img src="https://i.picsum.photos/id/1025/100/100.jpg" alt="" /></td>
+								<td>John Smith</td>
+								<td>john.smith@foo.com</td>
+								<td>01 800 2000</td>
+								<td>Aut voluptatum accusantium, eveniet, sapiente quaerat adipisci consequatur maxime
+									temporibus quas, dolorem impedit.</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 			</main>
 
@@ -365,7 +380,7 @@
 			</main>
 
 			<main role="main" class="inner cover me" STYLE="DISPLAY:NONE">
-				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourbalance">YOUR BALANCE</h6>
 						<H3 class="card-text balance"><span class='mybalance'>-.----</span> HotPot</H3>
@@ -373,7 +388,7 @@
 							data-lang="farm">FARM</a>
 					</div>
 				</div>
-				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
@@ -382,20 +397,20 @@
 							data-lang="getticket">GACHA</a>
 					</div>
 				</div>
-				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="myloan">MY LOAN</h6>
-						<H3 class="card-text "><span class="myloan">0</span> <span
-								data-lang="ticketdw">TICKET</span></H3>
+						<H3 class="card-text "><span class="myloan">0</span> <span data-lang="ticketdw">TICKET</span>
+						</H3>
 						<a href="#farms" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
 							data-lang="loan">LOAN</a>
 					</div>
 				</div>
-				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="mysell">MY SELL</h6>
-						<H3 class="card-text "><span class="mysell">0</span> <span
-								data-lang="ticketdw">TICKET</span></H3>
+						<H3 class="card-text "><span class="mysell">0</span> <span data-lang="ticketdw">TICKET</span>
+						</H3>
 						<a href="#farms" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
 							data-lang="market">MARKET</a>
 					</div>
@@ -522,8 +537,8 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalstake">Total Staked</h6>
 							<H3 class="card-text totalstake">-.----</H3>
 							<div class="not-approved-spend">
-								<a href="#" class="card-link btn btn-primary btn-lg" id="approvestake" onclick="Stake.approve()"
-									data-lang="approvestake">APPROVE STAKE</a>
+								<a href="#" class="card-link btn btn-primary btn-lg" id="approvestake"
+									onclick="Stake.approve()" data-lang="approvestake">APPROVE STAKE</a>
 							</div>
 							<div class="approved-spend">
 								<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.stake()"
@@ -545,31 +560,6 @@
 
 
 			<div class="pricingTable" style="display: none; color:black;width: 100%!important;">
-<!-- 	
-				<ul class="pricingTable-firstTable">
-					<li class="pricingTable-firstTable_table">
-						<h1 class="pricingTable-firstTable_table__header">Member Card</h1>
-						<p class="pricingTable-firstTable_table__pricing"><span>ID:</span><span>001</span><span>/1000</span>
-						</p>
-						<ul class="pricingTable-firstTable_table__options">
-							<li>Available</li>
-							<li>Loaning</li>
-						</ul>
-						<div class="pricingTable-firstTable_table__getstart">DIVIDENDS</div>
-					</li>
-					<li class="pricingTable-firstTable_table">
-						<h1 class="pricingTable-firstTable_table__header">Member Card</h1>
-						<p class="pricingTable-firstTable_table__pricing"><span>ID:</span><span>001</span><span>/1000</span>
-						</p>
-						<ul class="pricingTable-firstTable_table__options">
-							<li>Available</li>
-							<li>Loaning</li>
-						</ul>
-						<div class="pricingTable-firstTable_table__getstart">DIVIDENDS</div>
-					</li>
-					
-				</ul>
-				 -->
 			</div>
 
 			<div id="ticketinfo" style="display:none">
