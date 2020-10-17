@@ -404,9 +404,20 @@ Stake = {
     },
     //currentPagePoolID
     claimFree: function () {
+        var token = stakeInfos[currentPagePoolID];
+        if(token.userEarn==0){
+            toastAlert(getString('noearned'));
+            return;
+        }else{
 
+        }
     },
     claimNFT: function () {
+        var token = stakeInfos[currentPagePoolID];
+        if(token.userEarn==0){
+            toastAlert(getString('noearned'));
+            return;
+        }
         if (UserNFT.nftIds.length == 0) {
             //$.i18n.map[i]
             toastAlert($.i18n.map['nocard']);
@@ -467,7 +478,13 @@ Stake = {
     },
 
     withdraw: function () {
+        var token = stakeInfos[currentPagePoolID];
+        if(token.userStake==0){
+            toastAlert(getString('nostaked'));
+            return;
+        }else{
 
+        }
     },
     getAllPoolBalance: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -569,18 +586,19 @@ Stake = {
     },
     initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
-        console.log("poolname=" + poolName);
+        console.log("initSinglePool poolname=" + poolName);
         stakeInfos[poolName].instance = App.contracts.StakePool.at(poolAddress);
         stakeInfos[poolName].instance.totalSupply(function (e, result) {
-            console.log("totalSupply pool=" + poolName + ",totalSupply:" + result);
+            console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
             stakeInfos[poolName].poolTotalStake = result;
             stakeInfos[poolName].instance.balanceOf(App.defaultAccount, function (e, result) {
-                console.log("totalSupply pool=" + poolName + ",balanceOf:" + result);
+                console.log("initSinglePool pool=" + poolName + ",balanceOf:" + result);
                 stakeInfos[poolName].userStake = result;
                 stakeInfos[poolName].instance.earned(App.defaultAccount, function (e, result) {
+                    console.log("initSinglePool pool=" + poolName + ",earned:" + result);
                     stakeInfos[poolName].userEarn = result;
                     stakeInfos[poolName].instance.rewardRate(function (e, result) {
-                        console.log("totalSupply pool=" + poolName + ",rewardRate:" + result);
+                        console.log("initSinglePool pool=" + poolName + ",rewardRate:" + result);
                         stakeInfos[poolName].rewardRate = result;
                         Stake.updateAPY(poolName);
                         Stake.checkTotalStaked();
@@ -748,6 +766,7 @@ Reward = {
             //$.i18n.map[i]
             toastAlert($.i18n.map['nocard']);
         } else {
+            UserNFT.initNFTTable(nftUse[0]);
             showTable(true);
         }
     }
@@ -775,21 +794,13 @@ UserNFT = {
                 App.contracts.NFTHotPot.tokenOfOwnerByIndex(App.defaultAccount, i, function (e, result) {
                     console.log("tokenOfOwnerByIndex id=" + result);
                     UserNFT.nftIds.push(result);
-                    var nft = UserNFT.createNFTInfo(result, App.defaultAccount);
+                    var nft = NFT.createNFTInfo(result, App.defaultAccount);
                     UserNFT.nftInfos[result] = nft;
                     UserNFT.getNFTInfo(result);
                     // UserNFT.getUseTime(result);
                 });
             }
         });
-    },
-    createNFTInfo: function (id, owner) {
-        var nft = new Object;
-        nft.id = id;
-        nft.grade = 0;
-        nft.owner = owner;
-        nft.usetime = 0;
-        return nft;
     },
     getNFTInfo: function (id) {
         App.contracts.NFTHotPot.getGrade(id, function (e, result) {
@@ -827,8 +838,9 @@ UserNFT = {
 
         });
     },
-    initNFTTable: function () {
-
+    initNFTTable: function (use) {
+        $(".pricingTable").empty();
+        $(".pricingTable").append(NFT.createNFTs(UserNFT.nftIds,UserNFT.nftInfos,use));
     }
 }
 

@@ -97,7 +97,6 @@
   }
 }
 .pricingTable-firstTable_table:nth-of-type(2):before {
-  content: 'Most Popular';
   position: absolute;
   color: white;
   display: block;
@@ -277,7 +276,6 @@
   }
 }
 .pricingTable-firstTable_table__options > li:before {
-  content: '✓';
   display: inline-block;
   margin-right: 15px;
   color: white;
