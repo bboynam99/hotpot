@@ -1,29 +1,3 @@
-
-
-// <ul class="pricingTable-firstTable">
-// <li class="pricingTable-firstTable_table">
-//     <h1 class="pricingTable-firstTable_table__header">Member Card</h1>
-//     <p class="pricingTable-firstTable_table__pricing"><span>ID:</span><span>001</span><span>/1000</span>
-//     </p>
-//     <ul class="pricingTable-firstTable_table__options">
-//         <li>Available</li>
-//         <li>Loaning</li>
-//     </ul>
-//     <div class="pricingTable-firstTable_table__getstart">DIVIDENDS</div>
-// </li>
-
-// <li class="pricingTable-firstTable_table">
-//     <h1 class="pricingTable-firstTable_table__header">Gold Member Card</h1>
-//     <p class="pricingTable-firstTable_table__pricing"><span>ID:</span><span>002</span><span>/1000</span>
-//     </p>
-//     <ul class="pricingTable-firstTable_table__options">
-//         <li>Charging : 20h 10:36</li>
-//     </ul>
-//     <div class="pricingTable-firstTable_table__getstart">DIVIDENDS</div>
-// </li>
-
-// </ul>
-
 var nftUse = [
     'reward',
     'stake'
@@ -31,6 +5,10 @@ var nftUse = [
 
 NFT = {
     createNFT: function (nft, use) {
+        if (nft.id == 3) {
+            nft.usetime = Math.floor((new Date()).getTime() / 1000);
+        }
+
         var nodeli = $("<li class='pricingTable-firstTable_table'></li>");
         var name = "Member Card";
         if (nft.grade == 2) {
@@ -42,22 +20,48 @@ NFT = {
         var nodeh1 = $("<h1 class='pricingTable-firstTable_table__header'></h1>").text(name);
 
         //<span>ID:</span><span>002</span><span>/1000</span>
-        var phtml = "<span>ID:</span><span>" + nft.id + "</span><span>/1000</span>";
+        var phtml = "<span>ID:</span><span>" + formatZero(nft.id, 3) + "</span><span>/1000</span>";
         var nodep = $("<p class='pricingTable-firstTable_table__pricing'></p>").html(phtml);
         var nodeul = $("<ul class='pricingTable-firstTable_table__options'></ul>");
         var availabe = "Available";
+        var canUse = true;
         if (nft.usetime + 86400 > (new Date()).getTime() / 1000) {
+            canUse = false;
             availabe = "Charging : 20h 10:36"
+
+            let fomoTime = Math.floor(nft.usetime + 86400 - (new Date()).getTime() / 1000);
+            console.log("charger time=" + fomoTime);
+            availabe = "Charging : " + formatFomoTime(fomoTime);
+            if (fomoTime > 0) {
+                setInterval(() => {
+                    fomoTime -= 1;
+                    $("#nftusetime" + nft.id).text("Charging : " + formatFomoTime(fomoTime))
+                }, 1000);
+            }
         }
         var nodeli1 = $("<li></li>").text(availabe);
         nodeli1.attr("id", "nftusetime" + nft.id);
         nodeul.append(nodeli1);
 
-        var button = "DIVIDENDS";
+        var nodediv;
         if (use === nftUse[1]) {
-            button = "CLAIM";
+            if (canUse){
+                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("CLAIM");
+                nodeli.on("click",nodediv,function(){Stake.claimByNFT(nft.id)});
+            }
+            else{
+                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
+            }
+        } else {
+            if (canUse){
+                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("DIVIDENDS");
+                nodeli.on("click",nodediv,function(){Reward.rewardByNFT(nft.id)});
+            }               
+            else{
+                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
+            }
+                
         }
-        var nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text(button);
 
         nodeli.append(nodeh1);
         nodeli.append(nodep);
@@ -101,4 +105,22 @@ NFT = {
         nft.sell = false;
         return nft;
     },
+}
+
+
+function formatFomoTime(t) {
+    if (t < 0) {
+        return "已结束，奖励结算中";
+    }
+    // console.log("formatFomoTime : "+t)
+    const times = Math.floor(t);
+    const h = Math.floor(times / 3600);
+    const m = Math.floor((times % 3600) / 60);
+    const s = times % 60;
+    return h + "h " + m + "m " + ' ' + + s + "s";
+}
+
+function formatZero(num, len) {
+    if (String(num).length > len) return num;
+    return (Array(len).join(0) + num).slice(-len);
 }

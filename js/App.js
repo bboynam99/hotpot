@@ -384,6 +384,9 @@ App = {
 };
 var count = 0;
 Stake = {
+    claimByNFT:function(id){
+        console.log("claimByNFT "+id);
+    },
     approve: function () {
         console.log("stake approve:" + currentPagePoolID);
         if (currentPagePoolID != "") {
@@ -422,6 +425,8 @@ Stake = {
             //$.i18n.map[i]
             toastAlert($.i18n.map['nocard']);
         } else {
+            toastAlert(getString('choosecard'));
+            UserNFT.initNFTTable(nftUse[1]);
             showTable(true);
         }
     },
@@ -467,14 +472,12 @@ Stake = {
             var hex = web3.toHex(stake * Math.pow(10, token.decimals));
             token.instance.stake(hex, function (e, result) {
                 if (e) {
-
                     return console.error('Error with stake:', e);
                 }
                 showTopMsg("Pending...", 0, getEthersanUrl(result));
                 startListenTX(result);
             });
         }
-
     },
 
     withdraw: function () {
@@ -769,7 +772,30 @@ Reward = {
             UserNFT.initNFTTable(nftUse[0]);
             showTable(true);
         }
-    }
+    },
+    rewardByNFT:function(id){
+        console.log("rewardByNFT : "+id);
+        App.contracts.Reward.WithdrawReward({sender:App.defaultAccount},function(e,result){
+            if(!e){
+                toastAlert(getString('rewardsuccess'));
+            }
+        });
+        App.contracts.Reward.calReward(id,function(e,result){
+            if (e) {
+                toastAlert("Error with calReward:"+e);
+                return console.error('Error with getReward:', e);
+            }
+            console.log("calReward "+result);
+        });
+        App.contracts.Reward.getReward(id,function(e,result){
+            if (e) {
+                toastAlert("Error with getReward:"+e);
+                return console.error('Error with getReward:', e);
+            }
+            showTopMsg("Pending...", 0, getEthersanUrl(result));
+            startListenTX(result);
+        });
+    },
 }
 
 UserNFT = {
@@ -1005,7 +1031,6 @@ function startListenTX(tx){
                     showTopMsg(getString('txfail'),5000,getEthersanUrl(result.transactionHash));
                     // toastAlert(getString('txfail'));
                 }
-                
             }
         });
     },3000);
