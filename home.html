@@ -85,24 +85,25 @@
 				<span id="maxAvaliable">100</span><span> </span><span id="stakeToken"> HotPot/Eth LP</span> Avaliable
 			</div>　　
 			<input name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" id="stakeInput">
-			<button onclick="maxStake()">MAX</button>
-			<div>
-				<a data-lang="cancle" style="width: 60%;margin-top: 10%;margin-bottom: 10%;"
-					onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"
-					class="card-link btn btn-primary btn-lg">
-					Cancle
-				</a>
-			</div>
+			<button onclick="Stake.maxStake()">MAX</button>
+			
 			<div id="stakediv">
-				<a data-lang="stake" style="width: 60%;margin-bottom: 10%;" onclick="stakeSure()"
+				<a data-lang="stake" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Stake.stakeSure()"
 					class="card-link btn btn-primary btn-lg">
 					Stake
 				</a>
 			</div>
 			<div id="withdrawdiv">
-				<a data-lang="withdraw" style="width: 60%;margin-bottom: 10%;" onclick="withdrawSure()"
+				<a data-lang="withdraw" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Stake.withdrawSure()"
 					class="card-link btn btn-primary btn-lg">
 					Withdraw
+				</a>
+			</div>
+			<div>
+				<a data-lang="cancle" style="width: 60%;"
+					onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"
+					class="card-link btn btn-primary btn-lg">
+					Cancle
 				</a>
 			</div>
 		</div>
@@ -527,7 +528,7 @@
 									data-lang="approvestake">APPROVE STAKE</a>
 							</div>
 							<div class="approved-spend">
-								<a href="#" class="card-link btn btn-primary btn-lg" onclick="stake()"
+								<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.stake()"
 									data-lang="stake">STAKE</a>
 							</div>
 
@@ -537,7 +538,7 @@
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="yourstake">Your Staked</h6>
 							<H3 class="card-text stakedbalance">-.----</H3>
-							<a href="#" class="card-link btn btn-primary btn-lg" onclick="withdraw()"
+							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.withdraw()"
 								data-lang="withdraw">WITHDRAW</a>
 						</div>
 					</div>
