@@ -99,7 +99,7 @@ body:not(.web3) .web3true {
 }
 
 * {
-	font-weight: 400 !important;
+	/* font-weight: 400 !important; */
 }
 
 .yield-badge {
@@ -118,7 +118,7 @@ body:not(.approved) .approved-spend {
 }
 
 * {
-	font-family: Balsamiq Sans, Arial, Times New Roman !important;
+	/* font-family: Balsamiq Sans, Arial, Times New Roman !important; */
 }
 
 html {
@@ -193,53 +193,12 @@ body {
 	background: url('/images/hotpoticon.png');
 }
 
-.smp {
-	background: url('/images/smp.png');
-}
-
 .uni {
 	background: url('/images/uni.png');
 }
 
 .eth {
 	background: url('/images/eth.png');
-}
-
-
-.tai {
-	background: url('/images/tai.png');
-}
-
-.trx {
-	background-image: url('/images/trx.png')
-}
-
-.ht {
-	background-image: url('/images/ht.png')
-}
-
-.gold {
-	background-image: url('/images/gold.jpeg')
-}
-
-.dzi {
-	background-image: url('/images/dzi.png')
-}
-
-.pearl {
-	background-image: url('/images/pearl.png')
-}
-
-.ssk {
-	background-image: url('/images/ssk.png')
-}
-
-.jfi {
-	background-image: url('/images/jfi.png')
-}
-
-.sun {
-	background-image: url('/images/sun.png')
 }
 
 .usdt {
@@ -322,7 +281,7 @@ body {
 			display: -ms-flexbox;
 			display: flex;
 			color: #fff;
-			text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+			/* text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5); */
 			box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 			padding: 50px 10px;
 		}
@@ -377,7 +336,7 @@ body {
  * Cover
  */
 		.cover {
-			padding: 4em 0rem;
+			padding: 1em 0rem;
 		}
 
 		.cover .btn-lg {

@@ -311,7 +311,7 @@ App = {
         // call constant function
         App.contracts.HotPot.balanceOf(App.defaultAccount, function (e, result) {
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            $('#mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
+            $('.mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
             App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
@@ -606,7 +606,13 @@ Market = {
 Reward = {
     gotoPage:function(){
         console.log("Reward gotoPage");
-        
+    },
+    claim:function(){
+        if(UserNFT.nftIds.length==0){
+            toastAlert("No Available Member Card!");
+        }else{
+            showTable(true);
+        }
     }
 }
 
@@ -684,24 +690,9 @@ UserNFT = {
 
         });
     },
-    // updateNFTInfo:function(){
-    //     if(UserNFT.nftIds.length==userBalance){
-    //         // grade1num
-    //         //grade1unuse
-    //         for(var i=0;i<userBalance;i++){
-    //             var id = UserNFT.nftIds[i];
-    //             var nft = UserNFT.nftInfos[id];
-    //             console.log("updateNFTInfo id="+id);
-    //             if(nft.grade==1){
-    //                 $("#grade1num").text(parseInt($("#grade1num").text())+1);
-    //             }else if(nft.grade==2){
-    //                 $("#grade2num").text(parseInt($("#grade2num").text())+1);
-    //             }else if(nft.grade==3){
-    //                 $("#grade3num").text(parseInt($("#grade3num").text())+1);
-    //             }
-    //         }
-    //     }
-    // }
+    initNFTTable:function(){
+        
+    }
 }
 
 
@@ -753,8 +744,11 @@ function nav(classname) {
         document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
     }
 
+    showTable(false);
     if(classname === "reward"){
         Reward.gotoPage();
+    }else if(classname === "me"){
+        showTable(true);
     }
 }
 
@@ -808,4 +802,13 @@ function toastAlert(msg) {
     setTimeout(function () {
         document.getElementById('alertdiv').style.display = 'none';
     }, 2000);
+}
+
+window.showTable = (flag) => {
+    if(flag){
+        $(".pricingTable").show();
+        // black_overlay
+    }else{
+        $(".pricingTable").hide();
+    }
 }

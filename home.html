@@ -23,6 +23,7 @@
 	<script type="text/javascript" src="js/bignumber.min.js"></script>
 	<script type="text/javascript" src="js/truffle-contract.js"></script>
 
+	<link href="styles/table.css" rel="stylesheet">
 	<link href="styles/googleapis.css" rel="stylesheet">
 	<meta name="viewport" content="width=500, initial-scale=1">
 
@@ -113,6 +114,7 @@
 					height=70></a>
 		</div>
 
+
 		<div class="container d-flex w-100 h-100 mx-auto flex-column" style="z-index: 1;">
 			<header class="masthead">
 				<div class="inner">
@@ -132,9 +134,9 @@
 					</nav>
 				</div>
 			</header>
-			<a target="_blank" href="#" id="toprightmsg"  STYLE="DISPLAY:NONE">消息发送中...</a>
-			<a id="globalmsg" target="_blank" href="http://etherscan.com/"  STYLE="DISPLAY:NONE">
-				<span data-lang="congratulations" >恭喜</span>
+			<a target="_blank" href="#" id="toprightmsg" STYLE="DISPLAY:NONE">消息发送中...</a>
+			<a id="globalmsg" target="_blank" href="http://etherscan.com/" STYLE="DISPLAY:NONE">
+				<span data-lang="congratulations">恭喜</span>
 				<span id="gachauser">XXX</span>
 				<span data-lang="congratulations1">抽中会员卡！</span></a>
 			<div id="infodiv">
@@ -167,7 +169,7 @@
 					<div class="card swapcard hide web3true">
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="yourbalance">YOUR BALANCE</h6>
-							<H3 class="card-text balance"><span id='mybalance'>-.----</span> HotPot</H3>
+							<H3 class="card-text balance"><span class='mybalance'>-.----</span> HotPot</H3>
 							<a href="#farms" onclick="nav('farms')" class="card-link btn btn-primary btn-lg"
 								data-lang="farm">FARM</a>
 						</div>
@@ -282,8 +284,8 @@
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
-						<a href="#farms" id="approve" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
-							data-lang="approve">授权</a>
+						<a href="#farms" onclick="Gacha.approve()" class="card-link btn btn-primary btn-lg"
+							data-lang="approvegacha">APPROVE</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull1" onclick="Gacha.pull()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="Gacha.pull10()"
@@ -344,7 +346,7 @@
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="totalreward">Total Reward</h6>
 						<H3 class="card-text totalreward">-.----</H3>
-						<a target="_blank" href="#" class="card-link btn btn-primary btn-lg"
+						<a class="card-link btn btn-primary btn-lg" onclick="Reward.claim()"
 							data-lang="reward">Reward</a>
 						<p style="margin-top: 5%;">当前普通会员卡可领取分红：<span>100.0</span></p>
 					</div>
@@ -364,11 +366,40 @@
 			</main>
 
 			<main role="main" class="inner cover me" STYLE="DISPLAY:NONE">
-				<div class="membercard">
-					<span class="memberavailable">Avaliable</span>
-					<span class="membertime">Recharge: <span>2h:30m:30s</span></span>
-					<span class="memberno">NO. <span>0001</span></span>
-					<span class="memberdate">Date : <span>09/10 2020</span></span>
+				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourbalance">YOUR BALANCE</h6>
+						<H3 class="card-text balance"><span class='mybalance'>-.----</span> HotPot</H3>
+						<a href="#farms" onclick="nav('farms')" class="card-link btn btn-primary btn-lg"
+							data-lang="farm">FARM</a>
+					</div>
+				</div>
+				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="yourticket">YOUR TICKET</h6>
+						<H3 class="card-text "><span class="myticketbalance">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+						<a href="#farms" onclick="nav('gacha')" class="card-link btn btn-primary btn-lg"
+							data-lang="getticket">GACHA</a>
+					</div>
+				</div>
+				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="myloan">MY LOAN</h6>
+						<H3 class="card-text "><span class="myloan">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+						<a href="#farms" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
+							data-lang="loan">LOAN</a>
+					</div>
+				</div>
+				<div class="card swapcard hide web3true"  style="height: 170px !important;">
+					<div class="card-body">
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="mysell">MY SELL</h6>
+						<H3 class="card-text "><span class="mysell">0</span> <span
+								data-lang="ticketdw">TICKET</span></H3>
+						<a href="#farms" onclick="nav('exchange')" class="card-link btn btn-primary btn-lg"
+							data-lang="market">MARKET</a>
+					</div>
 				</div>
 			</main>
 
@@ -493,7 +524,7 @@
 							<H3 class="card-text totalstake">-.----</H3>
 							<div class="not-approved-spend">
 								<a href="#" class="card-link btn btn-primary btn-lg" onclick="approve()"
-									data-lang="approve">APPROVE</a>
+									data-lang="approvestake">APPROVE STAKE</a>
 							</div>
 							<div class="approved-spend">
 								<a href="#" class="card-link btn btn-primary btn-lg" onclick="stake()"
@@ -513,6 +544,37 @@
 				</div>
 			</main>
 
+
+			<div class="pricingTable" style="display: none; color:black;width: 100%!important;">
+				<h2 class="pricingTable-title" hidden>Find a plan that's right for you.</h2>
+				<h3 class="pricingTable-subtitle" hidden>Every plan comes with a 30-day free trial.</h3>
+	
+				<ul class="pricingTable-firstTable">
+					<li class="pricingTable-firstTable_table">
+						<h1 class="pricingTable-firstTable_table__header">Bronze Packege</h1>
+						<p class="pricingTable-firstTable_table__pricing"><span>$</span><span>10</span><span>Month</span>
+						</p>
+						<ul class="pricingTable-firstTable_table__options">
+							<li>Unlimited Listing</li>
+							<li>Edit Your Listing</li>
+							<li>Approve Reviews</li>
+						</ul>
+						<div class="pricingTable-firstTable_table__getstart">Get Started Now</div>
+					</li>
+					
+					<li class="pricingTable-firstTable_table">
+						<h1 class="pricingTable-firstTable_table__header">Platinum Packege</h1>
+						<p class="pricingTable-firstTable_table__pricing"><span>$</span><span>49</span><span>Month</span>
+						</p>
+						<ul class="pricingTable-firstTable_table__options">
+							<li>Unlimited Listing</li>
+							<li>Edit Your Listing</li>
+							<li>Approve Reviews</li>
+						</ul>
+						<div class="pricingTable-firstTable_table__getstart">Get Started Now</div>
+					</li>
+				</ul>
+			</div>
 			<div id="ticketinfo" style="display:none">
 				<p style="margin-top: 0%;">实时数据：当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
 

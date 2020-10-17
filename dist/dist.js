@@ -2600,7 +2600,7 @@ App = {
         // call constant function
         App.contracts.HotPot.balanceOf(App.defaultAccount, function (e, result) {
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            $('#mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
+            $('.mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
             App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
@@ -2895,7 +2895,13 @@ Market = {
 Reward = {
     gotoPage:function(){
         console.log("Reward gotoPage");
-        
+    },
+    claim:function(){
+        if(UserNFT.nftIds.length==0){
+            toastAlert("没有可用会员卡！");
+        }else{
+            showTable(true);
+        }
     }
 }
 
@@ -3042,8 +3048,11 @@ function nav(classname) {
         document.getElementById(aa).style.borderBottomColor = "rgba(255, 255, 255, .25)";
     }
 
+    showTable(false);
     if(classname === "reward"){
         Reward.gotoPage();
+    }else if(classname === "me"){
+        showTable(true);
     }
 }
 
@@ -3098,6 +3107,16 @@ function toastAlert(msg) {
         document.getElementById('alertdiv').style.display = 'none';
     }, 2000);
 }
+
+window.showTable = (flag) => {
+    if(flag){
+        $(".pricingTable").show();
+        // black_overlay
+    }else{
+        $(".pricingTable").hide();
+    }
+}
+
 },{"@uniswap/sdk":98,"ethers":123}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
