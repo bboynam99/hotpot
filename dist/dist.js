@@ -2341,10 +2341,10 @@ App = {
             // ethers.providers = provider;
 
             ETHENV.init(chainId);
-
         }
         return App.initWallet();
     },
+
     initWallet: async function () {
         console.log("initWallet");
         if (web3 != null) {
@@ -2361,16 +2361,20 @@ App = {
         App.defaultAccount = accounts[0];
         // var filter = web3.eth.filter("pending");
 
-        // var options = {
-        //     fromBlock: "pending",
-        //     address:contractAddress.gacha
-        // };
-        // var filter = web3.eth.filter(options);
+        var options = {
+            fromBlock: "latest",
+            toBlock:"latest",
+            address:contractAddress.gacha
+        };
+        var filter = web3.eth.filter(options);
 
-        // filter.watch(function (error, result) {
-        //     if (!error)
-        //         console.log("filter:"+result.transactionHash+",address="+result.address);
-        // });
+        filter.watch(function (error, result) {
+            if (!error)
+                console.log("filter:"+result.transactionHash+",address="+result.address);
+            else{
+                console.log("filter error:"+error);
+            }
+        });
 
         return App.initContract();
         // return App.initUniSDK();
@@ -2745,6 +2749,7 @@ Stake = {
                     return console.error('Error with stake:', e);
                 }
                 showTopMsg("Pending...", 0, getEthersanUrl(result));
+                startListenTX(result);
             });
         }
 
@@ -2978,6 +2983,7 @@ Gacha = {
                     url = "https://ropsten.etherscan.io/tx/" + result;
                 }
                 showTopMsg("Pending...", 0, url);
+                startListenTX(result);
             }
         });
     },
@@ -2997,6 +3003,7 @@ Gacha = {
                     url = "https://ropsten.etherscan.io/tx/" + result;
                 }
                 showTopMsg("Pending...", 0, url);
+                startListenTX(result);
             }
         });
     },
@@ -3255,6 +3262,31 @@ function getEthersanUrl(tx) {
         url = "https://ropsten.etherscan.io/tx/" + tx;
     }
     return url;
+}
+
+function startListenTX(tx){
+    console.log("startListenTX");
+    var internal = setInterval(function(){
+        web3.eth.getTransactionReceipt(tx, function(e,result){
+            if(e){
+                console.log("tx error:"+e);
+            }else{
+                console.log("tx result:"+result);
+            }
+            if(result)
+            {
+                clearInterval(internal);
+                console.log("getTransactionReceipt ");
+                hideTopMsg();
+                if(result.status == '0x0'){
+                    showTopMsg(getString('txfail'),5000,getEthersanUrl(result.transactionHash));
+                    // toastAlert(getString('txfail'));
+                }
+                
+            }
+        });
+    },3000);
+
 }
 },{"@uniswap/sdk":98,"ethers":123}],8:[function(require,module,exports){
 "use strict";
