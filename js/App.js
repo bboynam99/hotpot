@@ -6,6 +6,8 @@ const Route = UNISWAP.Route;
 const WETH = UNISWAP.WETH;
 const utils = require('web3-utils');
 var currentPagePoolID = "";
+
+var ganacheId = '0x7b';
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -144,6 +146,7 @@ App = {
     initContract: function () {
         $.getJSON('contracts/StakePool.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            console.log("StakePool create");
             App.contracts.StakePool = web3.eth.contract(data.abi);
             return App.getStakePools();
         });
@@ -185,6 +188,7 @@ App = {
             return App.getNFTMarket();
         });
 
+        
         $.getJSON('contracts/UniV2Pair.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.UniV2Pair = web3.eth.contract(data.abi);
@@ -229,6 +233,13 @@ App = {
         console.log("getUniV2Pair=" + pair);
         univ2PairInfo[pair] = createPairInfo(pair);
         if (stakeERCAddress[pair] == null || stakeERCAddress[pair] == "") {
+            return;
+        }
+        if(ETHENV.chainId===ganacheId){
+            console.log("getUniV2PairinitStakePool  ");
+            setTimeout(() => {
+                Stake.initStakePool();
+            }, 2000);
             return;
         }
         univ2PairInfo[pair].contractInstance = App.contracts.UniV2Pair.at(stakeERCAddress[pair]);
@@ -350,6 +361,10 @@ App = {
 
         // call constant function
         App.contracts.HotPot.balanceOf(App.defaultAccount, function (e, result) {
+            if(e){
+                console.log("HotPot.balanceOf error : "+e);
+                return;
+            }
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
             $('.mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
             App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
@@ -373,6 +388,10 @@ App = {
 
         // call constant function
         App.contracts.Reward.getBalance(function (error, result) {
+            if(error){
+                console.log("Reward.getBalance error : "+error);
+                return;
+            }
             console.log("reward balanceOf=" + result + ":" + getTime()) // '0x25434534534'
             var total = (result.div(Math.pow(10, 18))).toFixed(2);
             $(".totalreward").text(total + " HotPot");
@@ -399,6 +418,7 @@ Stake = {
                         url = "https://ropsten.etherscan.io/tx/" + result;
                     }
                     showTopMsg("Pending...", 0, url);
+                    startListenTX(result);
                 }
             });
         }
@@ -526,7 +546,7 @@ Stake = {
             App.contracts.UniFactory.setProvider(App.web3Provider);
             // App.contracts.Loan.numberFormat = "BigNumber";
             // Use our contract to retieve and mark the adopted pets.
-            return Stake.generateUniHotpotPair();
+            return App.generateUniHotpotPair();
         });
     },
     generateUniHotpotPair: function () {
@@ -749,6 +769,7 @@ Gacha = {
                     url = "https://ropsten.etherscan.io/tx/" + result;
                 }
                 showTopMsg("Pending...", 0, url);
+                startListenTX(result);
             }
         });
     }
