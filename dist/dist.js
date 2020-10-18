@@ -2339,7 +2339,6 @@ App = {
             //     etherscan: 'IXP277PKS6ZT4DU5RWZ5ACQW5567IW22K6',
             // });
             // ethers.providers = provider;
-
             ETHENV.init(chainId);
         }
         return App.initWallet();
@@ -2671,6 +2670,13 @@ App = {
         });
     },
 };
+
+Loan = {
+    loanNFT:function(id){
+
+    }
+}
+
 var count = 0;
 Stake = {
     claimByNFT:function(id){
@@ -3046,7 +3052,13 @@ Gacha = {
 }
 
 Market = {
-
+    sellNFT:function(id){
+        document.getElementById("popTitle").innerHTML = "Sell";
+        document.getElementById('stakeInput').value = 0;
+        $("#withdrawdiv").hide();
+        $("#stakediv").show();
+        showAlert();
+    }
 }
 
 Reward = {
@@ -3212,6 +3224,7 @@ function nav(classname) {
     if (classname === "reward") {
         Reward.gotoPage();
     } else if (classname === "me") {
+        UserNFT.initNFTTable(nftUse[2]);
         showTable(true);
     }
 }
@@ -3280,7 +3293,7 @@ window.showTable = (flag) => {
 
 function showAlert() {
     document.getElementById('light').style.display = 'block';
-    document.getElementById('fade').style.display = 'block';
+    // document.getElementById('fade').style.display = 'block';
 }
 
 function hideAlert() {

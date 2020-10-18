@@ -1,13 +1,14 @@
 var nftUse = [
     'reward',
-    'stake'
+    'stake',
+    'me'
 ]
 
 NFT = {
     createNFT: function (nft, use) {
-        if (nft.id == 3) {
-            nft.usetime = Math.floor((new Date()).getTime() / 1000);
-        }
+        // if (nft.id == 3) {
+        //     nft.usetime = Math.floor((new Date()).getTime() / 1000);
+        // }
 
         var nodeli = $("<li class='pricingTable-firstTable_table'></li>");
         var name = "Member Card";
@@ -43,6 +44,10 @@ NFT = {
         nodeli1.attr("id", "nftusetime" + nft.id);
         nodeul.append(nodeli1);
 
+        nodeli.append(nodeh1);
+        nodeli.append(nodep);
+        nodeli.append(nodeul);
+
         var nodediv;
         if (use === nftUse[1]) {
             if (canUse){
@@ -52,7 +57,7 @@ NFT = {
             else{
                 nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
             }
-        } else {
+        } else if(use===nftUse[0]){
             if (canUse){
                 nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("DIVIDENDS");
                 nodeli.on("click",nodediv,function(){Reward.rewardByNFT(nft.id)});
@@ -60,12 +65,15 @@ NFT = {
             else{
                 nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
             }
-                
+        } else if(use === nftUse[2]){
+            nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("LOAN");
+            nodeli.on("click",nodediv,function(){Loan.loanNFT(nft.id)});
+
+            var nodedivsell = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("SELL");
+            nodeli.on("click",nodedivsell,function(){Market.sellNFT(nft.id)});
+            nodeli.append(nodedivsell);
         }
 
-        nodeli.append(nodeh1);
-        nodeli.append(nodep);
-        nodeli.append(nodeul);
         nodeli.append(nodediv);
         return nodeli;
     },
@@ -84,7 +92,7 @@ NFT = {
                 var nodeul = $("<ul class='pricingTable-firstTable'></ul>");
                 for (var i = 0; i < 3; i++) {
                     var count = 3 * j + i;
-                    if (count > ids.length) {
+                    if (count > ids.length-1) {
                         break;
                     }
                     var node = NFT.createNFT(nfts[ids[count]], use);
