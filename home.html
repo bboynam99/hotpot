@@ -108,6 +108,41 @@
 				</a>
 			</div>
 		</div>
+
+		<div id="divsell" class="white_content">
+			<span style="color: black;text-align: center;font-size: 24px;" class="popTitle">Sell</span>　　　
+			<button style="height: 40px;width: 40px; position: absolute;right: 20px;border-style: none;"
+				onclick="document.getElementById('divsell').style.display='none';document.getElementById('fade').style.display='none'">X</button>
+			<div style="color: black;margin-top: 10%;">
+				<span id="sellToken"> </span> , <span data-lang="inputprice">请输入价格：</span>
+			</div>　　
+			<input  name="name" type="number" style="width: 50%;margin-top: 5%;" autofocus="autofocus" value="0" class="stakeInput"> <span style="color: black;" id='priceunit'>HotPot</span>
+			<div class="divloan">
+				<p style="color: black;margin-top: 2%;" data-lang="inputtime">请输入借贷时长：</p>
+				<input  name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" class="loanInput"> <span style="color: black;">Day</span>	
+			</div>
+			
+			<div id='iddiv' hidden></div>
+			<div id="selldiv">
+				<a data-lang="sell" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Market.sellSure()"
+					class="card-link btn btn-primary btn-lg">
+					Sell
+				</a>
+			</div>
+			<div id="loandiv">
+				<a data-lang="loan" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
+					onclick="Loan.loanSure()" class="card-link btn btn-primary btn-lg">
+					Loan
+				</a>
+			</div>
+			<div>
+				<a data-lang="cancle" style="width: 60%;"
+					onclick="document.getElementById('divsell').style.display='none';document.getElementById('fade').style.display='none'"
+					class="card-link btn btn-primary btn-lg">
+					Cancle
+				</a>
+			</div>
+		</div>
 		
 
 		<div id="fade" class="black_overlay"></div>

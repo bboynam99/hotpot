@@ -50,7 +50,7 @@ a {
 	left: 50%;
 	transform: translateX(-50%);
 	width: 500px;
-	height: 45%;
+	height: fit-content;
 	padding: 20px;
 	background-color: rgba(239, 231, 234, 255);
 	z-index: 1002;
@@ -207,6 +207,14 @@ body {
 
 #msgBox {
 	width: 200px;
+	position: fixed;
+	right: 40px;
+	bottom: 50px;
+	_position: absolute;
+	_top: expression(eval(document.documentElement.scrollBottom+250))
+}
+
+#divsell {
 	position: fixed;
 	right: 40px;
 	bottom: 50px;

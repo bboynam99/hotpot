@@ -26,6 +26,7 @@ NFT = {
         var nodeul = $("<ul class='pricingTable-firstTable_table__options'></ul>");
         var availabe = "Available";
         var canUse = true;
+
         if (nft.usetime + 86400 > (new Date()).getTime() / 1000) {
             canUse = false;
             availabe = "Charging : 20h 10:36"
@@ -66,11 +67,9 @@ NFT = {
                 nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
             }
         } else if(use === nftUse[2]){
-            nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("LOAN");
-            nodeli.on("click",nodediv,function(){Loan.loanNFT(nft.id)});
+            nodediv = $("<div class='pricingTable-firstTable_table__getstart' onclick='Loan.loanNFT("+nft.id+")'></div>").text("LOAN");
 
-            var nodedivsell = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("SELL");
-            nodeli.on("click",nodedivsell,function(){Market.sellNFT(nft.id)});
+            var nodedivsell = $("<div class='pricingTable-firstTable_table__getstart' onclick='Market.sellNFT("+nft.id+")'></div>").text("SELL");
             nodeli.append(nodedivsell);
         }
 
