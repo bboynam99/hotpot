@@ -160,7 +160,7 @@ function createToken(name, address, poolAddress) {
     oTempToken.price = 0;
 
     //The pool's end time
-    periodFinish=0;
+    oTempToken.periodFinish=0;
 
     oTempToken.priceNormalize = false;
 
@@ -173,6 +173,8 @@ function createToken(name, address, poolAddress) {
     oTempToken.allowance = 0;
 
     oTempToken.rewardRate = 0;
+
+    oTempToken.lastRewardTime = 0;
 
     return oTempToken;
 }

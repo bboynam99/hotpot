@@ -2395,13 +2395,15 @@ App = {
 
         $.getJSON('contracts/NFTokenHotPot.json', function (data) {
             App.contracts.NFTHotPot = web3.eth.contract(data.abi);
+            App.contracts.NFTHotPot = App.contracts.NFTHotPot.at(contractAddress.nft);
             return UserNFT.getNFTBalances();
         });
 
         $.getJSON('contracts/Reward.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             App.contracts.Reward = web3.eth.contract(data.abi);
-            return App.getReward();
+            App.contracts.Reward = App.contracts.Reward.at(contractAddress.reward);
+            return Reward.getRewardInfo();
         });
 
         $.getJSON('contracts/Gacha.json', function (data) {
@@ -2614,7 +2616,9 @@ App = {
             }
             App.defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            $('.mybalance').text((result.div(Math.pow(10, 18)).toFixed(2)));
+            var b = (result.div(Math.pow(10, 18)).toFixed(2));
+            console.log("HotPot balanceOf "+b);
+            $('.mybalance').text(b);
             App.contracts.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
@@ -2629,27 +2633,11 @@ App = {
         });
 
     },
-
-    getReward: function () {
-        console.log("getReward");
-        App.contracts.Reward = App.contracts.Reward.at(contractAddress.reward);
-
-        // call constant function
-        App.contracts.Reward.getBalance(function (error, result) {
-            if (error) {
-                console.log("Reward.getBalance error : " + error);
-                return;
-            }
-            console.log("reward balanceOf=" + result) // '0x25434534534'
-            var total = (result.div(Math.pow(10, 18))).toFixed(2);
-            $(".totalreward").text(total + " HotPot");
-        });
-    },
 };
 
 var count = 0;
 Stake = {
-    totalStaked:0,
+    cliamTimer:null,
     notifyRewardAmount: function (token, amount) {
         var amount = web3.toHex(amount * 10 ** 18);
         stakeInfos[token].instance.notifyRewardAmount(amount, function (e, result) {
@@ -2669,6 +2657,15 @@ Stake = {
     },
     claimByNFT: function (id) {
         console.log("claimByNFT " + id);
+        var token = stakeInfos[currentPagePoolID];
+        if (token.userEarn == 0) {
+            toastAlert(getString('noearned'));
+            return;
+        } else {
+            token.instance.getRewardByNFT(id,function (e, r) {
+                afterSendTx(e, r);
+            });
+        }
     },
     approve: function () {
         console.log("stake approve:" + currentPagePoolID);
@@ -2806,6 +2803,10 @@ Stake = {
         $("#totalcir").text(total.toFixed(2));
     },
     initpooldata: function (name) {
+        if(Stake.cliamTimer!=null){
+            clearInterval(Stake.cliamTimer);
+            Stake.cliamTimer = null;
+        }
         $('.farmname').text(name + ' FARM');
         currentPagePoolID = name;
 
@@ -2831,6 +2832,24 @@ Stake = {
         let earned = token.userEarn;
         earned = (earned / Math.pow(10, stakeInfos["hotpot"].decimals));
         $('.rewardbalance').text(earned.toFixed(2));
+
+        var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
+        var now = Math.floor(((new Date()).getTime())/1000);
+        var delay =  lastRewardTime + 86400 - now;
+        console.log("lastRewardTime="+lastRewardTime+",delay="+delay+",token="+name);
+        if (delay > 0) {
+            $("#claimtimep").show();
+            Stake.cliamTimer = setInterval(() => {
+                delay -= 1;
+                if(delay==0){
+                    $("#claimtimep").hide();
+                    clearInterval(Stake.cliamTimer);
+                }
+                $("#claimtime").text(formatFomoTime(delay));
+            }, 1000);
+        }else{
+            $("#claimtimep").hide();
+        }
     },
     initStakePool: function () {
         console.log("initStakePool");
@@ -2897,6 +2916,10 @@ Stake = {
                             stakeInfos[poolName].periodFinish = r;
 
                             Stake.checkTotalStaked();   
+                        });
+                        stakeInfos[poolName].instance.lastRewardTime(function (e, r) {
+                            console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
+                            stakeInfos[poolName].lastRewardTime = r;
                         });
                     });
                 });
@@ -3161,6 +3184,31 @@ Market = {
 Reward = {
     gotoPage: function () {
         console.log("Reward gotoPage");
+        Reward.getRewardInfo();
+    },
+    getRewardInfo:function(){
+        console.log("getReward");
+        
+        // call constant function
+        App.contracts.Reward.getBalance(function (error, result) {
+            if (error) {
+                console.log("Reward.getBalance error : " + error);
+                return;
+            }
+            console.log("reward balanceOf=" + result) // '0x25434534534'
+            var total = (result.div(Math.pow(10, 18))).toFixed(2);
+            $(".totalreward").text(total + " HotPot");
+        });
+        App.contracts.Reward.calNormalReward(1, function (e, result) {
+            if (e) {
+                toastAlert("Error with calReward:" + e);
+                return console.error('Error with getReward:', e);
+            }
+            
+            var total = (result.div(Math.pow(10, 18))).toFixed(2);
+            console.log("calReward " + total);
+            $("#rewardpercard").text(total);
+        });
     },
     claim: function () {
         if (UserNFT.nftIds.length == 0) {
@@ -3178,13 +3226,7 @@ Reward = {
                 toastAlert(getString('rewardsuccess'));
             }
         });
-        App.contracts.Reward.calReward(id, function (e, result) {
-            if (e) {
-                toastAlert("Error with calReward:" + e);
-                return console.error('Error with getReward:', e);
-            }
-            console.log("calReward " + result);
-        });
+
         App.contracts.Reward.getReward(id, function (e, result) {
             if (e) {
                 toastAlert("Error with getReward:" + e);
@@ -3203,8 +3245,7 @@ UserNFT = {
     getNFTBalances: function () {
         console.log("getNFTBalances");
         // initiate contract for an address
-        App.contracts.NFTHotPot = App.contracts.NFTHotPot.at(contractAddress.nft);
-
+        
         App.contracts.NFTHotPot.totalSupply(function (e, result) {
             $(".ticketbalance").text(result);
         });
@@ -3213,6 +3254,8 @@ UserNFT = {
         App.contracts.NFTHotPot.balanceOf(App.defaultAccount, function (error, result) {
             console.log("getNFTBalances balanceOf=" + result) // '0x25434534534'
             userBalance = result;
+            UserNFT.nftIds = Array();
+
             $(".myticketbalance").text(result);
             for (var i = 0; i < result; i++) {
                 App.contracts.NFTHotPot.tokenOfOwnerByIndex(App.defaultAccount, i, function (e, result) {
@@ -3496,18 +3539,48 @@ function startListenTX(tx) {
 }
 
 window.testFunction = () => {
-    for (var i = 0; i < allPoolTokens.length; i++) {
-        var token = allPoolTokens[i];
-        Stake.notifyRewardAmount(token, 70000);
-    }
+    // for (var i = 0; i < allPoolTokens.length; i++) {
+    //     var token = allPoolTokens[i];
+    // //     Stake.notifyRewardAmount(token, 70000);
+    //     stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
+    //         afterSendTx(e,r);
+    //     });
+    // }
+    App.contracts.Reward.loan(function(e,r){
+        console.log("loan = "+r);
+    });
+    App.contracts.Reward.erc20(function(e,r){
+        console.log("erc20 = "+r);
+    });
+    App.contracts.Reward.hotpot(function(e,r){
+        console.log("hotpot = "+r);
+    });
+    App.contracts.Reward.setLoan(contractAddress['loan'], function(e,r){
+        afterSendTx(r);
+    });
+
 }
 
 function autoRefresh(){
     console.log("auto refresh");
     App.getBalances();
     Stake.initStakePool();
+    Reward.getRewardInfo();
+    UserNFT.getNFTBalances();
 }
 
+
+function formatFomoTime(t) {
+    if (t < 0) {
+        return 'error';
+    }
+    // console.log("formatFomoTime : "+t)
+    const times = Math.floor(t);
+    const h = Math.floor(times / 3600);
+    const m = Math.floor((times % 3600) / 60);
+    const s = times % 60;
+    return h + "h " + m + "m " + ' ' + + s + "s";
+}
 },{"@uniswap/sdk":98,"web3-utils":158}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });

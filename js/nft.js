@@ -27,11 +27,14 @@ NFT = {
         var availabe = "Available";
         var canUse = true;
 
-        if (nft.usetime + 86400 > (new Date()).getTime() / 1000) {
+        var usetime = parseInt((nft.usetime).valueOf());
+        var delay = usetime + 86400 - ((new Date()).getTime()) / 1000;
+
+        if (delay>0) {
             canUse = false;
             availabe = "Charging : 20h 10:36"
 
-            let fomoTime = Math.floor(nft.usetime + 86400 - (new Date()).getTime() / 1000);
+            let fomoTime = Math.floor(delay);
             console.log("charger time=" + fomoTime);
             availabe = "Charging : " + formatFomoTime(fomoTime);
             if (fomoTime > 0) {
@@ -114,10 +117,9 @@ NFT = {
     },
 }
 
-
 function formatFomoTime(t) {
     if (t < 0) {
-        return "已结束，奖励结算中";
+        return 'error';
     }
     // console.log("formatFomoTime : "+t)
     const times = Math.floor(t);

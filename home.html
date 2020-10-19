@@ -347,11 +347,11 @@
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="">借贷市场（最近24小时）</h6>
 						<p>成交额：$2000</p>
-						<p>借贷数量：14张</p>
+						<p>借贷成交量：14张</p>
 						<p>借贷成交均价：$100/day</p>
 					</div>
 				</div>
-				<p style="margin:3% 3%">成交K线图近期推出...</p>
+				<p style="margin:3% 3%">成交价格K线图近期推出...</p>
 				<div class="table-users">
 					<div class="header">出售</div>
 
@@ -380,31 +380,38 @@
 					</table>
 				</div>
 
-
+				<div data-lang="loanintro">借贷可以借1天起</div>
 				<div class="table-users" style="margin-top: 5%;">
 					<div class="header">借贷</div>
 
 					<table cellspacing="0">
-						<tr>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th width="230">Comments</th>
+						<tr class="tabletr">
+							<th>ID</th>
+							<th>Grade</th>
+							<th>Avaliable</th>
+							<th>Price/Day</th>
+							<th>Time</th>
+							<th>Loan</th>
+							<!-- <th width="230">Comments</th> -->
 						</tr>
 
 						<tr>
-							<td>Jane Doe</td>
-							<td>jane.doe@foo.com</td>
-							<td>01 800 2000</td>
-							<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
+							<td>001</td>
+							<td>Normal</td>
+							<td>available</td>
+							<td>1000.00</td>
+							<td>2Days 20h30m</td>
+							<td><button>Loan</button></td>
+							<!-- <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td> -->
 						</tr>
-
 						<tr>
-							<td>John Doe</td>
-							<td>john.doe@foo.com</td>
-							<td>01 800 2000</td>
-							<td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque,
-								nesciunt rerum perferendis, inventore.</td>
+							<td>001</td>
+							<td>Normal</td>
+							<td>available</td>
+							<td>1000.00</td>
+							<td>2Days 20h30m</td>
+							<td><button>Loan</button></td>
+							<!-- <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td> -->
 						</tr>
 					</table>
 				</div>
@@ -418,7 +425,7 @@
 						<H3 class="card-text totalreward">-.----</H3>
 						<a class="card-link btn btn-primary btn-lg" onclick="Reward.claim()"
 							data-lang="reward">Reward</a>
-						<p style="margin-top: 5%;">当前普通会员卡可领取分红：<span>100.0</span></p>
+						<p style="margin-top: 5%;"><span data-lang="memberinfo">当前普通会员卡每日可领取分红：</span><span id="rewardpercard">100.0</span> HotPot</p>
 					</div>
 				</div>
 				<div class="card swapcard  web3true">
@@ -427,9 +434,9 @@
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
 
-						<p>普通会员卡：<span id="grade1num">0</span>张(可使用<span id="grade1unuse">0</span>张)</p>
-						<p>金色会员卡：<span id="grade2num">0</span>张(可使用<span id="grade2unuse">0</span>张)</p>
-						<p>紫金会员卡：<span id="grade3num">0</span>张(可使用<span id="grade3unuse">0</span>张)</p>
+						<p><span data-lang="normalcard">普通会员卡</span> : <span id="grade1num">0</span> (<span data-lang="available">可使用</span> : <span id="grade1unuse">0</span>)</p>
+						<p><span data-lang="goldcard">金色会员卡</span> : <span id="grade2num">0</span> (<span data-lang="available">可使用</span> : <span id="grade2unuse">0</span>)</p>
+						<p><span data-lang="epiccard">紫金会员卡</span> : <span id="grade3num">0</span> (<span data-lang="available">可使用</span> : <span id="grade3unuse">0</span>)</p>
 					</div>
 				</div>
 
@@ -583,7 +590,8 @@
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="tokenclaim">HOTPOT CLAIM</h6>
 							<H3 class="card-text rewardbalance">-.----</H3>
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimFree()"
-								data-lang="claimfree">CLAIM</a>
+								><span data-lang="claimfree">CLAIM</span></a>
+								<p id="claimtimep">(<span data-lang="claimtime">距离下次领取</span> ：<span id="claimtime">23h10m</span>)</p>
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimNFT()"
 								data-lang="claimnft">CLAIM</a>
 						</div>
@@ -610,8 +618,11 @@
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.withdraw()"
 								data-lang="withdraw">WITHDRAW</a>
 						</div>
+						
 					</div>
+					
 				</div>
+				<span style="margin-top: 5%!important;" data-lang="stakeinfo">Stake and withdraw anytime, no fee.</span>
 			</main>
 
 
