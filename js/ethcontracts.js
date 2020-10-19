@@ -30,21 +30,21 @@ var mainContracts = {
 }
 
 var ropstenContracts = {
-    "nft": "0xF0B81d9b69F8F31fB12aBE3f65A0b26B3855EA8B",
-    "hotpot": "0x5F5F353DEF50B7F5258c0Ff3eF710c3199859CB8",
-    "gacha": "0x66651d7d171367d1641ddeeab8332FB2773DCF99",
-    "loan": "0x6eFD34051A519C83a34c88eeC3E6dF4C412c00aE",
-    "market": "0x7DCB044D7D8AF2D6ABfB7B1eC497493147E3FECe",
-    "reward": "0x359Ce203647031e0bc9C9135f7CA4Ae1eb26073E",
+    "nft": "0x9c00EFbD9A187bE65ba088A59B133baEA06B1f71",
+    "hotpot": "0x42670e96F3F14399aeb3660472800AeC9b689e55",
+    "gacha": "0x6fE2eFC4b7c3CB2a16933Ac018d52e974813776d",
+    "loan": "0x77AAeDAb8d613b88Ef2329B7aD107516b8E5233d",
+    "market": "0xbAf28532f11f7CA008DAed382bba24A5BA243414",
+    "reward": "0xfe405e149c907D3f5c9979159D0Ad7d929a63B27",
 }
 
 var ganacheContracts = {
-    "nft": "0x2e53Fc0Be23cc164Ba531Aa3Bb779b2001d75bfa",
-    "hotpot": "0xCd0dB3A7922006E2E5141bB86596c076211F8a73",
-    "gacha": "0xB21A275f4d41403ddB7323c6ebaC9017A366b784",
-    "loan": "0x30eB316A852a4068e278f60fa1D9c3aF2e3C17cE",
-    "market": "0xc2dbD1fc7642900A3968B18423960879c938b936",
-    "reward": "0x776B9beB22C0947a6734Ea51961077f4540b14fc",
+    "nft": "0x07Ef939016643763201007909c5CC35858b290E1",
+    "hotpot": "0xe18eDD671c0b0ebE4F1aD5B2f1C5c065C8cA64ba",
+    "gacha": "0xEfA4D518fD856e478eE23e475Ca672Cc0a615629",
+    "loan": "0xf8125D436990b8FFc2d01834d2f76636c9a881f4",
+    "market": "0x6cE3c77Fe272c1d64340b51f66B8C341Cb70485D",
+    "reward": "0x07a45cD6D828f23De6e5Ba4899688d480e203bfe",
 }
 
 var mainPool = {
@@ -56,20 +56,20 @@ var mainPool = {
 }
 
 var ropstenPool = {
-    "usdt":"0x5Be34889FFEB5a4da4FBF66F5DC33A15A516ff83",
-    "eth/usdt":"0x6d4765f7E143A9d9c14B29936f38b9CaFf966eA5",
-    "uni/eth":"0x22E11d3A47Be9A0c73101Cf0b7EF157b0e92149F",
-    "hotpot":"0x1d766fa76C555c79dB162A738c4782c083642D9E",
-    "hotpot/eth":"0x0A2eF64D457AE65fA81748F6b3F150710a7e3b6e"
+    "usdt":"0x343121206D75c89961Ac2822ecf9F5F5762Db304",
+    "eth/usdt":"0xF4B3d0586aD31306ed5e8357b7e841Fa3f3594aA",
+    "uni/eth":"0xa4B9a2854C43d02e365E770408759A063784901a",
+    "hotpot":"0x7afa51532b542eF9Bc5CEDD233eee6A8f441B4A5",
+    "hotpot/eth":"0xeb549d230C16534d6d58bAAd4F321a83cE51419B"
 }
 
 
 var ganachePool = {
-    "usdt":"0x781ED42B0eF6199Ccd2863DE3ebE325b8730b4bB",
-    "eth/usdt":"0x39FfA08A0Fa6f811F47C05900f6714d0cDCF6D79",
-    "uni/eth":"0xC6D75eb8c21C76E0b54444479B24b9aA6B747B62",
-    "hotpot":"0x2EccdD1794cfC45C75bfeb9FbAc00574c7E77D33",
-    "hotpot/eth":"0x36d5287e52B68e7a13c88ACeE856BCFC6dF7FF63"
+    "usdt":"0xf6cFA1c520a9210eedC4a34b651f1B2BC377c921",
+    "eth/usdt":"0x83414F6884824B3C3f84982b5035B975016B314c",
+    "uni/eth":"0x6Cec720a5BB6D1a32542f3481cA01C34290869e7",
+    "hotpot":"0xD7082591252A713af183A685c5200cE2ef945AEE",
+    "hotpot/eth":"0xe19Cd136f6B59cfcedA33cEB1D06f34B57B80A7E"
 }
 
 var mainStakeERC = {
@@ -80,10 +80,10 @@ var mainStakeERC = {
 }
 
 var ropstenStakeERC = {
-    "usdt":"0x0d9c8723b343a8368bebe0b5e89273ff8d712e3c",
-    "eth/usdt":"0xbc30AaA8e99d0f0e435FC938034850c2fC77f753",
-    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",
-    "hotpot/eth":"0xCdaF6Ec7bFE04A3cEce52436B39BE0A2c2F85aDc"
+    "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",  //dai
+    "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",  //eth/dai
+    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "hotpot/eth":"0xDBA5276922b01bb01F9b1047e941aBd6469Aab4B"
 }
 
    // var stakeTokens = [
@@ -94,10 +94,10 @@ var ropstenStakeERC = {
     //     'hotpoteth'
     // ];
 var ganacheStakeERC = {
-    "usdt":"0xaCdE14dA5B325e937794dcfEaBDB1b9afA958083",
-    "eth/usdt":"0xfb42D94EEa4C28aa098a564671e52349001a9780",
-    "uni/eth":"0xB41D8e3b64e488B95C295D068D94e43000C8d8f7",
-    "hotpot/eth":"0x2897615b467434aCb5d8c85C15b47B08Fc385e63"
+    "usdt":"0xad2b72858c66B40cBDb97c28A2B939df5F147367",
+    "eth/usdt":"0x9d37ABBA38F30F336A87c2acC8E8B75D1a476Bc0",
+    "uni/eth":"0xBDeFFdE8a1358B96A6859fD0aEFE1b371a392b9e",
+    "hotpot/eth":"0xa99d9FFc19aC4d570dBcBce3b227389C84D9dB92"
 }
 
 function setChainId(chainId){

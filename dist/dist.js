@@ -2231,7 +2231,7 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],7:[function(require,module,exports){
-const UNISWAP = require('@uniswap/sdk')
+const UNISWAP = require('@uniswap/sdk');
 const Fetcher = UNISWAP.Fetcher;
 const ChainId = UNISWAP.ChainId;
 const Token = UNISWAP.Token;
@@ -2421,13 +2421,6 @@ App = {
             return App.getNFTMarket();
         });
 
-        
-        $.getJSON('contracts/UniV2Pair.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            App.contracts.UniV2Pair = web3.eth.contract(data.abi);
-            return App.getUniV2Pairs();
-        });
-
     },
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -2452,7 +2445,7 @@ App = {
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].decimals(function (e, result) {
                 stakeInfos[token].decimals = result;
-                App.contracts.HotPot.allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = result;
                     if (currentPagePoolID != "") {
@@ -2554,6 +2547,13 @@ App = {
             var lpAddress = stakeERCAddress[poolToken];
             stakeInfos[poolToken] = createToken(poolToken, lpAddress, poolAddress);
         }
+                
+        $.getJSON('contracts/UniV2Pair.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            App.contracts.UniV2Pair = web3.eth.contract(data.abi);
+            return App.getUniV2Pairs();
+        });
+        
     },
     checkApproval: function () {
         console.log("checkApproval");
@@ -2634,13 +2634,31 @@ App = {
 
 var count = 0;
 Stake = {
+    notifyRewardAmount:function(){
+        var amount = web3.toHex(70000*10**18);
+        stakeInfos['eth/usdt'].instance.notifyRewardAmount(amount,function(e,result){
+            if (e) {
+                console.log("stake approve error " + e);
+            } else {
+                var url = "https://etherscan.io/tx/" + result;
+                if (ETHENV.chainId == '0x1') {
+                    url = "https://etherscan.io/tx/" + result;
+                } else if (ETHENV.chainId == '0x3') {
+                    url = "https://ropsten.etherscan.io/tx/" + result;
+                }
+                showTopMsg("Pending...", 0, url);
+                startListenTX(result);
+            }
+        });
+    },
     claimByNFT: function (id) {
         console.log("claimByNFT " + id);
     },
     approve: function () {
         console.log("stake approve:" + currentPagePoolID);
         if (currentPagePoolID != "") {
-            App.contracts.HotPot.approve(stakePoolAddress[currentPagePoolID], web3.toHex(Math.pow(10, 30)), function (e, result) {
+            var stakeToken = stakeERCContract[currentPagePoolID];
+            stakeToken.approve(stakePoolAddress[currentPagePoolID], web3.toHex(Math.pow(10, 30)), function (e, result) {
                 if (e) {
                     console.log("stake approve error " + e);
                 } else {
@@ -2663,7 +2681,9 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         } else {
-
+            token.instance.getRewardFree(function(e,r){
+                afterSendTx(e,r);
+            });
         }
     },
     claimNFT: function () {
@@ -2766,31 +2786,7 @@ Stake = {
         }
         total = total.div(Math.pow(10, 18));
         console.log("calTotalCirculation=" + total);
-        $("#totalcir").text(total);
-    },
-
-    generateUniFactory: function () {
-        $.getJSON('contracts/UniswapFatory.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            var TutorialTokenArtifact = data;
-            App.contracts.UniFactory = TruffleContract(TutorialTokenArtifact);
-
-            // Set the provider for our contract.
-            App.contracts.UniFactory.setProvider(App.web3Provider);
-            // App.contracts.Loan.numberFormat = "BigNumber";
-            // Use our contract to retieve and mark the adopted pets.
-            return App.generateUniHotpotPair();
-        });
-    },
-    generateUniHotpotPair: function () {
-        App.contracts.UniFactory.at(uniFactoryAddress)
-            .then(function (instance) {
-                return instance.createPair(stakeERCAddress['hotpot'], ethAddress)
-            })
-            .then(function (result) {
-                console.log("createPair=" + result.c[0]);
-                // stakeERCAddress['hotpot/eth'] = result.c[0];
-            });
+        $("#totalcir").text(total.toFixed(2));
     },
     initpooldata: function (name) {
         $('.farmname').text(name + ' FARM');
@@ -2806,18 +2802,18 @@ Stake = {
         let totalStake = token.poolTotalStake;
         // console.log("totalStake=" + totalStake);
 
-        $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))));
+        $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))).toFixed(2)+" "+name);
         // pools[name].poolTotalStake = totalStake;
 
         let userStake = token.userStake;
         // console.log("userStake=" + userStake);
-        $('.stakedbalance').text((userStake.div(Math.pow(10, stakeDecimals))));
+        $('.stakedbalance').text((userStake.div(Math.pow(10, stakeDecimals))).toFixed(2)+" "+name);
 
         $('#stakeToken').text(name + " ");
 
-        let earned = token.earned;
+        let earned = token.userEarn;
         earned = (earned / Math.pow(10, stakeInfos["hotpot"].decimals));
-        $('.rewardbalance').text(earned);
+        $('.rewardbalance').text(earned.toFixed(2));
     },
     initStakePool: function () {
         console.log("initStakePool");
@@ -2827,16 +2823,19 @@ Stake = {
         }
     },
     checkTotalStaked: function () {
-        var totalPrice = 0;
+        var totalPrice = new BigNumber(0);
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
             var stake = stakeInfos[poolName].poolTotalStake;
+            console.log("checkTotalStaked: pool="+poolName+",price="+stakeInfos[poolName].price+",stake="+stake);
             if (stake == 0) {
-                return;
+                continue;
             }
-            totalPrice = totalPrice.add(stake.div(Math.pow(10, stakeInfos[poolName].decimals)).mul(stakeInfos[poolName].price));
+            var stakePrice = stake.div(Math.pow(10, stakeInfos[poolName].decimals)).mul(stakeInfos[poolName].price);
+            console.log("checkTotalStaked: pool="+poolName+",stake price="+stakePrice);
+            totalPrice = totalPrice.plus(stakePrice);
         }
-        $("#totalstake").text(totalPrice);
+        $("#totalstake").text(totalPrice.toFixed(2));
     },
     initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
@@ -2859,6 +2858,15 @@ Stake = {
                     });
                 });
             });
+        });
+        stakeInfos[poolName].instance.periodFinish(function(e,r){
+            console.log("initSinglePool pool=" + poolName + ",periodFinish:" + r);
+        });
+        stakeInfos[poolName].instance.starttime(function(e,r){
+            console.log("initSinglePool pool=" + poolName + ",starttime:" + r);
+        });
+        stakeInfos[poolName].instance.rewardContract(function(e,r){
+            console.log("initSinglePool pool=" + poolName + ",rewardContract:" + r);
         });
     },
     updateAPY: function (name) {
@@ -3392,9 +3400,24 @@ function hideSellAlert() {
 }
 
 
-
 function getString(id) {
     return $.i18n.map[id];
+}
+
+function afterSendTx(error,result){
+    if (error) {
+        console.log("stake approve error " + error);
+        toastAlert("Error:"+error);
+    } else {
+        var url = "https://etherscan.io/tx/" + result;
+        if (ETHENV.chainId == '0x1') {
+            url = "https://etherscan.io/tx/" + result;
+        } else if (ETHENV.chainId == '0x3') {
+            url = "https://ropsten.etherscan.io/tx/" + result;
+        }
+        showTopMsg("Pending...", 0, url);
+        startListenTX(result);
+    }
 }
 
 function getEthersanUrl(tx) {
@@ -3430,7 +3453,11 @@ function startListenTX(tx) {
 
 }
 
-
+window.testFunction = ()=>{
+    var token = 'usdt';
+    currentPagePoolID = "usdt";
+    Stake.approve();
+}
 },{"@uniswap/sdk":98,"web3-utils":158}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
