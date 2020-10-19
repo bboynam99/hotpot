@@ -11,8 +11,6 @@ var stakeInfos = {}
 
 var ethAddress;
 
-var testFlag = true;
-
 //createPairInfo
 var univ2PairInfo={}
 
@@ -103,7 +101,6 @@ var ganacheStakeERC = {
 function setChainId(chainId){
     if (chainId === "0x1") {
         console.log("connect main");
-        testFlag = false;
         contractAddress = mainContracts;
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
@@ -161,6 +158,9 @@ function createToken(name, address, poolAddress) {
 
     //该矿池的挖矿币的价格
     oTempToken.price = 0;
+
+    //The pool's end time
+    periodFinish=0;
 
     oTempToken.priceNormalize = false;
 
