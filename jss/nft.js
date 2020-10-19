@@ -36,11 +36,11 @@ NFT = {
 
             let fomoTime = Math.floor(delay);
             console.log("charger time=" + fomoTime);
-            availabe = "Charging : " + formatFomoTime(fomoTime);
+            availabe = "Charging : " + formatTime(fomoTime);
             if (fomoTime > 0) {
                 setInterval(() => {
                     fomoTime -= 1;
-                    $("#nftusetime" + nft.id).text("Charging : " + formatFomoTime(fomoTime))
+                    $("#nftusetime" + nft.id).text("Charging : " + formatTime(fomoTime))
                 }, 1000);
             }
         }
@@ -115,21 +115,4 @@ NFT = {
         nft.sell = false;
         return nft;
     },
-}
-
-function formatFomoTime(t) {
-    if (t < 0) {
-        return 'error';
-    }
-    // console.log("formatFomoTime : "+t)
-    const times = Math.floor(t);
-    const h = Math.floor(times / 3600);
-    const m = Math.floor((times % 3600) / 60);
-    const s = times % 60;
-    return h + "h " + m + "m " + ' ' + + s + "s";
-}
-
-function formatZero(num, len) {
-    if (String(num).length > len) return num;
-    return (Array(len).join(0) + num).slice(-len);
 }

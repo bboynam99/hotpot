@@ -12,19 +12,20 @@
 	<link rel=" preconnect" href="https://stackpath.bootstrapcdn.com/" crossorigin>
 	<link rel=" preconnect" href="https://raw.githubusercontent.com" crossorigin>
 
+	<script type="text/javascript" src="jss/utils.js"></script>
 	<link rel="icon" href="images/hotpoticon.png">
 
-	<script src="js/ethcontracts.js" crossorigin="anonymous"></script>
+	<script src="jss/ethcontracts.js" crossorigin="anonymous"></script>
 	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 	<link rel="stylesheet" href="styles/tablestyle.css">
 
 	<script type="text/javascript" src="dist/dist.js"></script>
 
-	<script type="text/javascript" src="js/nft.js"></script>
+	<script type="text/javascript" src="jss/nft.js"></script>
 	<script type="text/javascript" src="js/bignumber.min.js"></script>
 	<script type="text/javascript" src="js/truffle-contract.js"></script>
-
+	<link href="styles/buttons.css" rel="stylesheet">
 	<link href="styles/table.css" rel="stylesheet">
 	<link href="styles/googleapis.css" rel="stylesheet">
 	<meta name="viewport" content="width=500, initial-scale=1">
@@ -354,7 +355,7 @@
 				<p style="margin:3% 3%">成交价格K线图近期推出...</p>
 				<div class="table-users">
 					<div class="header">出售</div>
-
+					<div data-lang="nosell" id="noloan"></div>
 					<table cellspacing="0">
 						<tr>
 							<th>Name</th>
@@ -383,9 +384,9 @@
 				<div data-lang="loanintro">借贷可以借1天起</div>
 				<div class="table-users" style="margin-top: 5%;">
 					<div class="header">借贷</div>
-
-					<table cellspacing="0">
-						<tr class="tabletr">
+					<div data-lang="noloan" id="noloan"></div>
+					<table cellspacing="0" id="tableloan">
+						<tr>
 							<th>ID</th>
 							<th>Grade</th>
 							<th>Avaliable</th>
@@ -401,8 +402,7 @@
 							<td>available</td>
 							<td>1000.00</td>
 							<td>2Days 20h30m</td>
-							<td><button>Loan</button></td>
-							<!-- <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td> -->
+							<td style="text-align: center;"><button class="green button">Loan</button></td>
 						</tr>
 						<tr>
 							<td>001</td>

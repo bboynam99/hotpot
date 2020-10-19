@@ -18,6 +18,8 @@ var uniFactoryAddress = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f";
 
 var balanceOfHotpot={};
 
+var contractsInstance = {};
+
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
