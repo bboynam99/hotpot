@@ -384,7 +384,7 @@ App = {
             App.defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
             var b = (result.div(Math.pow(10, 18)).toFixed(2));
-            console.log("HotPot balanceOf "+b);
+            console.log("HotPot balanceOf " + b);
             $('.mybalance').text(b);
             contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
@@ -404,7 +404,7 @@ App = {
 
 var count = 0;
 Stake = {
-    cliamTimer:null,
+    cliamTimer: null,
     notifyRewardAmount: function (token, amount) {
         var amount = web3.toHex(amount * 10 ** 18);
         stakeInfos[token].instance.notifyRewardAmount(amount, function (e, result) {
@@ -429,7 +429,7 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         } else {
-            token.instance.getRewardByNFT(id,function (e, r) {
+            token.instance.getRewardByNFT(id, function (e, r) {
                 afterSendTx(e, r);
             });
         }
@@ -450,7 +450,7 @@ Stake = {
                     }
                     showTopMsg("Pending...", 0, url);
                     startListenTX(result);
-                    $("#approvestake").text(getString('approvestake')+"...");
+                    $("#approvestake").text(getString('approvestake') + "...");
                 }
             });
         }
@@ -570,7 +570,7 @@ Stake = {
         $("#totalcir").text(total.toFixed(2));
     },
     initpooldata: function (name) {
-        if(Stake.cliamTimer!=null){
+        if (Stake.cliamTimer != null) {
             clearInterval(Stake.cliamTimer);
             Stake.cliamTimer = null;
         }
@@ -601,20 +601,20 @@ Stake = {
         $('.rewardbalance').text(earned.toFixed(2));
 
         var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
-        var now = Math.floor(((new Date()).getTime())/1000);
-        var delay =  lastRewardTime + 86400 - now;
-        console.log("lastRewardTime="+lastRewardTime+",delay="+delay+",token="+name);
+        var now = Math.floor(((new Date()).getTime()) / 1000);
+        var delay = lastRewardTime + 86400 - now;
+        console.log("lastRewardTime=" + lastRewardTime + ",delay=" + delay + ",token=" + name);
         if (delay > 0) {
             $("#claimtimep").show();
             Stake.cliamTimer = setInterval(() => {
                 delay -= 1;
-                if(delay==0){
+                if (delay == 0) {
                     $("#claimtimep").hide();
                     clearInterval(Stake.cliamTimer);
                 }
                 $("#claimtime").text(formatFomoTime(delay));
             }, 1000);
-        }else{
+        } else {
             $("#claimtimep").hide();
         }
     },
@@ -626,17 +626,17 @@ Stake = {
         }
     },
     checkTotalStaked: function () {
-        if(Stake.totalStake){
+        if (Stake.totalStake) {
             return;
         }
         var totalPrice = new BigNumber(0);
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
             var periodFinish = stakeInfos[poolName].periodFinish;
-            if(!periodFinish){
+            if (!periodFinish) {
                 return;
             }
-            if(periodFinish==0){
+            if (periodFinish == 0) {
                 return;
             }
         }
@@ -673,8 +673,8 @@ Stake = {
                         console.log("initSinglePool pool=" + poolName + ",rewardRate:" + result);
                         stakeInfos[poolName].rewardRate = result;
                         Stake.updateAPY(poolName);
-                        
-                        console.log("initSinglePool poolName="+poolName+",currentPagePoolID="+currentPagePoolID);
+
+                        console.log("initSinglePool poolName=" + poolName + ",currentPagePoolID=" + currentPagePoolID);
                         if (currentPagePoolID === poolName) {
                             Stake.initpooldata(currentPagePoolID);
                         }
@@ -682,7 +682,7 @@ Stake = {
                             console.log("initSinglePool pool=" + poolName + ",periodFinish:" + r);
                             stakeInfos[poolName].periodFinish = r;
 
-                            Stake.checkTotalStaked();   
+                            Stake.checkTotalStaked();
                         });
                         stakeInfos[poolName].instance.lastRewardTime(function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
@@ -926,7 +926,18 @@ Market = {
         }
         price = web3.toHex(price * Math.pow(10, 18));
         id = parseInt(id);
+
         var bytes = utils.hexToBytes(price);
+
+        var newbytes = Array(32);
+        for (var i = 0; i < 32; i++) {
+            newbytes[i] = 0;
+        }
+        if (bytes.length < 32) {
+            for (var i = 0; i < bytes.length; i++) {
+                newbytes[31 - i] = bytes[bytes.length - 1 - i];
+            }
+        }
 
         contractsInstance.NFTMarket.Listed(function (e, result) {
             if (e) {
@@ -936,7 +947,7 @@ Market = {
             }
         });
 
-        contractsInstance.NFTHotPot.safeTransferFrom['address,address,uint256,bytes'](App.defaultAccount, contractAddress.market, id, bytes, function (e, result) {
+        contractsInstance.NFTHotPot.safeTransferFrom['address,address,uint256,bytes'](App.defaultAccount, contractAddress.market, id, newbytes, function (e, result) {
             if (e) {
                 toastAlert("Error:" + e.message);
             } else {
@@ -953,9 +964,9 @@ Reward = {
         console.log("Reward gotoPage");
         Reward.getRewardInfo();
     },
-    getRewardInfo:function(){
+    getRewardInfo: function () {
         console.log("getReward");
-        
+
         // call constant function
         contractsInstance.Reward.getBalance(function (error, result) {
             if (error) {
@@ -971,7 +982,7 @@ Reward = {
                 toastAlert("Error with calReward:" + e);
                 return console.error('Error with getReward:', e);
             }
-            
+
             var total = (result.div(Math.pow(10, 18))).toFixed(2);
             console.log("calReward " + total);
             $("#rewardpercard").text(total);
@@ -1012,7 +1023,7 @@ UserNFT = {
     getNFTBalances: function () {
         console.log("getNFTBalances");
         // initiate contract for an address
-        
+
         contractsInstance.NFTHotPot.totalSupply(function (e, result) {
             $(".ticketbalance").text(result);
         });
@@ -1313,21 +1324,33 @@ window.testFunction = () => {
     //         afterSendTx(e,r);
     //     });
     // }
-    contractsInstance.Reward.loan(function(e,r){
-        console.log("loan = "+r);
-    });
-    contractsInstance.Reward.erc20(function(e,r){
-        console.log("erc20 = "+r);
-    });
-    contractsInstance.Reward.hotpot(function(e,r){
-        console.log("hotpot = "+r);
-    });
-    contractsInstance.Reward.setLoan(contractAddress['loan'], function(e,r){
-        afterSendTx(r);
-    });
+    // contractsInstance.Reward.loan(function(e,r){
+    //     console.log("loan = "+r);
+    // });
+    // contractsInstance.Reward.erc20(function(e,r){
+    //     console.log("erc20 = "+r);
+    // });
+    // contractsInstance.Reward.hotpot(function(e,r){
+    //     console.log("hotpot = "+r);
+    // });
+    // contractsInstance.Reward.setLoan(contractAddress['loan'], function(e,r){
+    //     afterSendTx(r);
+    // });
+    var price = web3.toHex(1000 * Math.pow(10, 18));
+    var bytes = utils.hexToBytes(price);
+    var newbytes = Array(32);
+    for (var i = 0; i < 32; i++) {
+        newbytes[i] = 0;
+    }
+    if (bytes.length < 32) {
+        for (var i = 0; i < bytes.length; i++) {
+            newbytes[31 - i] = bytes[bytes.length - 1 - i];
+        }
+    }
+    console.log("test");
 }
 
-function autoRefresh(){
+function autoRefresh() {
     console.log("auto refresh");
     App.getBalances();
     Stake.initStakePool();
@@ -1348,3 +1371,4 @@ function formatFomoTime(t) {
     const s = times % 60;
     return h + "h " + m + "m " + ' ' + + s + "s";
 }
+

@@ -39,12 +39,12 @@ var ropstenContracts = {
 }
 
 var ganacheContracts = {
-    "nft": "0x07Ef939016643763201007909c5CC35858b290E1",
-    "hotpot": "0xe18eDD671c0b0ebE4F1aD5B2f1C5c065C8cA64ba",
-    "gacha": "0xEfA4D518fD856e478eE23e475Ca672Cc0a615629",
-    "loan": "0xf8125D436990b8FFc2d01834d2f76636c9a881f4",
-    "market": "0x6cE3c77Fe272c1d64340b51f66B8C341Cb70485D",
-    "reward": "0x07a45cD6D828f23De6e5Ba4899688d480e203bfe",
+    "nft": "0x37D910ac5f8628702E5B1839838dC0E52f1E407A",
+    "hotpot": "0x829B25171ee154d6deFFA2eC2C1385AF9b356b42",
+    "gacha": "0xf3B53787ccDD3a6Ab1bca7aCB4408e190ae4FB5B",
+    "loan": "0xB1af5A68eBB8b7D7Fa5aD614D0A2F96A324975d0",
+    "market": "0x006E6b60A11F6564E24A5aEfF2661B165Ee266F7",
+    "reward": "0xD522D6dEc82F447EE99526Ed9f7F4493D58Dc2F3",
 }
 
 var mainPool = {
@@ -65,11 +65,18 @@ var ropstenPool = {
 
 
 var ganachePool = {
-    "usdt":"0xf6cFA1c520a9210eedC4a34b651f1B2BC377c921",
-    "eth/usdt":"0x83414F6884824B3C3f84982b5035B975016B314c",
-    "uni/eth":"0x6Cec720a5BB6D1a32542f3481cA01C34290869e7",
-    "hotpot":"0xD7082591252A713af183A685c5200cE2ef945AEE",
-    "hotpot/eth":"0xe19Cd136f6B59cfcedA33cEB1D06f34B57B80A7E"
+    "usdt":"0x9DD3a5606A79400e07B8610D46F1044E790d2b11",
+    "eth/usdt":"0x1Fefab781C44c873CEeDc1bAff3812bcc54A917B",
+    "uni/eth":"0x663601190e1E7327A07268C6157D140c32E58aA6",
+    "hotpot":"0xd179c2ae2faf1E20A04040e8Ec66A8986676f4a1",
+    "hotpot/eth":"0xEEC45017d1AdE448fe1B6a3180Cce0959d988981"
+}
+
+var ganacheStakeERC = {
+    "usdt":"0x2Ba8B39C22e796d65e32FF6afcbFD4075379041e",
+    "eth/usdt":"0x71aa19b27DE4272c9189d3228796A3518f79F4d4",
+    "uni/eth":"0x3B7c840102252293c7A4a9d14Bb59ceD84b724F5",
+    "hotpot/eth":"0x82538e5dF3E3457502EfFB6b1C3D94e8dFDEf485"
 }
 
 var mainStakeERC = {
@@ -93,12 +100,7 @@ var ropstenStakeERC = {
     //     'hotpot',
     //     'hotpoteth'
     // ];
-var ganacheStakeERC = {
-    "usdt":"0xad2b72858c66B40cBDb97c28A2B939df5F147367",
-    "eth/usdt":"0x9d37ABBA38F30F336A87c2acC8E8B75D1a476Bc0",
-    "uni/eth":"0xBDeFFdE8a1358B96A6859fD0aEFE1b371a392b9e",
-    "hotpot/eth":"0xa99d9FFc19aC4d570dBcBce3b227389C84D9dB92"
-}
+
 
 function setChainId(chainId){
     if (chainId === "0x1") {
