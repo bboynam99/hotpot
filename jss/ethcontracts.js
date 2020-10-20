@@ -30,12 +30,12 @@ var mainContracts = {
 }
 
 var ropstenContracts = {
-    "nft": "0x9c00EFbD9A187bE65ba088A59B133baEA06B1f71",
-    "hotpot": "0x42670e96F3F14399aeb3660472800AeC9b689e55",
-    "gacha": "0x6fE2eFC4b7c3CB2a16933Ac018d52e974813776d",
-    "loan": "0x77AAeDAb8d613b88Ef2329B7aD107516b8E5233d",
-    "market": "0xbAf28532f11f7CA008DAed382bba24A5BA243414",
-    "reward": "0xfe405e149c907D3f5c9979159D0Ad7d929a63B27",
+    "nft": "0x50F0f08071DF6463f90B8dF7793A6271E0957CaB",
+    "hotpot": "0x11415FC887Fa16764C77ea770c8F6cEE576Ed165",
+    "gacha": "0x0f4BDE3CC0BfbCD4bA2c8FA2B6Ccbd6Cb67e54da",
+    "loan": "0xAed4be030fD6aE0a81b7F7A70432205d19Af90cE",
+    "market": "0x47d7d819c4602A53A08156ca304Bd5Bb16918159",
+    "reward": "0xACB1Ad1CF40De6a811AA1444F9b17AAd23914848",
 }
 
 var ganacheContracts = {
@@ -56,13 +56,19 @@ var mainPool = {
 }
 
 var ropstenPool = {
-    "usdt":"0x343121206D75c89961Ac2822ecf9F5F5762Db304",
-    "eth/usdt":"0xF4B3d0586aD31306ed5e8357b7e841Fa3f3594aA",
-    "uni/eth":"0xa4B9a2854C43d02e365E770408759A063784901a",
-    "hotpot":"0x7afa51532b542eF9Bc5CEDD233eee6A8f441B4A5",
-    "hotpot/eth":"0xeb549d230C16534d6d58bAAd4F321a83cE51419B"
+    "usdt":"0x6814b62e9EF2F9d67A5e2fb7c2fD163d577E7d59",
+    "eth/usdt":"0x81d78257a5771cD82cf798BC5Bf17563E251a731",
+    "uni/eth":"0xeBA2731aD0D17fa63a87Bebc1A0e2caa5891C008",
+    "hotpot":"0x1af0eBC0f57557b8231690370379f88782F5cDb8",
+    "hotpot/eth":"0x87D4dd16e368ddB3b37606AE795ee3f838C02a6D"
 }
 
+var ropstenStakeERC = {
+    "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",  //dai
+    "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",  //eth/dai
+    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "hotpot/eth":"0x87D4dd16e368ddB3b37606AE795ee3f838C02a6D"
+}
 
 var ganachePool = {
     "usdt":"0x9DD3a5606A79400e07B8610D46F1044E790d2b11",
@@ -86,12 +92,6 @@ var mainStakeERC = {
     "hotpot/eth":""
 }
 
-var ropstenStakeERC = {
-    "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",  //dai
-    "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",  //eth/dai
-    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
-    "hotpot/eth":"0xDBA5276922b01bb01F9b1047e941aBd6469Aab4B"
-}
 
    // var stakeTokens = [
     //     "ethusdt",
