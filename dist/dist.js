@@ -2239,6 +2239,7 @@ const Route = UNISWAP.Route;
 const WETH = UNISWAP.WETH;
 const utils = require('web3-utils');
 var currentPagePoolID = "";
+var eventBlocks = new Set(),
 
 App = {
     web3Provider: null,
@@ -3105,6 +3106,7 @@ Stake = {
 
 Gacha = {
     gachaHx:null,
+    
     getGacha: function () {
         contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
         contractsInstance.Gacha.GachaTicket(function (error, result) {
@@ -3133,15 +3135,19 @@ Gacha = {
             }
         });
         console.log("getGacha");
-        contractsInstance.Gacha.GachaNothing(function (e, result) {
+        contractsInstance.Gacha.GachaNothing({
+            fromBlock: 'latest',
+            toBlock: 'latest'
+          },function (e, result) {
             if (e) {
                 console.log("GachaTicket error " + e);
             } else {
-                console.log("GachaNothing ");
-                if(Gacha.gachaHx==result.transactionHash){
+                let blockNumber = result.blockNumber;
+                console.log("GachaNothing block num="+blockNumber);
+                if (eventBlocks.has(blockNumber)){
                     return;
-                }
-                Gacha.gachaHx = result.transactionHash;
+                } 
+                eventBlocks.add(blockNumber);
                 console.log("GachaNothing " + result.args);
                 showImportantMsg(getString('GachaNothing'), getEthersanUrl(result.transactionHash));
             }
@@ -3351,7 +3357,7 @@ Market = {
 Reward = {
     gotoPage: function () {
         console.log("Reward gotoPage");
-        Reward.getRewardInfo();
+        // Reward.getRewardInfo();
     },
     getRewardInfo: function () {
         console.log("getReward");
@@ -3774,15 +3780,6 @@ window.testFunction = () => {
     //     }
     // }
     // console.log("test");
-}
-
-function autoRefresh() {
-    console.log("auto refresh");
-    App.getBalances();
-    Stake.initStakePool();
-    Reward.getRewardInfo();
-    UserNFT.getNFTBalances();
-    showTable(false);
 }
 
 
