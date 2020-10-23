@@ -3,6 +3,7 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+/* mt-2 mb-4 cover-container */
 
 body:before {
 	content: '';
@@ -220,6 +221,18 @@ body {
 	bottom: 50px;
 	_position: absolute;
 	_top: expression(eval(document.documentElement.scrollBottom+250))
+}
+
+#importantmsg{
+	background-color: #e44541;
+	border-radius:30px;
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	position: fixed;
+	right: 70px;
+	top: 150px;
+	_position: absolute;
 }
 
 #toprightmsg{

@@ -20,6 +20,18 @@ var balanceOfHotpot={};
 
 var contractsInstance = {};
 
+var contractList = ['nft','hotpot','gacha','loan','market','reward','stakepool'];
+
+var contractURL = {
+    "nft": "https://etherscan.io/",
+    "hotpot": "https://etherscan.io/",
+    "gacha": "https://etherscan.io/",
+    "loan": "https://etherscan.io/",
+    "market": "https://etherscan.io/",
+    "reward": "https://etherscan.io/",
+    "stakepool":"https://etherscan.io/"
+}
+
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
     "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
@@ -30,12 +42,12 @@ var mainContracts = {
 }
 
 var ropstenContracts = {
-    "nft": "0x50F0f08071DF6463f90B8dF7793A6271E0957CaB",
-    "hotpot": "0x11415FC887Fa16764C77ea770c8F6cEE576Ed165",
-    "gacha": "0x0f4BDE3CC0BfbCD4bA2c8FA2B6Ccbd6Cb67e54da",
-    "loan": "0xAed4be030fD6aE0a81b7F7A70432205d19Af90cE",
-    "market": "0x47d7d819c4602A53A08156ca304Bd5Bb16918159",
-    "reward": "0xACB1Ad1CF40De6a811AA1444F9b17AAd23914848",
+    "nft": "0x42E08231b91470983D1d817cc0B347349F57eaE8",
+    "hotpot": "0x9141632EabB4A4D3003Bac72CC1c3d34808216a4",
+    "gacha": "0x864F577c259713dc3142dF64fc3AEED21A81548A",
+    "loan": "0x3019eD2f702281448f09Fc612c224C772e27af07",
+    "market": "0xa6b05c147717647bE51c3417399e64C7d6D775E7",
+    "reward": "0xE2F771ab7fb2aca0C6E783f36e19D2FC31025E84",
 }
 
 var ganacheContracts = {
@@ -56,18 +68,18 @@ var mainPool = {
 }
 
 var ropstenPool = {
-    "usdt":"0x6814b62e9EF2F9d67A5e2fb7c2fD163d577E7d59",
-    "eth/usdt":"0x81d78257a5771cD82cf798BC5Bf17563E251a731",
-    "uni/eth":"0xeBA2731aD0D17fa63a87Bebc1A0e2caa5891C008",
-    "hotpot":"0x1af0eBC0f57557b8231690370379f88782F5cDb8",
-    "hotpot/eth":"0x87D4dd16e368ddB3b37606AE795ee3f838C02a6D"
+    "usdt":"0x9EfF3F3f67F7a066BbB61cd2a3D2762392d771AB",
+    "eth/usdt":"0x82c68837325044447E1a8690249d258CDA2Fe768",
+    "uni/eth":"0x7b34ea6C98A51A06fC5A08893736740f870a9e03",
+    "hotpot":"0xa9374119056660BD3aE880f0018246B34B4fdd27",
+    "hotpot/eth":"0xd421E548D667BBc9B4ab516A3D9A8c21052531d6"
 }
 
 var ropstenStakeERC = {
     "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",  //dai
     "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",  //eth/dai
     "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
-    "hotpot/eth":"0x87D4dd16e368ddB3b37606AE795ee3f838C02a6D"
+    "hotpot/eth":"0x4F0BE49909c59e7D832a717c09F4A83A17D4B965"
 }
 
 var ganachePool = {

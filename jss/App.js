@@ -7,8 +7,6 @@ const WETH = UNISWAP.WETH;
 const utils = require('web3-utils');
 var currentPagePoolID = "";
 
-var ganacheId = '0x7b';
-
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -17,8 +15,22 @@ App = {
 
     init: function () {
         console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
-
+        // App.createSeletcContract();
         return App.initWeb3();
+    },
+    createSeletcContract: function () {
+        var obj = document.getElementById('selectcontract');
+        for (var i = 0; i < contractList.length; i++) {
+            var contract = contractList[i];
+            var url = contractURL[contract];
+            var value = getString(contract + "contract");
+            obj.options.add(new Option(value, contract));
+        }
+        $("#selectcontract").change(function () {
+            var val = $("#selectcontract").val();
+            window.open(contractURL[val]);
+            // window.location.href=contractURL[val];
+        });
     },
 
     initWeb3: function () {
@@ -75,20 +87,20 @@ App = {
         App.defaultAccount = accounts[0];
         // var filter = web3.eth.filter("pending");
 
-        var options = {
-            fromBlock: "latest",
-            toBlock: "latest",
-            address: contractAddress.gacha
-        };
-        var filter = web3.eth.filter(options);
+        // var options = {
+        //     fromBlock: "latest",
+        //     toBlock: "latest",
+        //     address: contractAddress.gacha
+        // };
+        // var filter = web3.eth.filter(options);
 
-        filter.watch(function (error, result) {
-            if (!error)
-                console.log("filter:" + result.transactionHash + ",address=" + result.address);
-            else {
-                console.log("filter error:" + error);
-            }
-        });
+        // filter.watch(function (error, result) {
+        //     if (!error)
+        //         console.log("filter:" + result.transactionHash + ",address=" + result.address);
+        //     else {
+        //         console.log("filter error:" + error);
+        //     }
+        // });
 
         return App.initContract();
         // return App.initUniSDK();
@@ -189,8 +201,8 @@ App = {
         $.getJSON('contracts/NFTMarket.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.NFTMarket = web3.eth.contract(data.abi);
-
-            return App.getNFTMarket();
+            contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
+            return Market.initMarketInfo();
         });
 
     },
@@ -206,6 +218,7 @@ App = {
             App.getStakeERCInfo(token);
         }
     },
+    lastERCHash:null,
     getStakeERCInfo: function (token) {
         if (stakeERCAddress[token] == null || stakeERCAddress[token] == "") {
             return;
@@ -231,18 +244,32 @@ App = {
         stakeERCContract[token].Approval({ owner: App.defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
-                console.log(token + ":approval " + result);
+                if(App.lastERCHash==result.transactionHash){
+                    return;
+                }
+                App.lastERCHash=result.transactionHash
+                console.log(token + ":approval " + result.args);
                 hideTopMsg();
 
-                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
-                    console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
-                    stakeInfos[token].allowance = result;
-                    if (currentPagePoolID != "") {
-                        Stake.initpooldata(currentPagePoolID);
-                    }
-                });
+                stakeInfos[token].allowance = result.args.value;
+                if (currentPagePoolID != "") {
+                    Stake.initpooldata(currentPagePoolID);
+                }
+
+                // stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                //     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
+                //     stakeInfos[token].allowance = result;
+                //     if (currentPagePoolID != "") {
+                //         Stake.initpooldata(currentPagePoolID);
+                //     }
+                // });
             }
         });
+    },
+    updateUserBalance:function(){
+        var b = (App.defaultBalance.div(Math.pow(10, 18)).toFixed(2));
+        console.log("updateUserBalance " + b);
+        $('.mybalance').text(b);
     },
     getUniV2Pair: function (pair) {
         console.log("getUniV2Pair=" + pair);
@@ -278,11 +305,7 @@ App = {
                 univ2PairInfo[pair].contractInstance.totalSupply(function (e, result) {
                     console.log("getUniV2Pair totalSupply=" + result + ",name=" + pair);
                     univ2PairInfo[pair].totalSupply = result;
-                    // if (pair === "eth/usdt" && ETHENV.chainId) {
-                    //     univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve0.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
-                    // } else {
                     univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
-                    // }
                     console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
                     App.checkAllUni();
                 });
@@ -331,7 +354,7 @@ App = {
         Stake.initStakePool();
     },
     getNFTMarket: function () {
-        contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
+        
     },
     getStakePools: function () {
         // allPoolTokens
@@ -349,19 +372,7 @@ App = {
         });
 
     },
-    checkApproval: function () {
-        console.log("checkApproval");
-        contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
-            var allowance = result.c[0];
-            if (allowance == 0) {
-
-            } else {
-                $("#pull1").show();
-                $("#pull10").show();
-                $("#approvegacha").hide();
-            }
-        });
-    },
+    lastHash:null,
     getBalances: function () {
         console.log('Getting balances...');
 
@@ -369,9 +380,49 @@ App = {
         contractsInstance.HotPot.Approval({ owner: App.defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
-                console.log("approval " + result);
+                if(App.lastHash==result.transactionHash){
+                    return;
+                }
+                App.lastHash=result.transactionHash;
+                console.log("approval spender=" + result.args.spender);
+                
                 hideTopMsg();
-                App.checkApproval();
+                var spender = result.args.spender;
+                if(spender === contractAddress.gacha){
+                    $("#pull1").show();
+                    $("#pull10").show();
+                    $("#approvegacha").hide();
+                }
+            }
+        });
+
+        // watch for an event with {some: 'args'}
+        contractsInstance.HotPot.Transfer({ to: App.defaultAccount }, function (error, result) {
+            if (!error) {
+                if(App.lastHash==result.transactionHash){
+                    return;
+                }
+                App.lastHash=result.transactionHash;
+                // toastAlert("Approve success!");
+                console.log("Transfer in=" + result.args.value);
+
+                App.defaultBalance = App.defaultBalance.plus(result.args.value);
+                App.updateUserBalance();
+            }
+        });
+
+        // watch for an event with {some: 'args'}
+        contractsInstance.HotPot.Transfer({ from: App.defaultAccount }, function (error, result) {
+            if (!error) {
+                if(App.lastHash==result.transactionHash){
+                    return;
+                }
+                App.lastHash=result.transactionHash;
+                // toastAlert("Approve success!");
+                console.log("Transfer out=" + result.args.value);
+                
+                App.defaultBalance = App.defaultBalance.sub(result.args.value);
+                App.updateUserBalance();
             }
         });
 
@@ -383,9 +434,7 @@ App = {
             }
             App.defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            var b = (result.div(Math.pow(10, 18)).toFixed(2));
-            console.log("HotPot balanceOf " + b);
-            $('.mybalance').text(b);
+            App.updateUserBalance();
             contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
@@ -405,6 +454,7 @@ App = {
 var count = 0;
 Stake = {
     cliamTimer: null,
+    lastHash:null,
     notifyRewardAmount: function (token, amount) {
         var amount = web3.toHex(amount * 10 ** 18);
         stakeInfos[token].instance.notifyRewardAmount(amount, function (e, result) {
@@ -496,31 +546,36 @@ Stake = {
         $("#stakediv").show();
         showAlert();
     },
+    withdraw: function () {
+        console.log("stake");
+        if (stakeInfos[currentPagePoolID].userStake == 0) {
+            toastAlert(getString('noenoughwithdraw'));
+            return;
+        }
+        document.getElementById("popTitle").innerHTML = "WithDraw";
+        var userStake = (stakeInfos[currentPagePoolID].userStake / Math.pow(10, stakeInfos[currentPagePoolID].decimals)).toFixed(4);
+        $('#maxAvaliable').text(userStake);
+        document.getElementById('stakeInput').value = 0;
+        $("#withdrawdiv").show();
+        $("#stakediv").hide();
+        showAlert();
+    },
 
     maxStake: function () {
         var max = $('#maxAvaliable').text();
         // console.log("maxStake=" + max);
         document.getElementById('stakeInput').value = max
     },
-    stakeSure: function () {
+    withdrawSure: function () {
         hideAlert();
         var token = stakeInfos[currentPagePoolID];
         if (token && token.poolAddress) {
             var stake = parseFloat(document.getElementById('stakeInput').value);
             if (stake <= 0) {
-                toastAlert(getString('stakecannotbezero'));
+                toastAlert(getString('withdrawcannotbezero'));
                 return;
             }
-            token.instance.Staked({ user: App.defaultAccount }, function (err, result) {
-                if (err) {
-                    return console.error('Error with stake:', err);
-                }
-                if (result) {
-                    // console.log('eventResult:', eventResult);
-                    toastAlert("Stake success!");
-                    initpooldata(currentPagePoolID);
-                }
-            });
+
             var hex = web3.toHex(stake * Math.pow(10, token.decimals));
             token.instance.stake(hex, function (e, result) {
                 if (e) {
@@ -531,14 +586,24 @@ Stake = {
             });
         }
     },
-
-    withdraw: function () {
+    stakeSure: function () {
+        hideAlert();
         var token = stakeInfos[currentPagePoolID];
-        if (token.userStake == 0) {
-            toastAlert(getString('nostaked'));
-            return;
-        } else {
-
+        if (token && token.poolAddress) {
+            var stake = parseFloat(document.getElementById('stakeInput').value);
+            if (stake <= 0) {
+                toastAlert(getString('stakecannotbezero'));
+                return;
+            }
+            
+            var hex = web3.toHex(stake * Math.pow(10, token.decimals));
+            token.instance.stake(hex, function (e, result) {
+                if (e) {
+                    return console.error('Error with stake:', e);
+                }
+                showTopMsg("Pending...", 0, getEthersanUrl(result));
+                startListenTX(result);
+            });
         }
     },
     getAllPoolBalance: function () {
@@ -581,6 +646,8 @@ Stake = {
         var allowance = token.allowance;
         if (allowance > 0) {
             $('body').addClass('approved');
+        } else {
+            $("#approvestake").text(getString('approvestake'));
         }
 
         var stakeDecimals = token.decimals;
@@ -660,6 +727,59 @@ Stake = {
         var poolAddress = stakePoolAddress[poolName];
         console.log("initSinglePool poolname=" + poolName);
         stakeInfos[poolName].instance = contractsInstance.StakePool.at(poolAddress);
+
+        stakeInfos[poolName].instance.Staked({ user: App.defaultAccount }, function (err, result) {
+            if (err) {
+                return console.error('Error with stake:', err);
+            }
+            if (result) {
+                // console.log('eventResult:', eventResult);
+                toastAlert("Stake success!");
+                console.log("Staked");
+                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.plus(result.args.amount);
+                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.plus(result.args.amount);
+                if(currentPagePoolID==poolName)
+                Stake.initpooldata(currentPagePoolID);
+            }
+        });
+
+        stakeInfos[poolName].instance.Withdrawn({ user: App.defaultAccount }, function (err, result) {
+            if (err) {
+                return console.error('Error with stake:', err);
+            }
+            if (result) {
+                // console.log('eventResult:', eventResult);
+                toastAlert("Withdraw success!");
+                console.log("Withdrawn");
+                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.sub(result.args.amount);
+                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.sub(result.args.amount);
+                if(currentPagePoolID==poolName)
+                Stake.initpooldata(currentPagePoolID);
+            }
+        });
+
+        stakeInfos[poolName].instance.RewardPaid({ user: App.defaultAccount }, function (err, result) {
+            if (err) {
+                return console.error('Error with stake:', err);
+            }
+            if (result) {
+                if(Stake.lastHash==result.transactionHash){
+                    return;
+                }
+                Stake.lastHash=result.transactionHash;
+                // console.log('eventResult:', eventResult);
+                // toastAlert("Withdraw success!");
+                console.log("RewardPaid");
+                stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.sub(result.args.reward);
+                console.log("currentPagePoolID="+currentPagePoolID+",poolName="+poolName);
+                if(result.args.percent<7){
+                    stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime()/1000);
+                }
+                if(currentPagePoolID==poolName)
+                Stake.initpooldata(currentPagePoolID);
+            }
+        });
+
         stakeInfos[poolName].instance.totalSupply(function (e, result) {
             console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
             stakeInfos[poolName].poolTotalStake = result;
@@ -684,7 +804,7 @@ Stake = {
 
                             Stake.checkTotalStaked();
                         });
-                        stakeInfos[poolName].instance.lastRewardTime(function (e, r) {
+                        stakeInfos[poolName].instance.lastRewardTime(App.defaultAccount, function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                             stakeInfos[poolName].lastRewardTime = r;
                         });
@@ -730,7 +850,7 @@ Stake = {
         stakeToken.apy = apy;
 
         var apyStr = parseInt(apy) * 100 + ' %';
-        if (totalStakePrice < 10) {
+        if (totalStakePrice < 1) {
             apyStr = "Infinity %";
         }
         // "eth/usdt",
@@ -751,21 +871,21 @@ Stake = {
 }
 
 Gacha = {
+    gachaHx:null,
     getGacha: function () {
         contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
         contractsInstance.Gacha.GachaTicket(function (error, result) {
             if (error) { console.log("GachaTicket error " + error); }
             else {
-                console.log("GachaTicket " + result);
-                $("#globalmsg").show();
-                //https://ropsten.etherscan.io/tx/0x1db5cc2d53ec1961c5df1331a034821bc888ac19eca86fe6a103f9973e6ec18c
-                var url = "https://etherscan.io/tx/" + result.transactionHash;
-                if (ETHENV.chainId == '0x1') {
-                    url = "https://etherscan.io/tx/" + result.transactionHash;
-                } else if (ETHENV.chainId == '0x3') {
-                    url = "https://ropsten.etherscan.io/tx/" + result.transactionHash;
+                console.log("GachaTicket ");
+                if(Gacha.gachaHx==result.transactionHash){
+                    return;
                 }
-                $("#globalmsg").attr("href", url);
+                Gacha.gachaHx = result.transactionHash;
+                console.log("GachaTicket " + result.args);
+                $("#globalmsg").show();
+
+                $("#globalmsg").attr("href", getEthersanUrl(result.transactionHash));
                 $("#gachauser").text(result.args._owner);
                 setTimeout(function () {
                     $("#globalmsg").hide();
@@ -774,6 +894,9 @@ Gacha = {
                 if (result.args._owner == App.defaultAccount) {
                     hideTopMsg();
                 }
+
+                UserNFT.totalNFT += 1;
+                UserNFT.updateTotalNFT();
             }
         });
         console.log("getGacha");
@@ -781,15 +904,20 @@ Gacha = {
             if (e) {
                 console.log("GachaTicket error " + e);
             } else {
-                console.log("GachaNothing " + result);
-                showTopMsg("没有抽中。", 5000);
+                console.log("GachaNothing ");
+                if(Gacha.gachaHx==result.transactionHash){
+                    return;
+                }
+                Gacha.gachaHx = result.transactionHash;
+                console.log("GachaNothing " + result.args);
+                showImportantMsg(getString('GachaNothing'), getEthersanUrl(result.transactionHash));
             }
         });
     },
     pull: function () {
         console.log("pull");
 
-        if (App.defaultBalance.lt(new BigNumber(100 * 10 ** 18))) {
+        if (App.defaultBalance.lt(new BigNumber(20 * 10 ** 18))) {
             toastAlert(getString('hotnotenough'));
             return;
         }
@@ -798,21 +926,15 @@ Gacha = {
                 console.log("pull error:" + e);
             } else {
                 console.log("pull " + result);
-                //https://ropsten.etherscan.io/tx/0x1db5cc2d53ec1961c5df1331a034821bc888ac19eca86fe6a103f9973e6ec18c
-                var url = "https://etherscan.io/tx/" + result;
-                if (ETHENV.chainId == '0x1') {
-                    url = "https://etherscan.io/tx/" + result;
-                } else if (ETHENV.chainId == '0x3') {
-                    url = "https://ropsten.etherscan.io/tx/" + result;
-                }
-                showTopMsg("Pending...", 0, url);
+
+                showTopMsg("Pending...", 0, getEthersanUrl(result));
                 startListenTX(result);
             }
         });
     },
     pull10: function () {
         console.log("pull10");
-        if (App.defaultBalance.lt(new BigNumber(950 * 10 ** 18))) {
+        if (App.defaultBalance.lt(new BigNumber(190 * 10 ** 18))) {
             toastAlert(getString('hotnotenough'));
             return;
         }
@@ -821,14 +943,8 @@ Gacha = {
                 console.log("pull 10 error:" + e);
             } else {
                 console.log("pull 10:" + result);
-                //https://ropsten.etherscan.io/tx/0x1db5cc2d53ec1961c5df1331a034821bc888ac19eca86fe6a103f9973e6ec18c
-                var url = "https://etherscan.io/tx/" + result;
-                if (ETHENV.chainId == '0x1') {
-                    url = "https://etherscan.io/tx/" + result;
-                } else if (ETHENV.chainId == '0x3') {
-                    url = "https://ropsten.etherscan.io/tx/" + result;
-                }
-                showTopMsg("Pending...", 0, url);
+
+                showTopMsg("Pending...", 0, getEthersanUrl(result));
                 startListenTX(result);
             }
         });
@@ -838,13 +954,7 @@ Gacha = {
             if (e) {
                 console.log("Gacha approve error " + e);
             } else {
-                var url = "https://etherscan.io/tx/" + result;
-                if (ETHENV.chainId == '0x1') {
-                    url = "https://etherscan.io/tx/" + result;
-                } else if (ETHENV.chainId == '0x3') {
-                    url = "https://ropsten.etherscan.io/tx/" + result;
-                }
-                showTopMsg("Pending...", 0, url);
+                showTopMsg("Pending...", 0, getEthersanUrl(result));
                 startListenTX(result);
             }
         });
@@ -852,8 +962,30 @@ Gacha = {
 }
 
 Loan = {
+    loanSize:0,
+    loanList:[],
     getLoan: function () {
-
+        contractsInstance.Loan.getLoanSize(function(e,r){
+            console.log("getLoanSize="+r);
+            if(!e){
+                Loan.loanSize = r;
+            }
+        });
+        contractsInstance.Loan.getLoanList(function(e,r){
+            console.log("getLoanList="+r);
+            if(!e){
+                Loan.getLoanList = r;
+            }
+        });
+        contractsInstance.Loan.TokenDeposit(function(e,r){
+            console.log("TokenDeposit");
+        });
+        contractsInstance.Loan.TokenCancelDeposit(function(e,r){
+            console.log("TokenCancelDeposit");
+        });
+        contractsInstance.Loan.TokenBorrowed(function(e,r){
+            console.log("TokenBorrowed");
+        });
     },
     loanNFT: function (id) {
         showLoanAlert(id);
@@ -910,6 +1042,30 @@ Loan = {
 }
 
 Market = {
+    listSize:0,
+    listTokens:[],
+    initMarketInfo:function(){
+        contractsInstance.NFTMarket.getListSize(function(e,r){
+            console.log("market size="+r);
+            Market.listSize = r;
+        });
+        contractsInstance.NFTMarket.getListToken(function(e,r){
+            console.log("market getListToken="+r);
+            Market.listTokens = r;
+        });
+        contractsInstance.NFTMarket.Listed(function(e,r){
+            console.log("Listed");
+
+        });
+        contractsInstance.NFTMarket.Unlisted(function(e,r){
+            console.log("Unlisted");
+
+        });
+        contractsInstance.NFTMarket.Swapped(function(e,r){
+            console.log("Swapped");
+
+        });
+    },
     sellNFT: function (id) {
         showSellAlert(id);
     },
@@ -1019,19 +1175,48 @@ Reward = {
 UserNFT = {
     nftIds: Array(),
     nftInfos: {},
+    totalNFT:0,
     userBalance: 0,
+    lastHash:null,
+    updateTotalNFT:function(){
+        $(".ticketbalance").text(UserNFT.totalNFT);
+    },
+    updateUserNFT:function(){
+        $(".myticketbalance").text(UserNFT.userBalance);
+    },
     getNFTBalances: function () {
         console.log("getNFTBalances");
         // initiate contract for an address
 
         contractsInstance.NFTHotPot.totalSupply(function (e, result) {
-            $(".ticketbalance").text(result);
+            UserNFT.totalNFT = result;
+            UserNFT.updateTotalNFT();
+        });
+
+        // Transfer
+        contractsInstance.NFTHotPot.Transfer({from:App.defaultAccount},function(e,r){
+            console.log("nft out tokenid="+r.args.tokenId+",to "+r.args.to);
+            if(UserNFT.lastHash==r.transactionHash){
+                return;
+            }
+            UserNFT.lastHash=r.transactionHash;
+            UserNFT.userBalance -= 1;
+            UserNFT.updateUserNFT();
+        });
+        contractsInstance.NFTHotPot.Transfer({to:App.defaultAccount},function(e,r){
+            console.log("nft in tokenid="+r.args.tokenId+",from "+r.args.from);
+            if(UserNFT.lastHash==r.transactionHash){
+                return;
+            }
+            UserNFT.lastHash=r.transactionHash;
+            UserNFT.userBalance += 1;
+            UserNFT.updateUserNFT();
         });
 
         // call constant function
         contractsInstance.NFTHotPot.balanceOf(App.defaultAccount, function (error, result) {
             console.log("getNFTBalances balanceOf=" + result) // '0x25434534534'
-            userBalance = result;
+            UserNFT.userBalance = result;
             UserNFT.nftIds = Array();
 
             $(".myticketbalance").text(result);
@@ -1186,6 +1371,18 @@ function hideTopMsg() {
     $("#toprightmsg").hide();
 }
 
+//importantmsg
+function showImportantMsg(msg, url) {
+    console.log("importantmsg = " + msg);
+    $("#importantmsg").text(msg);
+    $("#importantmsg").show();
+    $("#importantmsg").attr("href", url);
+
+    setTimeout(function () {
+        $("#importantmsg").hide();
+    }, 3000);
+}
+
 function toastAlert(msg) {
     console.log("toastAlert:" + msg);
     document.getElementById('alertdiv').style.display = 'block';
@@ -1271,13 +1468,7 @@ function afterSendTx(error, result) {
         console.log("stake approve error " + error);
         toastAlert("Error:" + error);
     } else {
-        var url = "https://etherscan.io/tx/" + result;
-        if (ETHENV.chainId == '0x1') {
-            url = "https://etherscan.io/tx/" + result;
-        } else if (ETHENV.chainId == '0x3') {
-            url = "https://ropsten.etherscan.io/tx/" + result;
-        }
-        showTopMsg("Pending...", 0, url);
+        showTopMsg("Pending...", 0, getEthersanUrl(result));
         startListenTX(result);
     }
 }
@@ -1298,6 +1489,7 @@ function startListenTX(tx) {
         web3.eth.getTransactionReceipt(tx, function (e, result) {
             if (e) {
                 console.log("tx error:" + e);
+                toastAlert("Error : "+e);
             } else {
                 console.log("tx result:" + result);
             }
@@ -1309,7 +1501,7 @@ function startListenTX(tx) {
                     showTopMsg(getString('txfail'), 5000, getEthersanUrl(result.transactionHash));
                     // toastAlert(getString('txfail'));
                 }
-                autoRefresh();
+                // autoRefresh();
             }
         });
     }, 3000);
@@ -1317,13 +1509,14 @@ function startListenTX(tx) {
 }
 
 window.testFunction = () => {
-    // for (var i = 0; i < allPoolTokens.length; i++) {
-    //     var token = allPoolTokens[i];
-    // //     Stake.notifyRewardAmount(token, 70000);
-    //     stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
-    //         afterSendTx(e,r);
-    //     });
-    // }
+
+    for (var i = 0; i < allPoolTokens.length; i++) {
+        var token = allPoolTokens[i];
+        Stake.notifyRewardAmount(token, 70000);
+        // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
+        //     afterSendTx(e,r);
+        // });
+    }
     // contractsInstance.Reward.loan(function(e,r){
     //     console.log("loan = "+r);
     // });
@@ -1336,18 +1529,18 @@ window.testFunction = () => {
     // contractsInstance.Reward.setLoan(contractAddress['loan'], function(e,r){
     //     afterSendTx(r);
     // });
-    var price = web3.toHex(1000 * Math.pow(10, 18));
-    var bytes = utils.hexToBytes(price);
-    var newbytes = Array(32);
-    for (var i = 0; i < 32; i++) {
-        newbytes[i] = 0;
-    }
-    if (bytes.length < 32) {
-        for (var i = 0; i < bytes.length; i++) {
-            newbytes[31 - i] = bytes[bytes.length - 1 - i];
-        }
-    }
-    console.log("test");
+    // var price = web3.toHex(1000 * Math.pow(10, 18));
+    // var bytes = utils.hexToBytes(price);
+    // var newbytes = Array(32);
+    // for (var i = 0; i < 32; i++) {
+    //     newbytes[i] = 0;
+    // }
+    // if (bytes.length < 32) {
+    //     for (var i = 0; i < bytes.length; i++) {
+    //         newbytes[31 - i] = bytes[bytes.length - 1 - i];
+    //     }
+    // }
+    // console.log("test");
 }
 
 function autoRefresh() {

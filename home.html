@@ -173,19 +173,20 @@
 					</nav>
 				</div>
 			</header>
-			<a target="_blank" href="#" id="toprightmsg" STYLE="DISPLAY:NONE">消息发送中...</a>
+			<a target="_blank" href="#" id="toprightmsg" STYLE="DISPLAY:NONE"></a>
+
+			<a target="_blank" href="#" id="importantmsg" STYLE="DISPLAY:NONE"></a>
+
 			<a id="globalmsg" target="_blank" href="http://etherscan.com/" STYLE="DISPLAY:NONE">
 				<span data-lang="congratulations">恭喜</span>
 				<span id="gachauser">XXX</span>
 				<span data-lang="congratulations1">抽中会员卡！</span></a>
 			<div id="infodiv">
 				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
-					Stake Anytime, Unstake Anytime, Get Rewards Instantly.</h3>
-				<h3 class="mt-2 cover-container" data-lang="string_info2">
-					Keep updating contract token.
 				</h3>
-				<h3 class="mt-2 cover-container" data-lang="string_info3">
-					Fork Sun's token and pool contract and Open sourced.
+				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info2">
+				</h3>
+				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info3">
 				</h3>
 			</div>
 			<div id="divloading">
@@ -575,8 +576,6 @@
 							</a>
 						</div>
 					</div>
-
-
 				</div>
 			</main>
 
@@ -628,31 +627,22 @@
 
 			<div class="pricingTable" style="display: none; color:black;width: 100%!important;">
 			</div>
-<!-- 
-			<div id="ticketinfo" style="display:none">
-				<p style="margin-top: 0%;">实时数据：当前普通会员卡二级市场价格：$1000.0，租赁价格$100.0/天。</p>
 
-				<p>分红：会员卡每日可领取分红，金卡和紫金卡分红提高20%和40%。当前普卡抽卡概率1/8，下一阶段概率降为1/16。</p>
-
-				<p>挖矿：挖矿每日提取额度3%，普通、金色和紫金会员卡挖矿提取额度分别为9%，12%和15%。</p>
-
-				<p>注意：1张会员卡在24小时内，分红和挖矿只能选择一个，谨慎选择。</p>
-			</div> -->
 		</div>
 	</div>
 
 	<footer class="mastfoot footer">
 		<div class="inner">
-			<p><a href="https://tronscan.org/#/contract/TUHVUsg8hvR4TxmWAbfvKTKwGdrqArmYsv/code" target="_blank"
-					data-lang="tokencontract">Token Contract</a>
-				&mdash;
-				<a href="https://tronscan.org/#/contract/TLfG1ogM21DVYKL8UqTmLksjkHccMa6BhS/code" target="_blank"
-					data-lang="poolcontract">Pool Contract</a>
+			
+			<p>
+				<select id="selectcontract">
+				
+			  	</select>
+			  
 				<br /><br />
 				<a href="https://twitter.com/dex_hot" target="_blank">Twitter</a>&mdash;
 				<a href="https://t.me/hotpotdex" target="_blank">Telegram</a>&mdash;
 				<a href="https://medium.com/@dex_hot" target="_blank">Medium</a>&mdash;
-				<a href="https://github.com/HotPot-Dex/HotPotContract" target="_blank">GitHub</a>&mdash;
 				<a id="awhitepaper" href="http://docs.hotpot-dex.com/" target="_blank"
 					data-lang="whitepaper">Whitepaper</a>
 		</div>
@@ -714,6 +704,7 @@
 			language_pack.loadProperties(1);
 		else
 			language_pack.loadProperties(0);
+		createSeletcContract();
 	});
 
 	function changelang() {
@@ -725,8 +716,27 @@
 			new_lang = 0;
 			$("#changelang").text("EN");
 		}
+		document.cookie = new_lang;
 		language_pack.loadProperties(new_lang);
+		createSeletcContract();
 	}
+
+	function createSeletcContract(){
+		var obj=document.getElementById('selectcontract');
+		$("#selectcontract").unbind('change');
+		obj.options.length = 0; 
+		obj.options.add(new Option($.i18n.map['contractselet'],""));
+        for(var i=0;i<contractList.length;i++){
+            var contract = contractList[i];
+            var url = contractURL[contract];
+            var value = getString(contract+"contract");
+            obj.options.add(new Option(value,contract)); 
+        }
+        $("#selectcontract").change(function(){
+			var val = $("#selectcontract").val();
+            window.open(contractURL[val]);
+        });
+    }
 </script>
 
 </html>
