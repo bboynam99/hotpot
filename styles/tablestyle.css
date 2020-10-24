@@ -64,3 +64,15 @@ tr{
 table tr:hover{
   background-color:#d9eff1;
 }
+
+.selectth{
+
+}
+
+.selectth:hover{
+  background-color:cornflowerblue;
+}
+
+.tableselect{
+  background-color:cornflowerblue;
+}

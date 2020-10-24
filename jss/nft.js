@@ -115,4 +115,8 @@ NFT = {
         nft.sell = false;
         return nft;
     },
+    isAvailable:function(usetime){
+        var now = Math.floor((new Date()).getTime()/1000);
+        return usetime+86400<now;
+    }
 }

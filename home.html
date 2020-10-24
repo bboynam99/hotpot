@@ -197,7 +197,7 @@
 					<div class="rect4"></div>
 					<div class="rect5"></div>
 				</div>
-				<div data-lang="loading">链上数据加载中...</div>
+				<div data-lang="loading"></div>
 			</div>
 
 			<main role="main" class="inner cover pt-2 home mt-4">
@@ -354,8 +354,15 @@
 					</div>
 				</div>
 				<p style="margin:3% 3%">成交价格K线图近期推出...</p>
-				<div class="table-users">
-					<div class="header">出售</div>
+
+				<table cellspacing="0">
+					<tr style="height: 50px!important;">
+						<th class='selectth tableselect' id='selectbuy' onclick="App.selectBuy()">Buy</th>
+						<th class='selectth'  id='selectloan' onclick="App.selectLoan()">Loan</th>
+					</tr>
+				</table>
+
+				<div class="table-users" id="tablebuy" style="display: block;">
 					<div data-lang="nosell" id="noloan"></div>
 					<table cellspacing="0">
 						<tr>
@@ -382,9 +389,7 @@
 					</table>
 				</div>
 
-				<div data-lang="loanintro">借贷可以借1天起</div>
-				<div class="table-users" style="margin-top: 5%;">
-					<div class="header">借贷</div>
+				<div class="table-users" id="tableloan" style="display: none;">
 					<div data-lang="noloan" id="noloan"></div>
 					<table cellspacing="0" id="tableloan">
 						<tr>

@@ -2239,14 +2239,15 @@ const Route = UNISWAP.Route;
 const WETH = UNISWAP.WETH;
 const utils = require('web3-utils');
 var currentPagePoolID = "";
-var eventBlocks = new Set(),
+var currentPage = "";
 
 App = {
     web3Provider: null,
     defaultAccount: null,
     defaultBalance: 0,
     erc20Contract: null,
-
+    eventBlocks: new Set(),
+    eventBlocks1: new Set(),
     init: function () {
         console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
         // App.createSeletcContract();
@@ -2316,28 +2317,9 @@ App = {
             }
         );
         console.log("account=" + accounts[0]);
-        console.log("current account=" + ethereum.selectedAddress);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
-        // var filter = web3.eth.filter("pending");
-
-        // var options = {
-        //     fromBlock: "latest",
-        //     toBlock: "latest",
-        //     address: contractAddress.gacha
-        // };
-        // var filter = web3.eth.filter(options);
-
-        // filter.watch(function (error, result) {
-        //     if (!error)
-        //         console.log("filter:" + result.transactionHash + ",address=" + result.address);
-        //     else {
-        //         console.log("filter error:" + error);
-        //     }
-        // });
-
         return App.initContract();
-        // return App.initUniSDK();
     },
     initUniSDK: async function () {
         var chain = ChainId.ROPSTEN;
@@ -2352,43 +2334,6 @@ App = {
         } else if (chainId === "0x29a") {
         }
         console.log("dai start");
-        for (var i = 0; i < initToken.length; i++) {
-            var name = initToken[i];
-            var t = knownTokens[name];
-            if (t.address == null || t.address == "") {
-                continue;
-            }
-            const token = new Token(chain, t.address, t.decimals);
-
-            // note that you may want/need to handle this async code differently,
-            // for example if top-level await is not an option
-            const pair = await Fetcher.fetchPairData(token, WETH[token.chainId])
-
-            const route = new Route([pair], WETH[token.chainId])
-
-            const route2 = new Route([pair], token);
-            // console.log("name="+name);
-            // console.log(route.midPrice.toSignificant(6)+":"+ (new Date()).getTime()) // 201.306
-            // console.log(route2.midPrice.toSignificant(6)+":"+ (new Date()).getTime()) // 201.306
-            if (name === 'usdt') {
-                ETHENV.ethPrice = route.midPrice;
-                console.log("eth price=" + ETHENV.ethPrice.toSignificant(6));
-            }
-            t.price = route2.midPrice;
-        }
-
-        for (var i = 0; i < initToken.length; i++) {
-            var name = initToken[i];
-            var t = knownTokens[name];
-            if (t.price == 0) {
-                continue;
-            }
-            t.price = t.price.multiply(ETHENV.ethPrice);
-            console.log("name=" + name + ",price=" + t.price.toSignificant(6));
-
-            var s = t.price.scalar.numerator;
-            console.log("s=" + s);
-        }
         return App.initContract();
     },
     initContract: function () {
@@ -2452,7 +2397,7 @@ App = {
             App.getStakeERCInfo(token);
         }
     },
-    lastERCHash:null,
+    lastERCHash: null,
     getStakeERCInfo: function (token) {
         if (stakeERCAddress[token] == null || stakeERCAddress[token] == "") {
             return;
@@ -2478,10 +2423,11 @@ App = {
         stakeERCContract[token].Approval({ owner: App.defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
-                if(App.lastERCHash==result.transactionHash){
+                if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
-                App.lastERCHash=result.transactionHash
+                App.eventBlocks.add(result.blockNumber);
+
                 console.log(token + ":approval " + result.args);
                 hideTopMsg();
 
@@ -2500,7 +2446,7 @@ App = {
             }
         });
     },
-    updateUserBalance:function(){
+    updateUserBalance: function () {
         var b = (App.defaultBalance.div(Math.pow(10, 18)).toFixed(2));
         console.log("updateUserBalance " + b);
         $('.mybalance').text(b);
@@ -2528,11 +2474,6 @@ App = {
                 console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
                 var reserve0 = result[0];
                 var reserve1 = result[1];
-
-                //eth/usdt token0 usdt token1 eth
-                //uni/eth token0 uni token1 eth
-                //hotpot/eth token0 hotpot token1 eth
-
                 univ2PairInfo[pair].reserve0 = reserve0;
                 univ2PairInfo[pair].reserve1 = reserve1;
 
@@ -2588,7 +2529,7 @@ App = {
         Stake.initStakePool();
     },
     getNFTMarket: function () {
-        
+
     },
     getStakePools: function () {
         // allPoolTokens
@@ -2606,7 +2547,6 @@ App = {
         });
 
     },
-    lastHash:null,
     getBalances: function () {
         console.log('Getting balances...');
 
@@ -2614,15 +2554,15 @@ App = {
         contractsInstance.HotPot.Approval({ owner: App.defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
-                if(App.lastHash==result.transactionHash){
+                if (App.eventBlocks1.has(result.blockNumber)) {
                     return;
                 }
-                App.lastHash=result.transactionHash;
+                App.eventBlocks1.add(result.blockNumber);
                 console.log("approval spender=" + result.args.spender);
-                
+
                 hideTopMsg();
                 var spender = result.args.spender;
-                if(spender === contractAddress.gacha){
+                if (spender === contractAddress.gacha) {
                     $("#pull1").show();
                     $("#pull10").show();
                     $("#approvegacha").hide();
@@ -2633,10 +2573,10 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.Transfer({ to: App.defaultAccount }, function (error, result) {
             if (!error) {
-                if(App.lastHash==result.transactionHash){
+                if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
-                App.lastHash=result.transactionHash;
+                App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
                 console.log("Transfer in=" + result.args.value);
 
@@ -2648,13 +2588,13 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.Transfer({ from: App.defaultAccount }, function (error, result) {
             if (!error) {
-                if(App.lastHash==result.transactionHash){
+                if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
-                App.lastHash=result.transactionHash;
+                App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
                 console.log("Transfer out=" + result.args.value);
-                
+
                 App.defaultBalance = App.defaultBalance.sub(result.args.value);
                 App.updateUserBalance();
             }
@@ -2683,12 +2623,24 @@ App = {
         });
 
     },
+    selectBuy:function(){
+        $("#selectbuy").addClass('tableselect');
+        $("#selectloan").removeClass('tableselect');
+        $("#tablebuy").show();
+        $("#tableloan").hide();
+    },
+    selectLoan:function(){
+        $("#selectloan").addClass('tableselect');
+        $("#selectbuy").removeClass('tableselect');
+        $("#tablebuy").hide();
+        $("#tableloan").show();
+    }
 };
 
 var count = 0;
 Stake = {
     cliamTimer: null,
-    lastHash:null,
+    eventBlocks: new Set(),
     notifyRewardAmount: function (token, amount) {
         var amount = web3.toHex(amount * 10 ** 18);
         stakeInfos[token].instance.notifyRewardAmount(amount, function (e, result) {
@@ -2829,7 +2781,7 @@ Stake = {
                 toastAlert(getString('stakecannotbezero'));
                 return;
             }
-            
+
             var hex = web3.toHex(stake * Math.pow(10, token.decimals));
             token.instance.stake(hex, function (e, result) {
                 if (e) {
@@ -2967,13 +2919,17 @@ Stake = {
                 return console.error('Error with stake:', err);
             }
             if (result) {
+                if (Stake.eventBlocks.has(result.blockNumber)) {
+                    return;
+                }
+                Stake.eventBlocks.add(result.blockNumber);
                 // console.log('eventResult:', eventResult);
                 toastAlert("Stake success!");
                 console.log("Staked");
                 stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.plus(result.args.amount);
                 stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.plus(result.args.amount);
-                if(currentPagePoolID==poolName)
-                Stake.initpooldata(currentPagePoolID);
+                if (currentPagePoolID == poolName)
+                    Stake.initpooldata(currentPagePoolID);
             }
         });
 
@@ -2983,12 +2939,16 @@ Stake = {
             }
             if (result) {
                 // console.log('eventResult:', eventResult);
+                if (Stake.eventBlocks.has(result.blockNumber)) {
+                    return;
+                }
+                Stake.eventBlocks.add(result.blockNumber);
                 toastAlert("Withdraw success!");
                 console.log("Withdrawn");
                 stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.sub(result.args.amount);
                 stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.sub(result.args.amount);
-                if(currentPagePoolID==poolName)
-                Stake.initpooldata(currentPagePoolID);
+                if (currentPagePoolID == poolName)
+                    Stake.initpooldata(currentPagePoolID);
             }
         });
 
@@ -2997,20 +2957,20 @@ Stake = {
                 return console.error('Error with stake:', err);
             }
             if (result) {
-                if(Stake.lastHash==result.transactionHash){
+                if (Stake.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
-                Stake.lastHash=result.transactionHash;
+                Stake.eventBlocks.add(result.blockNumber);
                 // console.log('eventResult:', eventResult);
                 // toastAlert("Withdraw success!");
                 console.log("RewardPaid");
                 stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.sub(result.args.reward);
-                console.log("currentPagePoolID="+currentPagePoolID+",poolName="+poolName);
-                if(result.args.percent<7){
-                    stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime()/1000);
+                console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
+                if (result.args.percent < 7) {
+                    stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
                 }
-                if(currentPagePoolID==poolName)
-                Stake.initpooldata(currentPagePoolID);
+                if (currentPagePoolID == poolName)
+                    Stake.initpooldata(currentPagePoolID);
             }
         });
 
@@ -3105,18 +3065,19 @@ Stake = {
 }
 
 Gacha = {
-    gachaHx:null,
-    
+    gachaHx: null,
+    eventBlocks: new Set(),
     getGacha: function () {
+        console.log("getGacha init");
         contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
         contractsInstance.Gacha.GachaTicket(function (error, result) {
             if (error) { console.log("GachaTicket error " + error); }
             else {
-                console.log("GachaTicket ");
-                if(Gacha.gachaHx==result.transactionHash){
+                console.log("GachaTicket block num=" + result.blockNumber);
+                if (Gacha.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
-                Gacha.gachaHx = result.transactionHash;
+                Gacha.eventBlocks.add(result.blockNumber);
                 console.log("GachaTicket " + result.args);
                 $("#globalmsg").show();
 
@@ -3130,7 +3091,7 @@ Gacha = {
                     hideTopMsg();
                 }
 
-                UserNFT.totalNFT += 1;
+                UserNFT.totalNFT=UserNFT.totalNFT.plus(1);
                 UserNFT.updateTotalNFT();
             }
         });
@@ -3138,16 +3099,16 @@ Gacha = {
         contractsInstance.Gacha.GachaNothing({
             fromBlock: 'latest',
             toBlock: 'latest'
-          },function (e, result) {
+        }, function (e, result) {
             if (e) {
                 console.log("GachaTicket error " + e);
             } else {
-                let blockNumber = result.blockNumber;
-                console.log("GachaNothing block num="+blockNumber);
-                if (eventBlocks.has(blockNumber)){
+                console.log("GachaNothing block num=" + result.blockNumber);
+                if (Gacha.eventBlocks.has(result.blockNumber)) {
                     return;
-                } 
-                eventBlocks.add(blockNumber);
+                }
+                Gacha.eventBlocks.add(result.blockNumber);
+
                 console.log("GachaNothing " + result.args);
                 showImportantMsg(getString('GachaNothing'), getEthersanUrl(result.transactionHash));
             }
@@ -3201,32 +3162,37 @@ Gacha = {
 }
 
 Loan = {
-    loanSize:0,
-    loanList:[],
+    loanSize: 0,
+    loanList: [],
     getLoan: function () {
-        contractsInstance.Loan.getLoanSize(function(e,r){
-            console.log("getLoanSize="+r);
-            if(!e){
+        contractsInstance.Loan.getLoanSize(function (e, r) {
+            console.log("getLoanSize=" + r);
+            if (!e) {
                 Loan.loanSize = r;
             }
         });
-        contractsInstance.Loan.getLoanList(function(e,r){
-            console.log("getLoanList="+r);
-            if(!e){
+        contractsInstance.Loan.getLoanList(function (e, r) {
+            console.log("getLoanList=" + r);
+            if (!e) {
                 Loan.getLoanList = r;
             }
         });
-        contractsInstance.Loan.TokenDeposit(function(e,r){
+        contractsInstance.Loan.TokenDeposit(function (e, r) {
             console.log("TokenDeposit");
         });
-        contractsInstance.Loan.TokenCancelDeposit(function(e,r){
+        contractsInstance.Loan.TokenCancelDeposit(function (e, r) {
             console.log("TokenCancelDeposit");
         });
-        contractsInstance.Loan.TokenBorrowed(function(e,r){
+        contractsInstance.Loan.TokenBorrowed(function (e, r) {
             console.log("TokenBorrowed");
         });
     },
     loanNFT: function (id) {
+        var nft = UserNFT.nftInfos[id];
+        if (!NFT.isAvailable(nft.usetime)) {
+            toastAlert(getString('nftnotavailable'));
+            return;
+        }
         showLoanAlert(id);
     },
     loanSure: function () {
@@ -3281,28 +3247,39 @@ Loan = {
 }
 
 Market = {
-    listSize:0,
-    listTokens:[],
-    initMarketInfo:function(){
-        contractsInstance.NFTMarket.getListSize(function(e,r){
-            console.log("market size="+r);
+    listSize: 0,
+    listTokens: [],
+    eventBlocks: new Set(),
+    initMarketInfo: function () {
+        contractsInstance.NFTMarket.getListSize(function (e, r) {
+            console.log("market size=" + r);
             Market.listSize = r;
         });
-        contractsInstance.NFTMarket.getListToken(function(e,r){
-            console.log("market getListToken="+r);
+        contractsInstance.NFTMarket.getListToken(function (e, r) {
+            console.log("market getListToken=" + r);
             Market.listTokens = r;
         });
-        contractsInstance.NFTMarket.Listed(function(e,r){
-            console.log("Listed");
+        contractsInstance.NFTMarket.Listed(function (e, r) {
+            console.log("Listed block num=" + result.blockNumber);
+            if (Market.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Market.eventBlocks.add(result.blockNumber);
+        });
+        contractsInstance.NFTMarket.Unlisted(function (e, r) {
+            console.log("Unlisted block num=" + result.blockNumber);
+            if (Market.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Market.eventBlocks.add(result.blockNumber);
 
         });
-        contractsInstance.NFTMarket.Unlisted(function(e,r){
-            console.log("Unlisted");
-
-        });
-        contractsInstance.NFTMarket.Swapped(function(e,r){
-            console.log("Swapped");
-
+        contractsInstance.NFTMarket.Swapped(function (e, r) {
+            console.log("Swapped block num=" + result.blockNumber);
+            if (Market.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Market.eventBlocks.add(result.blockNumber);
         });
     },
     sellNFT: function (id) {
@@ -3414,13 +3391,14 @@ Reward = {
 UserNFT = {
     nftIds: Array(),
     nftInfos: {},
-    totalNFT:0,
+    totalNFT: 0,
     userBalance: 0,
-    lastHash:null,
-    updateTotalNFT:function(){
+    eventBlocks: new Set(),
+    updateTotalNFT: function () {
         $(".ticketbalance").text(UserNFT.totalNFT);
     },
-    updateUserNFT:function(){
+    updateUserNFT: function () {
+        console.log("updateUserNFT");
         $(".myticketbalance").text(UserNFT.userBalance);
     },
     getNFTBalances: function () {
@@ -3433,24 +3411,45 @@ UserNFT = {
         });
 
         // Transfer
-        contractsInstance.NFTHotPot.Transfer({from:App.defaultAccount},function(e,r){
-            console.log("nft out tokenid="+r.args.tokenId+",to "+r.args.to);
-            if(UserNFT.lastHash==r.transactionHash){
+        contractsInstance.NFTHotPot.Transfer({ from: App.defaultAccount }, function (e, r) {
+            console.log("nft out tokenid=" + r.args.tokenId + ",to " + r.args.to);
+            console.log("nft block num=" + r.blockNumber);
+            if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
-            UserNFT.lastHash=r.transactionHash;
-            UserNFT.userBalance -= 1;
+            UserNFT.eventBlocks.add(r.blockNumber);
+
+            UserNFT.userBalance = UserNFT.userBalance.sub(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.Transfer({to:App.defaultAccount},function(e,r){
-            console.log("nft in tokenid="+r.args.tokenId+",from "+r.args.from);
-            if(UserNFT.lastHash==r.transactionHash){
+        contractsInstance.NFTHotPot.Transfer({ to: App.defaultAccount }, function (e, r) {
+            console.log("nft in tokenid=" + r.args.tokenId + ",from " + r.args.from);
+            if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
-            UserNFT.lastHash=r.transactionHash;
-            UserNFT.userBalance += 1;
+            UserNFT.eventBlocks.add(r.blockNumber);
+            UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
+        contractsInstance.NFTHotPot.UseTicket({ owner: App.defaultAccount }, function (e, r) {
+            console.log("nft UseTicket tokenid=" + r.args.tokenId);
+            if (UserNFT.eventBlocks.has(r.blockNumber)) {
+                return;
+            }
+            UserNFT.eventBlocks.add(r.blockNumber);
+
+            var id = r.args.tokenId;
+            var time = r.args.useTime;
+            UserNFT.nftInfos[id].usetime = time;
+
+            UserNFT.updateNFTTable();
+        });
+
+        // event UseTicket(
+        //     address indexed owner,
+        //     uint256 indexed useTime,
+        //     uint256 indexed tokenId
+        // );
 
         // call constant function
         contractsInstance.NFTHotPot.balanceOf(App.defaultAccount, function (error, result) {
@@ -3510,6 +3509,18 @@ UserNFT = {
     initNFTTable: function (use) {
         $(".pricingTable").empty();
         $(".pricingTable").append(NFT.createNFTs(UserNFT.nftIds, UserNFT.nftInfos, use));
+    },
+    updateNFTTable: function () {
+        console.log("updateNFTTable page=" + currentPage);
+        if (currentPage === "reward") {
+            UserNFT.initNFTTable(nftUse[0]);
+        } else if (currentPage === "me") {
+            UserNFT.initNFTTable(nftUse[2]);
+        } else {
+            if (currentPagePoolID != "") {
+                UserNFT.initNFTTable(nftUse[1]);
+            }
+        }
     }
 }
 
@@ -3534,6 +3545,7 @@ window.nav = (classname) => {
 
 function nav(classname) {
     hidepages();
+    currentPage = classname;
     $('body').removeClass('approved');
     currentPagePoolID = "";
     if (classname.indexOf('pool') === 0) {
@@ -3568,6 +3580,10 @@ function nav(classname) {
     } else if (classname === "me") {
         UserNFT.initNFTTable(nftUse[2]);
         showTable(true);
+    }
+
+    if(classname == 'exchange'){
+        App.selectBuy();
     }
 }
 
@@ -3728,7 +3744,7 @@ function startListenTX(tx) {
         web3.eth.getTransactionReceipt(tx, function (e, result) {
             if (e) {
                 console.log("tx error:" + e);
-                toastAlert("Error : "+e);
+                toastAlert("Error : " + e);
             } else {
                 console.log("tx result:" + result);
             }
