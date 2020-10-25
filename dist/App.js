@@ -2236,11 +2236,9 @@ const UNISWAP = require('@uniswap/sdk');
 const ChainId = UNISWAP.ChainId;
 const utils = require('web3-utils');
 
-
 App = {
     web3Provider: null,
     defaultAccount: null,
-    defaultBalance: 0,
     erc20Contract: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
@@ -2315,6 +2313,7 @@ App = {
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
+        defaultAccount = accounts[0];
         return App.initContract();
     },
     initUniSDK: async function () {
@@ -2363,6 +2362,7 @@ App = {
         $.getJSON('contracts/Gacha.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.Gacha = web3.eth.contract(data.abi);
+            contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
             return Gacha.getGacha();
         });
 
@@ -2379,7 +2379,6 @@ App = {
             contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
             return Market.initMarketInfo();
         });
-
     },
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -2434,7 +2433,7 @@ App = {
         });
     },
     updateUserBalance: function () {
-        var b = (App.defaultBalance.div(Math.pow(10, 18)).toFixed(2));
+        var b = (defaultBalance.div(Math.pow(10, 18)).toFixed(2));
         console.log("updateUserBalance " + b);
         $('.mybalance').text(b);
     },
@@ -2564,7 +2563,7 @@ App = {
                 // toastAlert("Approve success!");
                 console.log("Transfer in=" + result.args.value);
 
-                App.defaultBalance = App.defaultBalance.plus(result.args.value);
+                defaultBalance = defaultBalance.plus(result.args.value);
                 App.updateUserBalance();
             }
         });
@@ -2579,7 +2578,7 @@ App = {
                 // toastAlert("Approve success!");
                 console.log("Transfer out=" + result.args.value);
 
-                App.defaultBalance = App.defaultBalance.sub(result.args.value);
+                defaultBalance = defaultBalance.sub(result.args.value);
                 App.updateUserBalance();
             }
         });
@@ -2590,7 +2589,7 @@ App = {
                 console.log("HotPot.balanceOf error : " + e);
                 return;
             }
-            App.defaultBalance = result;
+            defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
             App.updateUserBalance();
             contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {

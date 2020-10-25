@@ -18,12 +18,19 @@
 	<script src="jss/ethcontracts.js" crossorigin="anonymous"></script>
 	<script src="js/jquery.min.js" crossorigin="anonymous"></script>
 
+	<script type="text/javascript" src="js/bignumber.min.js"></script>
 	<link rel="stylesheet" href="styles/tablestyle.css">
 
-	<script type="text/javascript" src="dist/dist.js"></script>
+	<script type="text/javascript" src="jss/common.js"></script>
+	<script type="text/javascript" src="jss/nft.js"></script>
+	<script type="text/javascript" src="dist/market.js"></script>
+	<script type="text/javascript" src="jss/gacha.js"></script>
+	<script type="text/javascript" src="dist/Loan.js"></script>
+	<script type="text/javascript" src="jss/stake.js"></script>
+	<script type="text/javascript" src="dist/App.js"></script>
 
 	<script type="text/javascript" src="jss/nft.js"></script>
-	<script type="text/javascript" src="js/bignumber.min.js"></script>
+
 	<script type="text/javascript" src="js/truffle-contract.js"></script>
 	<link href="styles/buttons.css" rel="stylesheet">
 	<link href="styles/table.css" rel="stylesheet">
@@ -178,9 +185,9 @@
 			<a target="_blank" href="#" id="importantmsg" STYLE="DISPLAY:NONE"></a>
 
 			<a id="globalmsg" target="_blank" href="http://etherscan.com/" STYLE="DISPLAY:NONE">
-				<span data-lang="congratulations">恭喜</span>
+				<span data-lang="congratulations"></span>
 				<span id="gachauser">XXX</span>
-				<span data-lang="congratulations1">抽中会员卡！</span></a>
+				<span data-lang="congratulations1"></span></a>
 			<div id="infodiv">
 				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
 				</h3>
@@ -315,8 +322,8 @@
 							<span class="ticketbalance">0</span>
 							<span data-lang="ticketdw">TICKET</span>
 						</H3>
-						<p>当前会员卡抽中概率：1/8</p>
-						<p>（流通10张后概率降低为：1/16）</p>
+						<p style="margin-top: 10%;"><span data-lang="posibilityinfo"></span><span id='posibilitynow'>1/8</span></p>
+						<p><span data-lang="posibilityinfo1"></span><span id='posibilitylater'>1/16</span></p>
 					</div>
 				</div>
 				<div class="card swapcard  web3true" style="height: 200px !important;">
@@ -330,7 +337,7 @@
 							class="card-link btn btn-primary btn-lg" data-lang="pull1">抽卡</a>
 						<a STYLE="DISPLAY:NONE" href="#farms" id="pull10" onclick="Gacha.pull10()"
 							class="card-link btn btn-primary btn-lg" data-lang="pull10">十连抽</a>
-						<p style="margin-top: 3%;">抽一次100HotPot，10连抽95折，950HotPot</p>
+						<p style="margin-top: 3%;" data-lang="gachainfo"></p>
 					</div>
 				</div>
 			</main>
@@ -339,21 +346,21 @@
 			<main role="main" class="inner cover exchange" STYLE="DISPLAY:NONE">
 				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
-						<h6 class="card-subtitle mb-2 text-warning" data-lang="">交易市场（最近24小时）</h6>
-						<p>成交额：$20000</p>
-						<p>成交量：14张</p>
-						<p>成交均价：$1000</p>
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="markettitle"></h6>
+						<p><span data-lang="volume"></span>$20000</p>
+						<p><span data-lang="transaction"></span>14 <span data-lang="ticketdw"></span></p>
+						<p><span data-lang="averageprice"></span>$1000</p>
 					</div>
 				</div>
 				<div class="card swapcard hide web3true" style="height: 170px !important;">
 					<div class="card-body">
-						<h6 class="card-subtitle mb-2 text-warning" data-lang="">借贷市场（最近24小时）</h6>
-						<p>成交额：$2000</p>
-						<p>借贷成交量：14张</p>
-						<p>借贷成交均价：$100/day</p>
+						<h6 class="card-subtitle mb-2 text-warning" data-lang="loantitle"></h6>
+						<p><span data-lang="volume"></span>$2000</p>
+						<p><span data-lang="transaction"></span>14 <span data-lang="ticketdw"></span></p>
+						<p><span data-lang="averageprice"></span>$100/day</p>
 					</div>
 				</div>
-				<p style="margin:3% 3%">成交价格K线图近期推出...</p>
+				<p style="margin:3% 3%" data-lang="kinfo"></p>
 
 				<table cellspacing="0">
 					<tr style="height: 50px!important;">
@@ -363,62 +370,31 @@
 				</table>
 
 				<div class="table-users" id="tablebuy" style="display: block;">
-					<div data-lang="nosell" id="noloan"></div>
-					<table cellspacing="0">
-						<tr>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th width="230">Comments</th>
-						</tr>
 
-						<tr>
-							<td>Jane Doe</td>
-							<td>jane.doe@foo.com</td>
-							<td>01 800 2000</td>
-							<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td>
-						</tr>
-
-						<tr>
-							<td>John Doe</td>
-							<td>john.doe@foo.com</td>
-							<td>01 800 2000</td>
-							<td>Blanditiis, aliquid numquam iure voluptatibus ut maiores explicabo ducimus neque,
-								nesciunt rerum perferendis, inventore.</td>
-						</tr>
+					<table cellspacing="0" id="tablesell">
 					</table>
 				</div>
 
 				<div class="table-users" id="tableloan" style="display: none;">
-					<div data-lang="noloan" id="noloan"></div>
+
 					<table cellspacing="0" id="tableloan">
 						<tr>
 							<th>ID</th>
 							<th>Grade</th>
-							<th>Avaliable</th>
 							<th>Price/Day</th>
-							<th>Time</th>
-							<th>Loan</th>
+							<th>Loan End Time</th>
+							<th>Action</th>
 							<!-- <th width="230">Comments</th> -->
 						</tr>
 
 						<tr>
 							<td>001</td>
 							<td>Normal</td>
-							<td>available</td>
 							<td>1000.00</td>
 							<td>2Days 20h30m</td>
 							<td style="text-align: center;"><button class="green button">Loan</button></td>
 						</tr>
-						<tr>
-							<td>001</td>
-							<td>Normal</td>
-							<td>available</td>
-							<td>1000.00</td>
-							<td>2Days 20h30m</td>
-							<td><button>Loan</button></td>
-							<!-- <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </td> -->
-						</tr>
+						
 					</table>
 				</div>
 
