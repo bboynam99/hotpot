@@ -87,7 +87,7 @@
 		<div class="alert_content" id="alertdiv"></div>
 
 		<div id="light" class="white_content">
-			<span style="color: black;text-align: center;font-size: 24px;" id="popTitle">Stake</span>　　　
+			<span style="color: black;text-align: center;font-size: 24px;" id="popTitle" ></span>　　　
 			<button style="height: 40px;width: 40px; position: absolute;right: 20px;border-style: none;"
 				onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">X</button>
 			<div style="color: black;margin-top: 10%;">
@@ -121,10 +121,15 @@
 			<span style="color: black;text-align: center;font-size: 24px;" class="popTitle">Sell</span>　　　
 			<button style="height: 40px;width: 40px; position: absolute;right: 20px;border-style: none;"
 				onclick="document.getElementById('divsell').style.display='none';document.getElementById('fade').style.display='none'">X</button>
-			<div style="color: black;margin-top: 10%;">
-				<span id="sellToken"> </span> , <span data-lang="inputprice">请输入价格：</span>
-			</div>　　
-			<input  name="name" type="number" style="width: 50%;margin-top: 5%;" autofocus="autofocus" value="0" class="stakeInput"> <span style="color: black;" id='priceunit'>HotPot</span>
+
+				<div id="priceinputdiv">
+					<div style="color: black;margin-top: 10%;">
+						<span id="sellToken"> </span> , <span data-lang="inputprice">请输入价格：</span>
+					</div>　　
+					<input  name="name" type="number" style="width: 50%;margin-top: 5%;" autofocus="autofocus" value="0" class="stakeInput"> <span style="color: black;" id='priceunit'>HotPot</span>
+		
+				</div>
+			
 			<div class="divloan">
 				<p style="color: black;margin-top: 2%;" data-lang="inputtime">请输入借贷时长：</p>
 				<input  name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" class="loanInput"> <span style="color: black;">Day</span>	
@@ -141,6 +146,12 @@
 				<a data-lang="loan" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
 					onclick="Loan.loanSure()" class="card-link btn btn-primary btn-lg">
 					Loan
+				</a>
+			</div>
+			<div id="borrowdiv">
+				<a data-lang="borrow" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
+					onclick="Loan.borrowSure()" class="card-link btn btn-primary btn-lg">
+					Borrow
 				</a>
 			</div>
 			<div>
@@ -369,31 +380,15 @@
 					</tr>
 				</table>
 
-				<div class="table-users" id="tablebuy" style="display: block;">
+				<div class="table-users" id="divbuytable" style="display: block;">
 
 					<table cellspacing="0" id="tablesell">
 					</table>
 				</div>
 
-				<div class="table-users" id="tableloan" style="display: none;">
+				<div class="table-users" id="divloantable" style="display: none;">
 
 					<table cellspacing="0" id="tableloan">
-						<tr>
-							<th>ID</th>
-							<th>Grade</th>
-							<th>Price/Day</th>
-							<th>Loan End Time</th>
-							<th>Action</th>
-							<!-- <th width="230">Comments</th> -->
-						</tr>
-
-						<tr>
-							<td>001</td>
-							<td>Normal</td>
-							<td>1000.00</td>
-							<td>2Days 20h30m</td>
-							<td style="text-align: center;"><button class="green button">Loan</button></td>
-						</tr>
 						
 					</table>
 				</div>

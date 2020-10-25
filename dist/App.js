@@ -2609,14 +2609,14 @@ App = {
     selectBuy:function(){
         $("#selectbuy").addClass('tableselect');
         $("#selectloan").removeClass('tableselect');
-        $("#tablebuy").show();
-        $("#tableloan").hide();
+        $("#divbuytable").show();
+        $("#divloantable").hide();
     },
     selectLoan:function(){
         $("#selectloan").addClass('tableselect');
         $("#selectbuy").removeClass('tableselect');
-        $("#tablebuy").hide();
-        $("#tableloan").show();
+        $("#divbuytable").hide();
+        $("#divloantable").show();
     }
 };
 

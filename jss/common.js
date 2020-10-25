@@ -31,9 +31,11 @@ function showSellAlert(id) {
     document.getElementById('stakeInput').value = 0;
     $("#sellToken").text("出售会员卡ID: " + id);
     $(".popTitle").text(getString('selltitle'));
+    $(".popTitle").attr('data-lang','selltitle');
     $("#loandiv").hide();
     $("#selldiv").show();
     $("#divsell").show();
+    $("#borrowdiv").hide();
     $(".divloan").hide();
     $("#iddiv").text(id);
     $("#priceunit").text('HotPot');
@@ -42,14 +44,33 @@ function showSellAlert(id) {
 function showLoanAlert(id) {
     document.getElementById('stakeInput').value = 0;
     $("#sellToken").text("租赁会员卡ID: " + id);
-    $(".popTitle").text(getString('loantitle'));
+    $(".popTitle").text(getString('loantitlepop'));
+    $(".popTitle").attr('data-lang','loantitlepop');
     $("#loandiv").show();
     $("#selldiv").hide();
     $("#divsell").show();
     $(".divloan").show();
     $("#iddiv").text(id);
+    $("#borrowdiv").hide();
+    $("#priceinputdiv").show();
     $("#priceunit").text('HotPot/Day');
 }
+
+function showBorrowAlert(id) {
+    document.getElementById('stakeInput').value = 0;
+    $("#sellToken").text("租赁会员卡ID: " + id);
+    $(".popTitle").text(getString('loantitlepop'));
+    $(".popTitle").attr('data-lang','loantitlepop');
+    $("#loandiv").hide();
+    $("#selldiv").hide();
+    $("#borrowdiv").show();
+    $("#divsell").show();
+    $(".divloan").show();
+    $("#iddiv").text(id);
+    $("#priceinputdiv").hide();
+    $("#priceunit").text('HotPot/Day');
+}
+
 
 function getSellAlertId() {
     return $("#iddiv").text();

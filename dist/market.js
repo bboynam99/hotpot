@@ -2258,7 +2258,7 @@ Market = {
                     return;
                 }
                 Market.eventBlocks.add(result.blockNumber);
-                if(!result.args.value.isEqualTo(Math.pow(10, 30))){
+                if(result.args.value.sub(Math.pow(10, 30)!=0)){
                     return;
                 }
                 Market.allowance = result.args.value;
