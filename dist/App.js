@@ -30253,6 +30253,12 @@ utils.intFromLE = intFromLE;
 
 },{"bn.js":104,"minimalistic-assert":146,"minimalistic-crypto-utils":147}],122:[function(require,module,exports){
 module.exports={
+  "_args": [
+    [
+      "elliptic@6.5.3",
+      "/Users/junhu/git/hotpot"
+    ]
+  ],
   "_from": "elliptic@6.5.3",
   "_id": "elliptic@6.5.3",
   "_inBundle": false,
@@ -30270,12 +30276,12 @@ module.exports={
     "fetchSpec": "6.5.3"
   },
   "_requiredBy": [
-    "/@ethersproject/signing-key"
+    "/@ethersproject/signing-key",
+    "/eth-lib"
   ],
   "_resolved": "https://registry.npm.taobao.org/elliptic/download/elliptic-6.5.3.tgz",
-  "_shasum": "cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6",
-  "_spec": "elliptic@6.5.3",
-  "_where": "/Users/junhu/git/hotpot/node_modules/@ethersproject/signing-key",
+  "_spec": "6.5.3",
+  "_where": "/Users/junhu/git/hotpot",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -30283,7 +30289,6 @@ module.exports={
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "bn.js": "^4.4.0",
     "brorand": "^1.0.1",
@@ -30293,7 +30298,6 @@ module.exports={
     "minimalistic-assert": "^1.0.0",
     "minimalistic-crypto-utils": "^1.0.0"
   },
-  "deprecated": false,
   "description": "EC cryptography",
   "devDependencies": {
     "brfs": "^1.4.3",
