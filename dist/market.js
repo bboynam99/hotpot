@@ -2258,9 +2258,13 @@ Market = {
                     return;
                 }
                 Market.eventBlocks.add(result.blockNumber);
-                if(result.args.value.sub(Math.pow(10, 30)!=0)){
+                
+                var nb = new BN(10);
+                nb = nb.pow(new BN(30));
+                if(result.args.value.lt(nb)){
                     return;
                 }
+                
                 Market.allowance = result.args.value;
                 console.log("approval spender=" + result.args.spender);
                 Market.initSellTable();

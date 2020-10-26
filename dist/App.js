@@ -2422,6 +2422,13 @@ App = {
                 }
                 App.eventBlocks.add(result.blockNumber);
 
+                var nb = new BN(10);
+                nb = nb.pow(new BN(30));
+                if(result.args.value.lt(nb)){
+                    console.log("stakeERCContract Approval less");
+                    return;
+                }
+
                 console.log(token + ":approval " + result.args);
                 hideTopMsg();
 
@@ -2542,6 +2549,13 @@ App = {
                 }
                 App.eventBlocks1.add(result.blockNumber);
                 console.log("approval spender=" + result.args.spender);
+
+                var nb = new BN(10);
+                nb = nb.pow(new BN(30));
+                if(result.args.value.lt(nb)){
+                    console.log("approval less");
+                    return;
+                }
 
                 hideTopMsg();
                 var spender = result.args.spender;

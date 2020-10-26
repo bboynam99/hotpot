@@ -27,23 +27,28 @@ NFT = {
         var availabe = "Available";
         var canUse = true;
 
-        var usetime = parseInt((nft.usetime).valueOf());
-        var delay = usetime + 86400 - ((new Date()).getTime()) / 1000;
-
-        if (delay>0) {
-            canUse = false;
-            availabe = "Charging : 20h 10:36"
-
-            let fomoTime = Math.floor(delay);
-            console.log("charger time=" + fomoTime);
-            availabe = "Charging : " + formatTime(fomoTime);
-            if (fomoTime > 0) {
-                setInterval(() => {
-                    fomoTime -= 1;
-                    $("#nftusetime" + nft.id).text("Charging : " + formatTime(fomoTime))
-                }, 1000);
+        if(nft.loan){
+            availabe = "Loaning";
+        }else{
+            var usetime = parseInt((nft.usetime).valueOf());
+            var delay = usetime + 86400 - ((new Date()).getTime()) / 1000;
+    
+            if (delay>0) {
+                canUse = false;
+                availabe = "Charging : 20h 10:36"
+    
+                let fomoTime = Math.floor(delay);
+                console.log("charger time=" + fomoTime);
+                availabe = "Charging : " + formatTime(fomoTime);
+                if (fomoTime > 0) {
+                    setInterval(() => {
+                        fomoTime -= 1;
+                        $("#nftusetime" + nft.id).text("Charging : " + formatTime(fomoTime))
+                    }, 1000);
+                }
             }
         }
+        
         var nodeli1 = $("<li></li>").text(availabe);
         nodeli1.attr("id", "nftusetime" + nft.id);
         nodeul.append(nodeli1);
@@ -204,12 +209,6 @@ UserNFT = {
             UserNFT.updateNFTTable();
         });
 
-        // event UseTicket(
-        //     address indexed owner,
-        //     uint256 indexed useTime,
-        //     uint256 indexed tokenId
-        // );
-
         // call constant function
         contractsInstance.NFTHotPot.balanceOf(App.defaultAccount, function (error, result) {
             console.log("getNFTBalances balanceOf=" + result) // '0x25434534534'
@@ -217,6 +216,7 @@ UserNFT = {
             UserNFT.nftIds = Array();
 
             $(".myticketbalance").text(result);
+
             for (var i = 0; i < result; i++) {
                 contractsInstance.NFTHotPot.tokenOfOwnerByIndex(App.defaultAccount, i, function (e, result) {
                     console.log("tokenOfOwnerByIndex id=" + result);
@@ -240,6 +240,22 @@ UserNFT = {
                 $("#grade3num").text(parseInt($("#grade3num").text()) + 1);
             }
             UserNFT.getUseTime(id);
+        });
+        
+        contractsInstance.Loan.reservations(id, function (e, r) {
+            var tokenId = r[0];
+            var borrower = r[1];
+            var borrowEndTime = r[2];
+            var pricePerDay = r[3];
+            var start = r[4];
+            var times = r[5];
+
+            var lasttime = times.mul(86400).plus(start);
+            var timenow = Math.floor((new Date()).getTime()/1000);
+            if(timenow<lasttime){
+                console.log("this token is loan");
+                UserNFT.nftInfos[id].loan = true;
+            }
         });
     },
     getUseTime: function (id) {
