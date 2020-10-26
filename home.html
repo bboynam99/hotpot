@@ -208,7 +208,7 @@
 				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info3">
 				</h3>
 			</div>
-			<div id="divloading">
+			<div id="divloading" style="display: none;">
 				<div class="spinner">
 					<div class="rect1"></div>
 					<div class="rect2"></div>
@@ -221,9 +221,13 @@
 
 			<main role="main" class="inner cover pt-2 home mt-4">
 				<p class="lead"></p>
-				<p class="lead web3false">
-					<span class=" btn-lg btn-secondary">Please connect MetaMask</span>
+				<p class="lead web3false" onclick="App.connectMetamask()">
+					<span class=" btn-lg btn-secondary">Connect MetaMask</span>
 				</p>
+				<p class="lead web3false" style="margin-top: 5%;" onclick="App.connectWallet()">
+					<span class=" btn-lg btn-secondary">Connect WalletConnect</span>
+				</p>
+				
 				<div class="cover-container mx-auto">
 					<div class="card swapcard hide web3true">
 						<div class="card-body">
@@ -612,9 +616,7 @@
 		<div class="inner">
 			
 			<p>
-				<select id="selectcontract">
-				
-			  	</select>
+				<select id="selectcontract"></select>
 			  
 				<br /><br />
 				<a href="https://twitter.com/dex_hot" target="_blank">Twitter</a>&mdash;

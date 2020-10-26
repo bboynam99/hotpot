@@ -1,36 +1,22 @@
-// const UNISWAP = require('@uniswap/sdk');
-// const ChainId = UNISWAP.ChainId;
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-
+const Webs = require('web3');
 
 App = {
     web3Provider: null,
-    defaultAccount: null,
     erc20Contract: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
-        // App.createSeletcContract();
         // return App.initWeb3();
-        return App.testWallet();
     },
-    createSeletcContract: function () {
-        var obj = document.getElementById('selectcontract');
-        for (var i = 0; i < contractList.length; i++) {
-            var contract = contractList[i];
-            var url = contractURL[contract];
-            var value = getString(contract + "contract");
-            obj.options.add(new Option(value, contract));
+    connectMetamask: function () {
+        if (typeof window.ethereum != 'undefined') {
+            App.initWeb3();
+        } else {
+            toastAlert(getString('nometamask'));
         }
-        $("#selectcontract").change(function () {
-            var val = $("#selectcontract").val();
-            window.open(contractURL[val]);
-            // window.location.href=contractURL[val];
-        });
     },
-
-    initWeb3: function () {
-
+    initWeb3: async function () {
         // Initialize web3 and set the provider to the testRPC.
         if (typeof window.ethereum != 'undefined') {
             console.log("Metamask is installed!");
@@ -59,24 +45,33 @@ App = {
             var chainId = window.ethereum.chainId;
             // Use the mainnet
             // const network = "mainnet";
+            //chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
+            var chain = ChainId[0];
+            if (chainId === "0x1") {
+                chain = ChainId[0];
+            } else if (chainId === "0x3") {
+                chain = ChainId[1];
+            } else if (chainId === "0x4") {
+                chain = ChainId[2];
+            }
+            ETHENV.init(chain);
+            if (web3 != null) {
+                $('body').addClass('web3');
+            }
+            var accounts = await window.ethereum.request(
+                {
+                    method: 'eth_requestAccounts'
+                }
+            );
 
-            // Specify your own API keys
-            // Each is optional, and if you omit it the default
-            // API key for that service will be used.
-            // const provider = ethers.getDefaultProvider(network, {
-            //     etherscan: 'IXP277PKS6ZT4DU5RWZ5ACQW5567IW22K6',
-            // });
-            // ethers.providers = provider;
-            ETHENV.init(chainId);
+            console.log("account=" + accounts[0]);
+            defaultAccount = accounts[0];
+            return App.initContract();
         } else {
-            $("#testp").text("has no ethereum");
-            // web3 = new Web3(web3.currentProvider);
-            App.testWallet();
-        }
-        return App.initWallet();
-    },
 
-    testWallet: async function () {
+        }
+    },
+    connectWallet: async function () {
         //  Create WalletConnect Provider
         const provider = new WalletConnectProvider({
             infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
@@ -84,11 +79,13 @@ App = {
         // Subscribe to accounts change
         provider.on("accountsChanged", (accounts) => {
             console.log(accounts);
+            // window.location.reload();
         });
 
         // Subscribe to chainId change
         provider.on("chainChanged", (chainId) => {
             console.log(chainId);
+            // window.location.reload();
         });
 
         // Subscribe to session connection
@@ -99,29 +96,42 @@ App = {
         // Subscribe to session disconnection
         provider.on("disconnect", (code, reason) => {
             console.log(code, reason);
+            // window.location.reload();
         });
         //  Enable session (triggers QR Code modal)
         await provider.enable();
         $("#testp").text("wallet provider");
         //  Create Web3
+        // web3 = new Web3(provider);
         web3 = new Web3(provider);
-    },
 
-    initWallet: async function () {
-        console.log("initWallet");
+        if (web3 == null) {
+            toastAlert(getString('noconnectwallet'));
+            return;
+        }
+
         if (web3 != null) {
             $('body').addClass('web3');
         }
-        let accounts = await ethereum.request(
-            {
-                method: 'eth_requestAccounts'
-            }
-        );
+        //  Get Accounts
+        const accounts = provider.accounts[0];
 
+        //  Get Chain Id
+        const chainId = provider.chainId;
+        var chain = ChainId[0];
+
+        if (chainId == 1) {
+            chain = ChainId[0];
+        } else if (chainId == 3) {
+            chain = ChainId[1];
+        } else if (chainId == 4) {
+            chain = ChainId[2];
+        }
+        ETHENV.init(chain);
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
-        App.defaultAccount = accounts[0];
         defaultAccount = accounts[0];
+        console.log("chainid=" + chainId + ",account=" + defaultAccount);
         return App.initContract();
     },
     initContract: function () {
@@ -191,12 +201,12 @@ App = {
         }
         stakeERCContract[token] = erc20Contract.at(stakeERCAddress[token]);
         console.log("getStakeERCInfo token=" + token);
-        stakeERCContract[token].balanceOf(App.defaultAccount, function (e, result) {
+        stakeERCContract[token].balanceOf(defaultAccount, function (e, result) {
             stakeInfos[token].userBalance = result;
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].decimals(function (e, result) {
                 stakeInfos[token].decimals = result;
-                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                stakeERCContract[token].allowance(defaultAccount, stakePoolAddress[token], function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = result;
                     if (currentPagePoolID != "") {
@@ -207,7 +217,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        stakeERCContract[token].Approval({ owner: App.defaultAccount }, function (error, result) {
+        stakeERCContract[token].Approval({ owner: defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
@@ -289,7 +299,7 @@ App = {
         var ethusdt = univ2PairInfo["eth/usdt"];
         var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
         var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
-        if (ETHENV.chainId == '0x3') {
+        if (ETHENV.chainId == ChainId[1]) {
             vEth = ethusdt.reserve1.div(Math.pow(10, 18));
             vUsdt = ethusdt.reserve0.div(Math.pow(10, 18));
         }
@@ -334,7 +344,7 @@ App = {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Approval({ owner: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Approval({ owner: defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -361,7 +371,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ to: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Transfer({ to: defaultAccount }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -376,7 +386,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ from: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Transfer({ from: defaultAccount }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -391,15 +401,16 @@ App = {
         });
 
         // call constant function
-        contractsInstance.HotPot.balanceOf(App.defaultAccount, function (e, result) {
+        contractsInstance.HotPot.balanceOf(defaultAccount, function (e, result) {
             if (e) {
                 console.log("HotPot.balanceOf error : " + e);
                 return;
             }
+            console.log("HotPot.balanceOf");
             defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
             App.updateUserBalance();
-            contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
+            contractsInstance.HotPot.allowance(defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
 
@@ -469,7 +480,7 @@ Reward = {
     },
     rewardByNFT: function (id) {
         console.log("rewardByNFT : " + id);
-        contractsInstance.Reward.WithdrawReward({ sender: App.defaultAccount }, function (e, result) {
+        contractsInstance.Reward.WithdrawReward({ sender: defaultAccount }, function (e, result) {
             if (!e) {
                 toastAlert(getString('rewardsuccess'));
             }

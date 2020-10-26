@@ -257,6 +257,8 @@ var ropstenTokenAddress={
     "uni":""
 }
 
+var ChainId = ['main','ropsten','rinkey']
+
 ETHENV = {
     Tokens:{},
     //chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
