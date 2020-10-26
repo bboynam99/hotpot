@@ -1,10 +1,10 @@
 const utils = require('web3-utils');
-const BigNumber = require("big-number");
-const BN = require('bn.js');
+// const BigNumber = require("big-number");
+// const BN = require('bn.js');
 
 function getPriceBytes(price) {
     var p = new BigNumber(price);
-    p.mult(10**18);
+    p.mul(10**18);
     console.log("p="+p.toString());
     return utils.padLeft(utils.toHex(p.toString()), 64)
 }

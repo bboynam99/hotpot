@@ -1,5 +1,5 @@
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-const Web3 = require('web3');
+
 App = {
     web3Provider: null,
     defaultAccount: null,
