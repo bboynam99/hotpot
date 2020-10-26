@@ -1,7 +1,6 @@
 const UNISWAP = require('@uniswap/sdk');
-
 const ChainId = UNISWAP.ChainId;
-const utils = require('web3-utils');
+
 
 App = {
     web3Provider: null,
@@ -30,9 +29,14 @@ App = {
     },
 
     initWeb3: function () {
+
         // Initialize web3 and set the provider to the testRPC.
         if (typeof window.ethereum != 'undefined') {
             console.log("Metamask is installed!");
+            $("#testp").text("has ethereum");
+            if(window.ethereum.isImToken){
+                $("#testp").text("has isImToken");
+            }
             App.web3Provider = window.ethereum;
             web3 = new Web3(window.ethereum);
 
@@ -63,6 +67,9 @@ App = {
             // });
             // ethers.providers = provider;
             ETHENV.init(chainId);
+        }else{
+            $("#testp").text("has no ethereum");
+            // web3 = new Web3(web3.currentProvider);
         }
         return App.initWallet();
     },
@@ -77,6 +84,7 @@ App = {
                 method: 'eth_requestAccounts'
             }
         );
+        
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
