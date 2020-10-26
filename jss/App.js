@@ -133,12 +133,12 @@ App = {
     },
     initContract: function () {
         $("#divloading").show();
-        $.getJSON('contracts/StakePool.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            console.log("StakePool create");
-            contractsInstance.StakePool = web3.eth.contract(data.abi);
-            return App.getStakePools();
-        });
+        // $.getJSON('contracts/StakePool.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     console.log("StakePool create");
+        //     contractsInstance.StakePool = web3.eth.contract(data.abi);
+        //     return App.getStakePools();
+        // });
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.HotPot = web3.eth.contract(data.abi);
@@ -147,39 +147,39 @@ App = {
             return App.getBalances();
         });
 
-        $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-            contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
-            contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
-            return UserNFT.getNFTBalances();
-        });
+        // $.getJSON('contracts/NFTokenHotPot.json', function (data) {
+        //     contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
+        //     contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
+        //     return UserNFT.getNFTBalances();
+        // });
 
-        $.getJSON('contracts/Reward.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Reward = web3.eth.contract(data.abi);
-            contractsInstance.Reward = contractsInstance.Reward.at(contractAddress.reward);
-            return Reward.getRewardInfo();
-        });
+        // $.getJSON('contracts/Reward.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     contractsInstance.Reward = web3.eth.contract(data.abi);
+        //     contractsInstance.Reward = contractsInstance.Reward.at(contractAddress.reward);
+        //     return Reward.getRewardInfo();
+        // });
 
-        $.getJSON('contracts/Gacha.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Gacha = web3.eth.contract(data.abi);
-            contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
-            return Gacha.getGacha();
-        });
+        // $.getJSON('contracts/Gacha.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     contractsInstance.Gacha = web3.eth.contract(data.abi);
+        //     contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
+        //     return Gacha.getGacha();
+        // });
 
-        $.getJSON('contracts/Loan.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Loan = web3.eth.contract(data.abi);
-            contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
-            return Loan.getLoan();
-        });
+        // $.getJSON('contracts/Loan.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     contractsInstance.Loan = web3.eth.contract(data.abi);
+        //     contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
+        //     return Loan.getLoan();
+        // });
 
-        $.getJSON('contracts/NFTMarket.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.NFTMarket = web3.eth.contract(data.abi);
-            contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
-            return Market.initMarketInfo();
-        });
+        // $.getJSON('contracts/NFTMarket.json', function (data) {
+        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
+        //     contractsInstance.NFTMarket = web3.eth.contract(data.abi);
+        //     contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
+        //     return Market.initMarketInfo();
+        // });
     },
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -417,7 +417,7 @@ App = {
                     $("#approvegacha").hide();
                 }
             });
-            Stake.getAllPoolBalance();
+            // Stake.getAllPoolBalance();
         });
 
     },
