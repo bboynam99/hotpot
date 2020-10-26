@@ -32035,6 +32035,7 @@ App = {
          const provider = new WalletConnectProvider({
             infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
         });
+        $("#testp").text("connectWallet");
         // Subscribe to accounts change
         provider.on("accountsChanged", (accounts) => {
             console.log(accounts);
@@ -32059,7 +32060,7 @@ App = {
         });
         //  Enable session (triggers QR Code modal)
         await provider.enable();
-       
+        $("#testp").text("Walletconnect is enable");
         //  Create Web3
         // web3 = new Web3(provider);
         web3 = new Web3(provider);
@@ -32101,7 +32102,7 @@ App = {
             console.log("Metamask is installed!");
             App.web3Provider = window.ethereum;
             web3 = new Web3(window.ethereum);
-
+            $("#testp").text("Metamask is installed");
             window.ethereum.on('accountsChanged', (accounts) => {
                 // Handle the new accounts, or lack thereof.
                 // "accounts" will always be an array, but it can be empty.
@@ -32120,6 +32121,8 @@ App = {
             var chainId = window.ethereum.chainId;
             ETHENV.init(chainId);
             return App.initWallet();
+        }else{
+            $("#testp").text("Metamask is not installed");
         }
     },
 
