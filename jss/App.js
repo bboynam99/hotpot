@@ -1,5 +1,6 @@
-const UNISWAP = require('@uniswap/sdk');
-const ChainId = UNISWAP.ChainId;
+// const UNISWAP = require('@uniswap/sdk');
+// const ChainId = UNISWAP.ChainId;
+const WalletConnectProvider = require("@walletconnect/web3-provider").default;
 
 
 App = {
@@ -9,9 +10,9 @@ App = {
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
-        console.log(`The chainId of mainnet is ${ChainId.MAINNET}.`)
         // App.createSeletcContract();
-        return App.initWeb3();
+        // return App.initWeb3();
+        return App.testWallet();
     },
     createSeletcContract: function () {
         var obj = document.getElementById('selectcontract');
@@ -34,7 +35,7 @@ App = {
         if (typeof window.ethereum != 'undefined') {
             console.log("Metamask is installed!");
             $("#testp").text("has ethereum");
-            if(window.ethereum.isImToken){
+            if (window.ethereum.isImToken) {
                 $("#testp").text("has isImToken");
             }
             App.web3Provider = window.ethereum;
@@ -67,11 +68,43 @@ App = {
             // });
             // ethers.providers = provider;
             ETHENV.init(chainId);
-        }else{
+        } else {
             $("#testp").text("has no ethereum");
             // web3 = new Web3(web3.currentProvider);
+            App.testWallet();
         }
         return App.initWallet();
+    },
+
+    testWallet: async function () {
+        //  Create WalletConnect Provider
+        const provider = new WalletConnectProvider({
+            infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
+        });
+        // Subscribe to accounts change
+        provider.on("accountsChanged", (accounts) => {
+            console.log(accounts);
+        });
+
+        // Subscribe to chainId change
+        provider.on("chainChanged", (chainId) => {
+            console.log(chainId);
+        });
+
+        // Subscribe to session connection
+        provider.on("connect", () => {
+            console.log("connect");
+        });
+
+        // Subscribe to session disconnection
+        provider.on("disconnect", (code, reason) => {
+            console.log(code, reason);
+        });
+        //  Enable session (triggers QR Code modal)
+        await provider.enable();
+        $("#testp").text("wallet provider");
+        //  Create Web3
+        web3 = new Web3(provider);
     },
 
     initWallet: async function () {
@@ -84,26 +117,11 @@ App = {
                 method: 'eth_requestAccounts'
             }
         );
-        
+
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         App.defaultAccount = accounts[0];
         defaultAccount = accounts[0];
-        return App.initContract();
-    },
-    initUniSDK: async function () {
-        var chain = ChainId.ROPSTEN;
-        var chainId = ETHENV.chainId;
-        if (chainId === "0x1") {
-            chain = ChainId.MAINNET;
-        } else if (chainId === "0x3") {
-            chain = ChainId.ROPSTEN;
-        }
-        else if (chainId === "0x4") {
-            chain = ChainId.RINKEBY;
-        } else if (chainId === "0x29a") {
-        }
-        console.log("dai start");
         return App.initContract();
     },
     initContract: function () {
@@ -199,7 +217,7 @@ App = {
 
                 var nb = new BN(10);
                 nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                if (result.args.value.lt(nb)) {
                     console.log("stakeERCContract Approval less");
                     return;
                 }
@@ -327,7 +345,7 @@ App = {
 
                 var nb = new BN(10);
                 nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                if (result.args.value.lt(nb)) {
                     console.log("approval less");
                     return;
                 }
@@ -395,13 +413,13 @@ App = {
         });
 
     },
-    selectBuy:function(){
+    selectBuy: function () {
         $("#selectbuy").addClass('tableselect');
         $("#selectloan").removeClass('tableselect');
         $("#divbuytable").show();
         $("#divloantable").hide();
     },
-    selectLoan:function(){
+    selectLoan: function () {
         $("#selectloan").addClass('tableselect');
         $("#selectbuy").removeClass('tableselect');
         $("#divbuytable").hide();
@@ -526,7 +544,7 @@ function nav(classname) {
         showTable(true);
     }
 
-    if(classname == 'exchange'){
+    if (classname == 'exchange') {
         App.selectBuy();
     }
 }
