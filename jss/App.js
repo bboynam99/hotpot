@@ -1,5 +1,5 @@
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-
+const Web3 = require('web3');
 App = {
     web3Provider: null,
     defaultAccount: null,
@@ -8,7 +8,7 @@ App = {
     eventBlocks1: new Set(),
     init: function () {
         // App.createSeletcContract();
-        return App.initWeb3();
+        // return App.initWeb3();
     },
     connectMetamask:function(){
         if (typeof window.ethereum != 'undefined') {
@@ -60,11 +60,13 @@ App = {
         if (web3 != null) {
             $('body').addClass('web3');
         }
+        $("#testp").text("Walletconnect is enable 2");
         //  Get Accounts
         const accounts = provider.accounts;
 
         //  Get Chain Id
         const chainId = provider.chainId;
+        $("#testp").text("Walletconnect is enable 3");
         var chain = ChainId[0];
 
         if (chainId == 1) {
