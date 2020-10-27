@@ -13,7 +13,7 @@ Loan = {
     eventBlocks1: new Set(),
     getLoan: function () {
         Loan.initLoanTable();
-        contractsInstance.HotPot.Approval({ owner: App.defaultAccount, spender: contractsInstance.Loan.address }, function (error, result) {
+        contractsInstance.HotPot.Approval({ owner: defaultAccount, spender: contractsInstance.Loan.address }, function (error, result) {
             if (!error) {
                 console.log("Approve success!");
                 if (Loan.eventBlocks.has(result.blockNumber)) {

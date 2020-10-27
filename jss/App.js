@@ -2,7 +2,6 @@ const WalletConnectProvider = require("@walletconnect/web3-provider").default;
 
 App = {
     web3Provider: null,
-    defaultAccount: null,
     erc20Contract: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
@@ -81,6 +80,7 @@ App = {
 
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         defaultAccount = accounts[0];
+        defaultAccount = '0x123608D432ccE70dE240156505948094518bc23F';
         $("#testp").text("wallet provider:"+defaultAccount);
         console.log("chainid=" + chainId + ",account=" + defaultAccount);
         return App.initContract();
@@ -108,7 +108,16 @@ App = {
             });
             console.log("chainid=" + window.ethereum.chainId);
             var chainId = window.ethereum.chainId;
-            ETHENV.init(chainId);
+            ////chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
+            var chain = ChainId[0];
+            if(chainId==='0x1'){
+                chain = ChainId[0];
+            }else if(chainId==='0x3'){
+                chain = ChainId[1];
+            }else if(chainId==='0x4'){
+                chain = ChainId[2];
+            }
+            ETHENV.init(chain);
             return App.initWallet();
         }else{
             $("#testp").text("Metamask is not installed");
@@ -127,18 +136,17 @@ App = {
         );
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
-        App.defaultAccount = accounts[0];
         defaultAccount = accounts[0];
         return App.initContract();
     },
     initContract: function () {
         $("#divloading").show();
-        // $.getJSON('contracts/StakePool.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     console.log("StakePool create");
-        //     contractsInstance.StakePool = web3.eth.contract(data.abi);
-        //     return App.getStakePools();
-        // });
+        $.getJSON('contracts/StakePool.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            console.log("StakePool create");
+            contractsInstance.StakePool = web3.eth.contract(data.abi);
+            return App.getStakePools();
+        });
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.HotPot = web3.eth.contract(data.abi);
@@ -147,39 +155,39 @@ App = {
             return App.getBalances();
         });
 
-        // $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-        //     contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
-        //     contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
-        //     return UserNFT.getNFTBalances();
-        // });
+        $.getJSON('contracts/NFTokenHotPot.json', function (data) {
+            contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
+            contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
+            return UserNFT.getNFTBalances();
+        });
 
-        // $.getJSON('contracts/Reward.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     contractsInstance.Reward = web3.eth.contract(data.abi);
-        //     contractsInstance.Reward = contractsInstance.Reward.at(contractAddress.reward);
-        //     return Reward.getRewardInfo();
-        // });
+        $.getJSON('contracts/Reward.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            contractsInstance.Reward = web3.eth.contract(data.abi);
+            contractsInstance.Reward = contractsInstance.Reward.at(contractAddress.reward);
+            return Reward.getRewardInfo();
+        });
 
-        // $.getJSON('contracts/Gacha.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     contractsInstance.Gacha = web3.eth.contract(data.abi);
-        //     contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
-        //     return Gacha.getGacha();
-        // });
+        $.getJSON('contracts/Gacha.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            contractsInstance.Gacha = web3.eth.contract(data.abi);
+            contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
+            return Gacha.getGacha();
+        });
 
-        // $.getJSON('contracts/Loan.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     contractsInstance.Loan = web3.eth.contract(data.abi);
-        //     contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
-        //     return Loan.getLoan();
-        // });
+        $.getJSON('contracts/Loan.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            contractsInstance.Loan = web3.eth.contract(data.abi);
+            contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
+            return Loan.getLoan();
+        });
 
-        // $.getJSON('contracts/NFTMarket.json', function (data) {
-        //     // Get the necessary contract artifact file and instantiate it with truffle-contract.
-        //     contractsInstance.NFTMarket = web3.eth.contract(data.abi);
-        //     contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
-        //     return Market.initMarketInfo();
-        // });
+        $.getJSON('contracts/NFTMarket.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            contractsInstance.NFTMarket = web3.eth.contract(data.abi);
+            contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
+            return Market.initMarketInfo();
+        });
     },
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -199,12 +207,12 @@ App = {
         }
         stakeERCContract[token] = erc20Contract.at(stakeERCAddress[token]);
         console.log("getStakeERCInfo token=" + token);
-        stakeERCContract[token].balanceOf(App.defaultAccount, function (e, result) {
+        stakeERCContract[token].balanceOf(defaultAccount, function (e, result) {
             stakeInfos[token].userBalance = result;
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].decimals(function (e, result) {
                 stakeInfos[token].decimals = result;
-                stakeERCContract[token].allowance(App.defaultAccount, stakePoolAddress[token], function (e, result) {
+                stakeERCContract[token].allowance(defaultAccount, stakePoolAddress[token], function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = result;
                     if (currentPagePoolID != "") {
@@ -215,7 +223,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        stakeERCContract[token].Approval({ owner: App.defaultAccount }, function (error, result) {
+        stakeERCContract[token].Approval({ owner: defaultAccount }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
@@ -338,11 +346,11 @@ App = {
         });
 
     },
-    getBalances: function () {
+    getBalances:async function () {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Approval({ owner: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Approval({ owner: defaultAccount }, {fromBlock:  'latest', toBlock: 'latest'}, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -369,7 +377,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ to: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Transfer({ to: defaultAccount },{fromBlock:  'latest', toBlock: 'latest'}, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -384,7 +392,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ from: App.defaultAccount }, function (error, result) {
+        contractsInstance.HotPot.Transfer({ from: defaultAccount }, {fromBlock:  'latest', toBlock: 'latest'},function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -398,16 +406,19 @@ App = {
             }
         });
 
+        // var result = await contractsInstance.HotPot.balanceOf(defaultAccount).call();
+
         // call constant function
-        contractsInstance.HotPot.balanceOf(App.defaultAccount, function (e, result) {
+        contractsInstance.HotPot.balanceOf(defaultAccount, function (e, result) {
             if (e) {
                 console.log("HotPot.balanceOf error : " + e);
                 return;
             }
             defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
+            console.log("balanceOf "+result/10**18);
             App.updateUserBalance();
-            contractsInstance.HotPot.allowance(App.defaultAccount, contractAddress.gacha, function (e, result) {
+            contractsInstance.HotPot.allowance(defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
                 if (allowance == 0) {
 
@@ -417,7 +428,7 @@ App = {
                     $("#approvegacha").hide();
                 }
             });
-            // Stake.getAllPoolBalance();
+            Stake.getAllPoolBalance();
         });
 
     },
@@ -477,7 +488,7 @@ Reward = {
     },
     rewardByNFT: function (id) {
         console.log("rewardByNFT : " + id);
-        contractsInstance.Reward.WithdrawReward({ sender: App.defaultAccount }, function (e, result) {
+        contractsInstance.Reward.WithdrawReward({ sender: defaultAccount }, function (e, result) {
             if (!e) {
                 toastAlert(getString('rewardsuccess'));
             }

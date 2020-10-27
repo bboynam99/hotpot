@@ -18,7 +18,7 @@ Market = {
     initMarketInfo: function () {
         console.log("initMarketInfo");
         Market.initSellTable();
-        contractsInstance.HotPot.Approval({ owner: App.defaultAccount, spender: contractsInstance.NFTMarket.address }, function (error, result) {
+        contractsInstance.HotPot.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket.address }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (Market.eventBlocks.has(result.blockNumber)) {
@@ -165,7 +165,7 @@ Market = {
         // var bn = new BigNumber(price*10**18);
         // price = utils.padLeft(utils.toHex(bn), 64)
         id = parseInt(id);
-        contractsInstance.NFTHotPot.safeTransferFrom['address,address,uint256,bytes'](App.defaultAccount, contractAddress.market, id, getPriceBytes(price), function (e, result) {
+        contractsInstance.NFTHotPot.safeTransferFrom['address,address,uint256,bytes'](defaultAccount, contractAddress.market, id, getPriceBytes(price), function (e, result) {
             if (e) {
                 toastAlert("Error:" + e.message);
             } else {

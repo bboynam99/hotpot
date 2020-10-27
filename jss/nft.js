@@ -161,7 +161,7 @@ UserNFT = {
     addNFT:function(tokenId){
         console.log("addNFT "+tokenId);
         UserNFT.nftIds.push(tokenId);
-        var nft = NFT.createNFTInfo(tokenId, App.defaultAccount);
+        var nft = NFT.createNFTInfo(tokenId, defaultAccount);
         UserNFT.nftInfos[tokenId] = nft;
     },
     getNFTBalances: function () {
@@ -174,7 +174,7 @@ UserNFT = {
         });
         // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
         // Transfer
-        contractsInstance.NFTHotPot.Transfer({ from: App.defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.Transfer({ from: defaultAccount }, function (e, r) {
             console.log("nft out tokenid=" + r.args.tokenId + ",to " + r.args.to);
             console.log("nft block num=" + r.blockNumber);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
@@ -185,7 +185,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.sub(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.Transfer({ to: App.defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.Transfer({ to: defaultAccount }, function (e, r) {
             console.log("nft in tokenid=" + r.args.tokenId + ",from " + r.args.from);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -195,7 +195,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.UseTicket({ owner: App.defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.UseTicket({ owner: defaultAccount }, function (e, r) {
             console.log("nft UseTicket tokenid=" + r.args.tokenId);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -210,7 +210,7 @@ UserNFT = {
         });
 
         // call constant function
-        contractsInstance.NFTHotPot.balanceOf(App.defaultAccount, function (error, result) {
+        contractsInstance.NFTHotPot.balanceOf(defaultAccount, function (error, result) {
             console.log("getNFTBalances balanceOf=" + result) // '0x25434534534'
             UserNFT.userBalance = result;
             UserNFT.nftIds = Array();
@@ -218,10 +218,10 @@ UserNFT = {
             $(".myticketbalance").text(result);
 
             for (var i = 0; i < result; i++) {
-                contractsInstance.NFTHotPot.tokenOfOwnerByIndex(App.defaultAccount, i, function (e, result) {
+                contractsInstance.NFTHotPot.tokenOfOwnerByIndex(defaultAccount, i, function (e, result) {
                     console.log("tokenOfOwnerByIndex id=" + result);
                     UserNFT.nftIds.push(result);
-                    var nft = NFT.createNFTInfo(result, App.defaultAccount);
+                    var nft = NFT.createNFTInfo(result, defaultAccount);
                     UserNFT.nftInfos[result] = nft;
                     UserNFT.getNFTInfo(result);
                 });

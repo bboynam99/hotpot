@@ -27,7 +27,7 @@ Gacha = {
                     $("#globalmsg").hide();
                 }, 5000);
 
-                if (result.args._owner == App.defaultAccount) {
+                if (result.args._owner == defaultAccount) {
                     hideTopMsg();
                 }
 

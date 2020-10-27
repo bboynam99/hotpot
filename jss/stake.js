@@ -276,7 +276,7 @@ Stake = {
         console.log("initSinglePool poolname=" + poolName);
         stakeInfos[poolName].instance = contractsInstance.StakePool.at(poolAddress);
 
-        stakeInfos[poolName].instance.Staked({ user: App.defaultAccount }, function (err, result) {
+        stakeInfos[poolName].instance.Staked({ user: defaultAccount }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -295,7 +295,7 @@ Stake = {
             }
         });
 
-        stakeInfos[poolName].instance.Withdrawn({ user: App.defaultAccount }, function (err, result) {
+        stakeInfos[poolName].instance.Withdrawn({ user: defaultAccount }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -314,7 +314,7 @@ Stake = {
             }
         });
 
-        stakeInfos[poolName].instance.RewardPaid({ user: App.defaultAccount }, function (err, result) {
+        stakeInfos[poolName].instance.RewardPaid({ user: defaultAccount }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -340,10 +340,10 @@ Stake = {
         stakeInfos[poolName].instance.totalSupply(function (e, result) {
             console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
             stakeInfos[poolName].poolTotalStake = result;
-            stakeInfos[poolName].instance.balanceOf(App.defaultAccount, function (e, result) {
+            stakeInfos[poolName].instance.balanceOf(defaultAccount, function (e, result) {
                 console.log("initSinglePool pool=" + poolName + ",balanceOf:" + result);
                 stakeInfos[poolName].userStake = result;
-                stakeInfos[poolName].instance.earned(App.defaultAccount, function (e, result) {
+                stakeInfos[poolName].instance.earned(defaultAccount, function (e, result) {
                     console.log("initSinglePool pool=" + poolName + ",earned:" + result);
                     stakeInfos[poolName].userEarn = result;
                     stakeInfos[poolName].instance.rewardRate(function (e, result) {
@@ -361,7 +361,7 @@ Stake = {
 
                             Stake.checkTotalStaked();
                         });
-                        stakeInfos[poolName].instance.lastRewardTime(App.defaultAccount, function (e, r) {
+                        stakeInfos[poolName].instance.lastRewardTime(defaultAccount, function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                             stakeInfos[poolName].lastRewardTime = r;
                         });
