@@ -89,21 +89,6 @@ Market = {
             Market.eventBlocks.add(result.blockNumber);
             Market.removeNFT(r.args._tokenId);
         });
-
-    // event Swapped(
-    //     address indexed _buyer,
-    //     address indexed _seller,
-    //     uint256 indexed _tokenId,
-    //     uint256 _price
-    // );
-        // contractsInstance.NFTMarket.Swapped(function (e, r) {
-        //     console.log("Swapped block num=" + result.blockNumber);
-        //     if (Market.eventBlocks.has(result.blockNumber)) {
-        //         return;
-        //     }
-        //     Market.eventBlocks.add(result.blockNumber);
-        //     Market.removeNFT(r.args._tokenId);
-        // });
     },
     removeNFT:function(tokenId){
         console.log("removeNFT="+tokenId);
@@ -146,6 +131,11 @@ Market = {
     sellNFT: function (id) {
         if(!UserNFT.isAvailable(id)){
             toastAlert(getString('nftnotavailable'));
+            return;
+        }
+        var nft = UserNFT.nftInfos[id];
+        if(nft.loan){
+            toastAlert(getString('loaning'));
             return;
         }
         showSellAlert(id);
@@ -199,9 +189,9 @@ Market = {
         $("#tablesell").empty();
         var node = $("<tr></tr>");
         var nodeid = $("<td>ID</td>");
-        var nodegrade = $("<td></td>").text(getString('grade'));
-        var nodeprice = $("<td></td>").text(getString('price'));
-        var nodeaction = $("<td style='text-align: center;'></td>").text(getString('action'));
+        var nodegrade = $("<td data-lang='grade'></td>").text(getString('grade'));
+        var nodeprice = $("<td data-lang='price'></td>").text(getString('price'));
+        var nodeaction = $("<td data-lang='action' style='text-align: center;'></td>").text(getString('action'));
         node.append(nodeid);
         node.append(nodegrade);
         node.append(nodeprice);
@@ -221,13 +211,18 @@ Market = {
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);
 
-        var grade = getString('grade1');
-        if (nft.grade == 2) {
-            grade = getString('grade2');
-        } else if (nft.grade == 3) {
-            grade = getString('grade3');
+        var nodegradein;
+        if(nft.grade==1){
+            nodegradein=$("<span data-lang='grade1'></span>").text(getString('grade1'));
         }
-        var nodegrade = $("<td></td>").text(grade);
+        else if (nft.grade == 2) {
+            nodegradein=$("<span data-lang='grade2'></span>").text(getString('grade2'));
+        } else if (nft.grade == 3) {
+            nodegradein=$("<span data-lang='grade3'></span>").text(getString('grade3'));
+        }
+
+        var nodegrade = $("<td></td>");
+        nodegrade.append(nodegradein);
         node.append(nodegrade);
 
         var price = nft.price.div(Math.pow(10, 18));
@@ -240,16 +235,16 @@ Market = {
         var nodetdbtn = $("<td style='text-align: center;'></td>");
 
         if(Market.allowance==0){
-            var nodebtn = $("<button class='green button'></button>").text(getString('approve'));
+            var nodebtn = $("<button class='green button' data-lang='approve'></button>").text(getString('approve'));
             nodetdbtn.on("click", nodebtn, function () { Market.approve() });
             nodetdbtn.append(nodebtn);            
         }else{
             if (nft.seller == defaultAccount) {
-                var nodebtn = $("<button class='green button'></button>").text(getString('canclesell'));
+                var nodebtn = $("<button class='green button' data-lang='cancelsell'></button>").text(getString('cancelsell'));
                 nodetdbtn.on("click", nodebtn, function () { Market.cancleSell(nft.id) });
                 nodetdbtn.append(nodebtn);
             } else {
-                var nodebtn = $("<button class='green button'></button>").text(getString('buy'));
+                var nodebtn = $("<button class='green button' data-lang='buy'></button>").text(getString('buy'));
                 nodetdbtn.on("click", nodebtn, function () { Market.buyNFT(nft.id) });
                 nodetdbtn.append(nodebtn);
             }

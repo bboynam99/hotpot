@@ -86,7 +86,6 @@
 <body class="text-center">
 	<button onclick="testFunction()">测试</button>
 	<div class="content">
-		<p id='testp'>testp</p>
 		<div class="alert_content" id="alertdiv"></div>
 
 		<div id="light" class="white_content">
@@ -224,10 +223,10 @@
 			<main role="main" class="inner cover pt-2 home mt-4">
 				<p class="lead"></p>
 				<p class="lead web3false" onclick="App.connectMetamask()">
-					<span class=" btn-lg btn-secondary">Connect MetaMask</span>
+					<span class=" btn-lg btn-secondary"> MetaMask </span>
 				</p>
 				<p class="lead web3false" style="margin-top: 5%;" onclick="App.connectWallet()">
-					<span class=" btn-lg btn-secondary">Connect WalletConnect</span>
+					<span class=" btn-lg btn-secondary">WalletConnect</span>
 				</p>
 				
 				<div class="cover-container mx-auto">
@@ -294,7 +293,7 @@
 					<div class="card hide web3true swapcard2">
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="totalsupply">Total Supply</h6>
-							<H3 class="card-text mcap"><span id="totalcir">266.00 </span>HotPot</H3>
+							<H3 class="card-text mcap"><span id="totalcir"></span>HotPot</H3>
 						</div>
 					</div>
 					<div class="card hide web3true swapcard2" hidden>
@@ -382,8 +381,8 @@
 
 				<table cellspacing="0">
 					<tr style="height: 50px!important;">
-						<th class='selectth tableselect' id='selectbuy' onclick="App.selectBuy()">Buy</th>
-						<th class='selectth'  id='selectloan' onclick="App.selectLoan()">Loan</th>
+						<th class='selectth tableselect' data-lang="selectbuy" id='selectbuy' onclick="App.selectBuy()">Buy</th>
+						<th class='selectth' data-lang="selectloan"  id='selectloan' onclick="App.selectLoan()">Loan</th>
 					</tr>
 				</table>
 

@@ -11,14 +11,15 @@ NFT = {
         // }
 
         var nodeli = $("<li class='pricingTable-firstTable_table'></li>");
-        var name = "Member Card";
-        if (nft.grade == 2) {
-            name = "Gold Member Card";
-        } else if (nft.grade == 3) {
-            name = "Epic Member Card";
-        }
 
-        var nodeh1 = $("<h1 class='pricingTable-firstTable_table__header'></h1>").text(name);
+        var nodename = $("<span data-lang='grade1mb'></span>").text(getString('grade1mb'));
+        if (nft.grade == 2) {
+            nodename = $("<span data-lang='grade2mb'></span>").text(getString('grade2mb'));
+        } else if (nft.grade == 3) {
+            nodename = $("<span data-lang='grade3mb'></span>").text(getString('grade3mb'));
+        }
+        var nodeh1 = $("<h1 class='pricingTable-firstTable_table__header'></h1>");
+        nodeh1.append(nodename);
 
         //<span>ID:</span><span>002</span><span>/1000</span>
         var phtml = "<span>ID:</span><span>" + formatZero(nft.id, 3) + "</span><span>/1000</span>";
@@ -60,25 +61,29 @@ NFT = {
         var nodediv;
         if (use === nftUse[1]) {
             if (canUse){
-                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("CLAIM");
+                nodediv = $("<div data-lang='claim'  class='pricingTable-firstTable_table__getstart'></div>").text(getString('claim'));
                 nodeli.on("click",nodediv,function(){Stake.claimByNFT(nft.id)});
             }
             else{
-                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
+                nodediv = $("<div data-lang='waitcharge' class='pricingTable-firstTable_table__getstart'></div>").text(getString('waitcharge'));
             }
         } else if(use===nftUse[0]){
             if (canUse){
-                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("DIVIDENDS");
+                nodediv = $("<div data-lang='bonus' class='pricingTable-firstTable_table__getstart'></div>").text(getString('bonus'));
                 nodeli.on("click",nodediv,function(){Reward.rewardByNFT(nft.id)});
             }               
             else{
-                nodediv = $("<div class='pricingTable-firstTable_table__getstart'></div>").text("Waitting for charging");
+                nodediv = $("<div data-lang='waitcharge' class='pricingTable-firstTable_table__getstart'></div>").text(getString('waitcharge'));
             }
         } else if(use === nftUse[2]){
-            nodediv = $("<div class='pricingTable-firstTable_table__getstart' onclick='Loan.loanNFT("+nft.id+")'></div>").text("LOAN");
-
-            var nodedivsell = $("<div class='pricingTable-firstTable_table__getstart' onclick='Market.sellNFT("+nft.id+")'></div>").text("SELL");
-            nodeli.append(nodedivsell);
+            if(!nft.loan){
+                nodediv = $("<div data-lang='loan' class='pricingTable-firstTable_table__getstart' onclick='Loan.loanNFT("+nft.id+")'></div>").text(getString('loan'));
+                var nodedivsell = $("<div data-lang='sell' class='pricingTable-firstTable_table__getstart' onclick='Market.sellNFT("+nft.id+")'></div>").text(getString('sell'));
+                nodeli.append(nodedivsell);
+            }
+            else{
+                nodediv = $("<div data-lang='cancelloan' class='pricingTable-firstTable_table__getstart' onclick='Loan.cancelDeposit("+nft.id+")'></div>").text(getString('cancelloan'));
+            }
         }
 
         nodeli.append(nodediv);

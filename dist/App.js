@@ -62917,8 +62917,7 @@ App = {
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
-        // App.createSeletcContract();
-        // return App.initWeb3();
+        return App.initWeb3();
     },
     connectMetamask:function(){
         if (typeof window.ethereum != 'undefined') {
@@ -62932,7 +62931,6 @@ App = {
          const provider = new WalletConnectProvider({
             infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
         });
-        $("#testp").text("connectWallet");
         // Subscribe to accounts change
         provider.on("accountsChanged", (accounts) => {
             console.log(accounts);
@@ -62957,7 +62955,6 @@ App = {
         });
         //  Enable session (triggers QR Code modal)
         await provider.enable();
-        $("#testp").text("Walletconnect is enable");
         //  Create Web3
         // web3 = new Web3(provider);
         web3 = new Web3(provider);
@@ -62970,13 +62967,11 @@ App = {
         if (web3 != null) {
             $('body').addClass('web3');
         }
-        $("#testp").text("Walletconnect is enable 2");
         //  Get Accounts
         const accounts = provider.accounts;
 
         //  Get Chain Id
         const chainId = provider.chainId;
-        $("#testp").text("Walletconnect is enable 3");
         var chain = ChainId[0];
 
         if (chainId == 1) {
@@ -62992,7 +62987,6 @@ App = {
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         defaultAccount = accounts[0];
         defaultAccount = '0x123608D432ccE70dE240156505948094518bc23F';
-        $("#testp").text("wallet provider:"+defaultAccount);
         console.log("chainid=" + chainId + ",account=" + defaultAccount);
         return App.initContract();
     },
@@ -63002,7 +62996,6 @@ App = {
             console.log("Metamask is installed!");
             App.web3Provider = window.ethereum;
             web3 = new Web3(window.ethereum);
-            $("#testp").text("Metamask is installed");
             window.ethereum.on('accountsChanged', (accounts) => {
                 // Handle the new accounts, or lack thereof.
                 // "accounts" will always be an array, but it can be empty.
@@ -63031,7 +63024,7 @@ App = {
             ETHENV.init(chain);
             return App.initWallet();
         }else{
-            $("#testp").text("Metamask is not installed");
+            App.connectWallet();
         }
     },
 
@@ -63216,7 +63209,7 @@ App = {
         var ethusdt = univ2PairInfo["eth/usdt"];
         var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
         var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
-        if (ETHENV.chainId == '0x3') {
+        if (ETHENV.chainId == ChainId[1]) {
             vEth = ethusdt.reserve1.div(Math.pow(10, 18));
             vUsdt = ethusdt.reserve0.div(Math.pow(10, 18));
         }

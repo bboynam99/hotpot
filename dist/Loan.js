@@ -14270,10 +14270,10 @@ Loan = {
         $("#tableloan").empty();
         var node = $("<tr></tr>");
         var nodeid = $("<td>ID</td>");
-        var nodegrade = $("<td></td>").text(getString('grade'));
-        var nodeprice = $("<td></td>").text(getString('priceday'));
-        var nodeendtime = $("<td></td>").text(getString('nodeendtime'));
-        var nodeaction = $("<td style='text-align: center;'></td>").text(getString('action'));
+        var nodegrade = $("<td data-lang='grade'></td>").text(getString('grade'));
+        var nodeprice = $("<td data-lang='priceday'></td>").text(getString('priceday'));
+        var nodeendtime = $("<td data-lang='nodeendtime'></td>").text(getString('nodeendtime'));
+        var nodeaction = $("<td data-lang='action' style='text-align: center;'></td>").text(getString('action'));
         node.append(nodeid);
         node.append(nodegrade);
         node.append(nodeprice);
@@ -14294,13 +14294,18 @@ Loan = {
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);
 
-        var grade = getString('grade1');
-        if (nft.grade == 2) {
-            grade = getString('grade2');
-        } else if (nft.grade == 3) {
-            grade = getString('grade3');
+        var nodegradein;
+        if(nft.grade==1){
+            nodegradein=$("<span data-lang='grade1'></span>").text(getString('grade1'));
         }
-        var nodegrade = $("<td></td>").text(grade);
+        else if (nft.grade == 2) {
+            nodegradein=$("<span data-lang='grade2'></span>").text(getString('grade2'));
+        } else if (nft.grade == 3) {
+            nodegradein=$("<span data-lang='grade3'></span>").text(getString('grade3'));
+        }
+
+        var nodegrade = $("<td></td>");
+        nodegrade.append(nodegradein);
         node.append(nodegrade);
 
         var price = nft.price.div(Math.pow(10, 18));
@@ -14328,16 +14333,16 @@ Loan = {
         var nodetdbtn = $("<td style='text-align: center;'></td>");
 
         if(Loan.allowance==0){
-            var nodebtn = $("<button class='green button'></button>").text(getString('approve'));
+            var nodebtn = $("<button class='green button' data-lang='approve'></button>").text(getString('approve'));
             nodetdbtn.on("click", nodebtn, function () { Loan.approve() });
             nodetdbtn.append(nodebtn);            
         }else{
             if (nft.owner == defaultAccount) {
-                var nodebtn = $("<button class='green button'></button>").text(getString('canclesell'));
+                var nodebtn = $("<button class='green button' data-lang='cancelloan'></button>").text(getString('cancelloan'));
                 nodetdbtn.on("click", nodebtn, function () { Loan.cancelDeposit(nft.id) });
                 nodetdbtn.append(nodebtn);
             } else {
-                var nodebtn = $("<button class='green button'></button>").text(getString('borrow'));
+                var nodebtn = $("<button class='green button' data-lang='borrow'></button>").text(getString('borrow'));
                 nodetdbtn.on("click", nodebtn, function () { Loan.borrowNFT(nft.id) });
                 nodetdbtn.append(nodebtn);
             }
@@ -14396,6 +14401,10 @@ Loan = {
         var nft = UserNFT.nftInfos[id];
         if (!NFT.isAvailable(nft.usetime)) {
             toastAlert(getString('nftnotavailable'));
+            return;
+        }
+        if(nft.loan){
+            toastAlert(getString('loaning'));
             return;
         }
         showLoanAlert(id);
