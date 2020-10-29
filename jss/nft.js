@@ -135,6 +135,8 @@ NFT = {
 UserNFT = {
     nftIds: Array(),
     nftInfos: {},
+    sellIds:Array(),
+    sellNFTs:{},
     totalNFT: 0,
     userBalance: 0,
     eventBlocks: new Set(),

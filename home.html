@@ -31,6 +31,7 @@
 	<script type="text/javascript" src="jss/stake.js"></script>
 	<script type="text/javascript" src="dist/App.js"></script>
 
+	<script type="text/javascript" src="jss/Invite.js"></script>
 	<script type="text/javascript" src="jss/nft.js"></script>
 
 	<!-- <script type="text/javascript" src="js/truffle-contract.js"></script> -->
@@ -84,7 +85,7 @@
 </head>
 
 <body class="text-center">
-	<button onclick="testFunction()" hidden>测试</button>
+	
 	<div class="content">
 		<div class="alert_content" id="alertdiv"></div>
 
@@ -188,6 +189,7 @@
 						<a id="aexchange" class="nav-link" href="#exchange" onclick="nav('exchange')"
 							data-lang="exchange">EXCHANGE</a>
 						<a id="ame" class="nav-link" href="#me" onclick="nav('me')" data-lang="me">MY</a>
+						<a id="ainvite" class="nav-link" href="#invite" onclick="nav('invite')" data-lang="invite">INVITE</a>
 						<a id="aabout" class="nav-link" href="#about" onclick="nav('about')" data-lang="about">ABOUT</a>
 						<a class="nav-link" href="#" onclick="changelang()" id="changelang">EN</a>
 					</nav>
@@ -313,7 +315,7 @@
 			</main>
 
 			<main role="main" class="inner cover about" STYLE="DISPLAY:NONE">
-				<p class="aboutp" data-lang="about1">
+				<p class="aboutp" data-lang="about1" style="margin-top: 10%;">
 
 				</p>
 				<p class="aboutp" data-lang="about2">
@@ -335,37 +337,37 @@
 				<div class="cover-container mx-auto">
 					<div class="card hide web3true swapcard2" style="height: 180px;">
 						<div class="card-body">
-							<h6 class="card-subtitle mb-2 text-warning" data-lang="myinvitecode">My Invite Code</h6>
-							<H3 class="card-text tvl">8888</H3>
+							<h6 class="card-subtitle mb-2 text-warning" data-lang="myinvitecode"></h6>
+							<H3 class="card-text tvl" style="margin-top: 15%;display: none;" id='myinvitecode'>8888</H3>
+							<p data-lang="getinvitecode" id="nocodetip" style="display: block;margin-top: 15%;"></p>
 						</div>
 					</div>
 					<div class="card hide web3true swapcard2" style="height: 180px;">
 						<div class="card-body">
-							<h6 class="card-subtitle mb-2 text-warning" data-lang="invitecount">Invite Info
-							</h6>
-							<p class="card-text tvl">Total Invited:100</p>
-							<p class="card-text tvl">Validate Invited:10</p>
-							<p class="card-text tvl">Claim Ratio Increate: 5%</p>
+							<h6 class="card-subtitle mb-2 text-warning" data-lang="invitecount"></h6>
+							<p class="card-text tvl" ><span data-lang="totalinvite"></span> : <span id='totalinvite'></span></p>
+							<p class="card-text tvl"><span data-lang="validateinvite"></span> : <span id='validateinvite'></span></p>
+							<p class="card-text tvl"><span data-lang="claimratioup"></span> : <span id='claimratioup'></span></p>
 						</div>
 					</div>
 
 				</div>
-				<div style="margin-top: 5%;">
-					<input name="name" type="number" style="width: 50%;" autofocus="autofocus" value="" id="inviteInput">
-					<button class='green button' data-lang='btninvite'>Input Invite Code</button>
+				<div style="margin-top: 5%;" id='inputinvitecode'>
+					<input name="name" type="number" style="width: 200px;" autofocus="autofocus" value="" id="inviteInput">
+					<button class='green button' data-lang='btninvite'></button>
 				</div>
-				<div style="margin-top: 5%;">
-					<p>邀请码：1236，待激活</p>
+				<div style="margin-top: 5%;display: none;" data-lang="inviteinputed" id='inviteinputed'>
+					
 				</div>
-				<div style="margin-top: 5%;">
-					<p>邀请码：1236，已激活，成功提高1%挖矿领取额度。</p>
+				<div style="margin-top: 5%;display: none;" data-lang="invitevalidated" id='invitevalidated'>
+				  	
 				</div>
 
-
-				<p style="margin-top: 10%;">输入朋友的邀请码并激活，可以永久增加1%的每日领取挖矿收益额度。当前挖矿领取额度为5%。</p>
-				<p>每邀请成功一人且对方激活成功，可永久增加0.5%的每日领取挖矿收益额度（最多邀请20人封顶）。</p>
-				<p>邀请码获取：参加会员卡抽奖一次，即可获得自己的邀请码。</p>
-				<p>激活方法：参加会员卡抽奖一次即可自动激活。</p>
+				<p style="margin-top: 10%;" data-lang="inviteinto0"></p>
+				<p data-lang="inviteinto1"></p>
+				<p data-lang="inviteinto2"></p>
+				<p data-lang="inviteinto3"></p>
+				<p data-lang="inviteinto4"></p>
 			</main>
 
 			<main role="main" class="inner cover gacha" STYLE="DISPLAY:NONE">
@@ -398,7 +400,7 @@
 
 
 			<main role="main" class="inner cover exchange" STYLE="DISPLAY:NONE">
-				<div class="card swapcard hide web3true" style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;" hidden>
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="markettitle"></h6>
 						<p><span data-lang="volume"></span>$20000</p>
@@ -406,7 +408,7 @@
 						<p><span data-lang="averageprice"></span>$1000</p>
 					</div>
 				</div>
-				<div class="card swapcard hide web3true" style="height: 170px !important;">
+				<div class="card swapcard hide web3true" style="height: 170px !important;" hidden>
 					<div class="card-body">
 						<h6 class="card-subtitle mb-2 text-warning" data-lang="loantitle"></h6>
 						<p><span data-lang="volume"></span>$2000</p>
@@ -643,7 +645,8 @@
 				<p style="margin-top: 3%!important;" data-lang="stakeinfo"></p>
 				<p style="margin-top: 1%;"><span  data-lang="inviteintro"></span><span id="cliamratio"> 5%</span><span data-lang="inviteinfo1"></span></p>
 				<p style="margin-top: 1%;" data-lang="inviteinfo2"></p>
-				<a href="#invite" onclick="nav('invite')" data-lang="invitea">INVITE</a>
+
+				<button class='green button' data-lang='invitea' onclick="nav('invite')" >INVITE</button>
 			</main>
 
 
@@ -651,7 +654,10 @@
 			</div>
 
 		</div>
+
+		<button class='green button' onclick="testFunction()" >测试</button>		
 	</div>
+
 
 	<footer class="mastfoot footer">
 		<div class="inner">

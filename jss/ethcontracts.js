@@ -39,6 +39,7 @@ var mainContracts = {
     "loan": "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7",
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
+    "invite":"",
 }
 
 var ropstenContracts = {
@@ -58,6 +59,7 @@ var ganacheContracts = {
     "loan": "0xB1af5A68eBB8b7D7Fa5aD614D0A2F96A324975d0",
     "market": "0x006E6b60A11F6564E24A5aEfF2661B165Ee266F7",
     "reward": "0xD522D6dEc82F447EE99526Ed9f7F4493D58Dc2F3",
+    "invite":"",
 }
 
 var mainPool = {

@@ -63092,6 +63092,13 @@ App = {
             contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
             return Market.initMarketInfo();
         });
+
+        $.getJSON('contracts/Invite.json', function (data) {
+            // Get the necessary contract artifact file and instantiate it with truffle-contract.
+            contractsInstance.Invite = web3.eth.contract(data.abi);
+            contractsInstance.Invite = contractsInstance.Invite.at(contractAddress['invite']);
+            return Invite.initInviteInfo();
+        });
     },
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -63422,6 +63429,7 @@ function recoveABottom() {
     document.getElementById("agacha").style.borderBottomColor = "transparent";
     document.getElementById("aabout").style.borderBottomColor = "transparent";
     document.getElementById("ame").style.borderBottomColor = "transparent";
+    document.getElementById("ainvite").style.borderBottomColor = "transparent";
 }
 
 window.nav = (classname) => {

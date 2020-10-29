@@ -97,9 +97,9 @@ function afterSendTx(error, result) {
 
 function getEthersanUrl(tx) {
     var url = "https://etherscan.io/tx/" + tx;
-    if (ETHENV.chainId == '0x1') {
+    if (ETHENV.chainId == ChainId[0]) {
         url = "https://etherscan.io/tx/" + tx;
-    } else if (ETHENV.chainId == '0x3') {
+    } else if (ETHENV.chainId == ChainId[1]) {
         url = "https://ropsten.etherscan.io/tx/" + tx;
     }
     return url;

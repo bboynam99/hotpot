@@ -163,25 +163,34 @@ Market = {
                 startListenTX(result);
             }
         });
-
     },
     getNFTInfo: async function (id) {
         console.log("getNFTInfo id=" + id);
-        contractsInstance.NFTHotPot.getGrade(id, function (e, r) {
-            var grade = r;
-            var nft = Market.createSellNft(id, grade);
-            Market.listTokens[id] = nft;
-
-            contractsInstance.NFTMarket.priceOf(id, function (e, r) {
-                var price = r;
-                Market.listTokens[id].price = price;
-                contractsInstance.NFTMarket.sellerOf(id, function (e, r) {
-                    Market.listTokens[id].seller = r;
-                    Market.addNFTToTable(Market.listTokens[id]);
+        contractsInstance.NFTHotPot.ownerOf(id,function(e,r){
+            if(r == defaultAccount){
+                var nft = NFT.createNFTInfo(id,defaultAccount);
+                UserNFT.sellNFTs[id] = nft;
+                UserNFT.sellNFTs[id].sell = true;
+                UserNFT.sellIds.push(id);
+            }
+            contractsInstance.NFTHotPot.getGrade(id, function (e, r) {
+                var grade = r;
+                UserNFT.sellNFTs[id].grade = r;
+                var nft = Market.createSellNft(id, grade);
+                Market.listTokens[id] = nft;
+    
+                contractsInstance.NFTMarket.priceOf(id, function (e, r) {
+                    var price = r;
+                    Market.listTokens[id].price = price;
+                    contractsInstance.NFTMarket.sellerOf(id, function (e, r) {
+                        Market.listTokens[id].seller = r;
+                        Market.addNFTToTable(Market.listTokens[id]);
+                    });
+    
                 });
-
             });
         });
+        
     },
 
     initSellTable:function(){
