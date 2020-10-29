@@ -63,18 +63,12 @@ var ganacheContracts = {
     "invite":"",
 }
 
-var mainPool = {
-    "usdt":"",
-    "eth/usdt":"",
-    "uni/eth":"",
-    "hotpot":"",
-    "hotpot/eth":""
-}
 
 var ropstenPool = {
     "usdt":"0xf22EedE32e58df2266B101953E17030d813e0Fd1",
     "eth/usdt":"0x8E239Aa44e8Fd2CFeb0D790ED818455aC67Ca8e5",
-    "uni/eth":"0xB53d399345721Cb32Ce2164ec451F9Ff62EAFcac",
+    "wbtc":"0xB53d399345721Cb32Ce2164ec451F9Ff62EAFcac",
+    "usdc":"0xB53d399345721Cb32Ce2164ec451F9Ff62EAFcac",
     "hotpot":"0xEbA362ebF91059c856F94af793d7686755C5e96D",
     "hotpot/eth":"0xd421E548D667BBc9B4ab516A3D9A8c21052531d6"
 }
@@ -82,40 +76,44 @@ var ropstenPool = {
 var ropstenStakeERC = {
     "usdt":"0xad6d458402f60fd3bd25163575031acdce07538d",  //dai
     "eth/usdt":"0x1c5DEe94a34D795f9EEeF830B68B80e44868d316",  //eth/dai
-    "uni/eth":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "wbtc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",
     "hotpot/eth":"0x4F0BE49909c59e7D832a717c09F4A83A17D4B965"
 }
 
 var ganachePool = {
-    "usdt":"0x9DD3a5606A79400e07B8610D46F1044E790d2b11",
-    "eth/usdt":"0x1Fefab781C44c873CEeDc1bAff3812bcc54A917B",
-    "uni/eth":"0x663601190e1E7327A07268C6157D140c32E58aA6",
-    "hotpot":"0xd179c2ae2faf1E20A04040e8Ec66A8986676f4a1",
-    "hotpot/eth":"0xEEC45017d1AdE448fe1B6a3180Cce0959d988981"
+    "usdt":"0xf22EedE32e58df2266B101953E17030d813e0Fd1",
+    "eth/usdt":"0x8E239Aa44e8Fd2CFeb0D790ED818455aC67Ca8e5",
+    "wbtc":"0xB53d399345721Cb32Ce2164ec451F9Ff62EAFcac",
+    "usdc":"",
+    "hotpot":"0xEbA362ebF91059c856F94af793d7686755C5e96D",
+    "hotpot/eth":"0xd421E548D667BBc9B4ab516A3D9A8c21052531d6"
 }
 
 var ganacheStakeERC = {
     "usdt":"0x2Ba8B39C22e796d65e32FF6afcbFD4075379041e",
     "eth/usdt":"0x71aa19b27DE4272c9189d3228796A3518f79F4d4",
-    "uni/eth":"0x3B7c840102252293c7A4a9d14Bb59ceD84b724F5",
+    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "wbtc":"",
     "hotpot/eth":"0x82538e5dF3E3457502EfFB6b1C3D94e8dFDEf485"
+}
+
+var mainPool = {
+    "usdt":"0xf22EedE32e58df2266B101953E17030d813e0Fd1",
+    "eth/usdt":"0x8E239Aa44e8Fd2CFeb0D790ED818455aC67Ca8e5",
+    "wbtc":"0xB53d399345721Cb32Ce2164ec451F9Ff62EAFcac",
+    "usdc":"",
+    "hotpot":"0xEbA362ebF91059c856F94af793d7686755C5e96D",
+    "hotpot/eth":"0xd421E548D667BBc9B4ab516A3D9A8c21052531d6"
 }
 
 var mainStakeERC = {
     "usdt":"0xdac17f958d2ee523a2206206994597c13d831ec7",
     "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
-    "uni/eth":"0xd3d2e2692501a5c9ca623199d38826e513033a17",
+    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "wbtc":"",
     "hotpot/eth":""
 }
-
-
-   // var stakeTokens = [
-    //     "ethusdt",
-    //     'unieth',
-    //     'usdt',
-    //     'hotpot',
-    //     'hotpoteth'
-    // ];
 
 
 function setChainId(chainId){
@@ -124,14 +122,12 @@ function setChainId(chainId){
         contractAddress = mainContracts;
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
-        TokenAddress = mainTokenAddress;
         ethAddress="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
     }else if(chainId === ChainId[1]){
         console.log("connect ropsten")
         contractAddress = ropstenContracts;
         stakePoolAddress = ropstenPool;
         stakeERCAddress = ropstenStakeERC;
-        TokenAddress = ropstenTokenAddress;
         ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
     }
      else if (chainId === ChainId[2]) {
@@ -225,12 +221,11 @@ function createPairInfo(address) {
 var allPoolTokens = [
     "usdt",
     "eth/usdt",
-    "uni/eth",
+    "wbtc",
+    "usdc",
     "hotpot",
     "hotpot/eth",
 ]
-
-var knownTokens = {}
 
 function createTokenInfo(name){
     var token = new Object;
@@ -239,26 +234,6 @@ function createTokenInfo(name){
     token.address = null;
     token.price = 0;
     return token;
-}
-
-var initToken=[
-    'usdt',
-    'hotpot',
-    'uni'
-]
-
-var TokenAddress = {}
-
-var mainTokenAddress={
-    'usdt':"0xdac17f958d2ee523a2206206994597c13d831ec7",
-    'hotpot':"",
-    "uni":"0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
-}
-
-var ropstenTokenAddress={
-    'usdt':"",
-    'hotpot':"",
-    "uni":""
 }
 
 var ChainId = ['main','ropsten','rinkey']
@@ -272,16 +247,5 @@ ETHENV = {
     init:function(_chainId){
         setChainId(_chainId);
         ETHENV.chainId = _chainId;
-        knownTokens['usdt'] = createTokenInfo('usdt');
-        knownTokens['usdt'].decimals = 6;
-        knownTokens['usdt'].address = TokenAddress['usdt'];
-
-        knownTokens['uni'] = createTokenInfo('uni');
-        knownTokens['uni'].decimals = 18;
-        knownTokens['uni'].address = TokenAddress['uni'];
-
-        knownTokens['hotpot'] = createTokenInfo('hotpot');
-        knownTokens['hotpot'].decimals = 18;
-        knownTokens['hotpot'].address = TokenAddress['hotpot'];
     }
 }

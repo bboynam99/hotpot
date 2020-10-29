@@ -187,6 +187,14 @@ body {
 	background-image: url('/images/usdt.png')
 }
 
+.usdc {
+	background-image: url('/images/usdc.png')
+}
+
+.wbtc {
+	background-image: url('/images/wbtc.png')
+}
+
 #msgBox {
 	width: 200px;
 	position: fixed;

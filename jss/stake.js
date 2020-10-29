@@ -187,7 +187,9 @@ Stake = {
             clearInterval(Stake.cliamTimer);
             Stake.cliamTimer = null;
         }
-        $('.farmname').text(name + ' FARM');
+        var upername = (name+"").toUpperCase();
+
+        $('.farmname').text(upername);
         currentPagePoolID = name;
 
         let token = stakeInfos[name];
@@ -379,7 +381,7 @@ Stake = {
     },
     updateAPY: function (name) {
         console.log("updateapy " + name);
-        var hotpotDecimals = knownTokens["hotpot"].decimals;
+        var hotpotDecimals = 18;
         //池子每s产出wwt数量
         let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10, hotpotDecimals));
         console.log("rewardRate=" + rewardRate);

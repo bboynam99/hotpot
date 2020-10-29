@@ -204,11 +204,13 @@
 				<span id="gachauser">XXX</span>
 				<span data-lang="congratulations1"></span></a>
 			<div id="infodiv">
-				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1">
+				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info">
 				</h3>
-				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info2">
+				<h3 class="mt-2 mb-4 cover-container" data-lang="string_info1" hidden>
 				</h3>
-				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info3">
+				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info2" hidden>
+				</h3>
+				<h3 class="mt-2 mb-4  cover-container" data-lang="string_info3" hidden>
 				</h3>
 			</div>
 			<div id="divloading" style="display: none;">
@@ -555,17 +557,31 @@
 						</div>
 					</div>
 
+
+					<div class="card swapcard">
+						<div class="card-body">
+							<span class="badge badge-warning yield-badge">2x</span>
+							<div class="token usdc"></div>
+							<h6 class="card-subtitle mb-2 text-warning">USDC</h6>
+							<H3 class="card-text apy0">APY <span class="poolyieldusdt">---.-%</span></H3>
+							<a href="#poolusdc" onclick="nav('poolusdc')" class="card-link btn btn-primary btn-lg"
+								data-lang="farm">
+								Farm
+							</a>
+						</div>
+					</div>
+
+
 					<div class="card swapcard ">
 						<span class="badge badge-warning yield-badge">2x</span>
 
 						<div class="card-body">
 							<div class="tokenpair">
-								<div class="token1 uni"></div>
-								<div class="token2 eth"></div>
+								<div class="token wbtc"></div>
 							</div>
-							<h6 class="card-subtitle mb-2 text-warning">UNI/ETH UniV2-LP</h6>
+							<h6 class="card-subtitle mb-2 text-warning">WBTC</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldunieth">---.-%</span></H3>
-							<a href="#pooluni/eth" onclick="nav('pooluni/eth')" class="card-link btn btn-primary btn-lg"
+							<a href="#poolwbtc" onclick="nav('poolwbtc')" class="card-link btn btn-primary btn-lg"
 								data-lang="farm">
 								Farm
 							</a>
@@ -602,7 +618,7 @@
 
 			<main role="main" class="inner cover pool" style="display:none" id="singlepool">
 				<img src="images/hotpoticon.png" height="150" class="mb-4" />
-				<h1 class="cover-heading farmname"> FARM</h1>
+				<h1 class="cover-heading "><span class="farmname"></span> <span data-lang="farmname"> FARM</span></h1>
 				<p class="lead"></p>
 				<div class="row">
 					<div class="card hide web3true col-md-12 col-12">
