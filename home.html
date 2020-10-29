@@ -84,7 +84,7 @@
 </head>
 
 <body class="text-center">
-	<button onclick="testFunction()">测试</button>
+	<button onclick="testFunction()" hidden>测试</button>
 	<div class="content">
 		<div class="alert_content" id="alertdiv"></div>
 
@@ -332,12 +332,40 @@
 			</main>
 
 			<main role="main" class="inner cover invite" STYLE="DISPLAY:NONE">
-				<p class="aboutp" data-lang="about1">
+				<div class="cover-container mx-auto">
+					<div class="card hide web3true swapcard2" style="height: 180px;">
+						<div class="card-body">
+							<h6 class="card-subtitle mb-2 text-warning" data-lang="myinvitecode">My Invite Code</h6>
+							<H3 class="card-text tvl">8888</H3>
+						</div>
+					</div>
+					<div class="card hide web3true swapcard2" style="height: 180px;">
+						<div class="card-body">
+							<h6 class="card-subtitle mb-2 text-warning" data-lang="invitecount">Invite Info
+							</h6>
+							<p class="card-text tvl">Total Invited:100</p>
+							<p class="card-text tvl">Validate Invited:10</p>
+							<p class="card-text tvl">Claim Ratio Increate: 5%</p>
+						</div>
+					</div>
 
-				</p>
-				<p class="aboutp" data-lang="about2">
+				</div>
+				<div style="margin-top: 5%;">
+					<input name="name" type="number" style="width: 50%;" autofocus="autofocus" value="" id="inviteInput">
+					<button class='green button' data-lang='btninvite'>Input Invite Code</button>
+				</div>
+				<div style="margin-top: 5%;">
+					<p>邀请码：1236，待激活</p>
+				</div>
+				<div style="margin-top: 5%;">
+					<p>邀请码：1236，已激活，成功提高1%挖矿领取额度。</p>
+				</div>
 
-				</p>
+
+				<p style="margin-top: 10%;">输入朋友的邀请码并激活，可以永久增加1%的每日领取挖矿收益额度。当前挖矿领取额度为5%。</p>
+				<p>每邀请成功一人且对方激活成功，可永久增加0.5%的每日领取挖矿收益额度（最多邀请20人封顶）。</p>
+				<p>邀请码获取：参加会员卡抽奖一次，即可获得自己的邀请码。</p>
+				<p>激活方法：参加会员卡抽奖一次即可自动激活。</p>
 			</main>
 
 			<main role="main" class="inner cover gacha" STYLE="DISPLAY:NONE">
