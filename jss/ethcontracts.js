@@ -20,7 +20,7 @@ var balanceOfHotpot={};
 
 var contractsInstance = {};
 
-var contractList = ['nft','hotpot','gacha','loan','market','reward','stakepool'];
+var contractList = ['nft','hotpot','gacha','loan','market','reward','stakepool','invite'];
 
 var contractURL = {
     "nft": "https://etherscan.io/",
@@ -29,7 +29,8 @@ var contractURL = {
     "loan": "https://etherscan.io/",
     "market": "https://etherscan.io/",
     "reward": "https://etherscan.io/",
-    "stakepool":"https://etherscan.io/"
+    "stakepool":"https://etherscan.io/",
+    "invite":"https://etherscan.io/"
 }
 
 var mainContracts = {
