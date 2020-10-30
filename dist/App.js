@@ -62910,25 +62910,26 @@ XMLHttpRequest.prototype.nodejsBaseUrl = null;
 arguments[4][292][0].apply(exports,arguments)
 },{"dup":292}],545:[function(require,module,exports){
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-
+const https = require('https');
 App = {
     web3Provider: null,
     erc20Contract: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
+        getPrice3();
         return App.initWeb3();
     },
-    connectMetamask:function(){
+    connectMetamask: function () {
         if (typeof window.ethereum != 'undefined') {
             App.initWeb3();
         } else {
             toastAlert(getString('nometamask'));
         }
     },
-    connectWallet: async function(){
-         //  Create WalletConnect Provider
-         const provider = new WalletConnectProvider({
+    connectWallet: async function () {
+        //  Create WalletConnect Provider
+        const provider = new WalletConnectProvider({
             infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
         });
         // Subscribe to accounts change
@@ -63014,16 +63015,16 @@ App = {
             var chainId = window.ethereum.chainId;
             ////chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
             var chain = ChainId[0];
-            if(chainId==='0x1'){
+            if (chainId === '0x1') {
                 chain = ChainId[0];
-            }else if(chainId==='0x3'){
+            } else if (chainId === '0x3') {
                 chain = ChainId[1];
-            }else if(chainId==='0x4'){
+            } else if (chainId === '0x4') {
                 chain = ChainId[2];
             }
             ETHENV.init(chain);
             return App.initWallet();
-        }else{
+        } else {
             App.connectWallet();
         }
     },
@@ -63104,7 +63105,7 @@ App = {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             console.log("getUniV2Pairs " + token);
-            if(token == 'eth/usdt' || token == "hotpot/eth"){
+            if (token == 'eth/usdt' || token == "hotpot/eth") {
                 App.getUniV2Pair(token);
             }
             App.getStakeERCInfo(token);
@@ -63142,7 +63143,7 @@ App = {
 
                 var nb = new BN(10);
                 nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                if (result.args.value.lt(nb)) {
                     console.log("stakeERCContract Approval less");
                     return;
                 }
@@ -63255,11 +63256,11 @@ App = {
         });
 
     },
-    getBalances:async function () {
+    getBalances: async function () {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Approval({ owner: defaultAccount }, {fromBlock:  'latest', toBlock: 'latest'}, function (error, result) {
+        contractsInstance.HotPot.Approval({ owner: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -63270,7 +63271,7 @@ App = {
 
                 var nb = new BN(10);
                 nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                if (result.args.value.lt(nb)) {
                     console.log("approval less");
                     return;
                 }
@@ -63286,7 +63287,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ to: defaultAccount },{fromBlock:  'latest', toBlock: 'latest'}, function (error, result) {
+        contractsInstance.HotPot.Transfer({ to: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -63301,7 +63302,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.Transfer({ from: defaultAccount }, {fromBlock:  'latest', toBlock: 'latest'},function (error, result) {
+        contractsInstance.HotPot.Transfer({ from: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -63325,7 +63326,7 @@ App = {
             }
             defaultBalance = result;
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            console.log("balanceOf "+result/10**18);
+            console.log("balanceOf " + result / 10 ** 18);
             App.updateUserBalance();
             contractsInstance.HotPot.allowance(defaultAccount, contractAddress.gacha, function (e, result) {
                 var allowance = result.c[0];
@@ -63341,13 +63342,13 @@ App = {
         });
 
     },
-    selectBuy:function(){
+    selectBuy: function () {
         $("#selectbuy").addClass('tableselect');
         $("#selectloan").removeClass('tableselect');
         $("#divbuytable").show();
         $("#divloantable").hide();
     },
-    selectLoan:function(){
+    selectLoan: function () {
         $("#selectloan").addClass('tableselect');
         $("#selectbuy").removeClass('tableselect');
         $("#divbuytable").hide();
@@ -63473,7 +63474,7 @@ function nav(classname) {
         showTable(true);
     }
 
-    if(classname == 'exchange'){
+    if (classname == 'exchange') {
         App.selectBuy();
     }
 }
@@ -63506,7 +63507,7 @@ window.checkInt = (n, max) => {
     }
 }
 
-window.rescue = ()=>{
+window.rescue = () => {
     // function rescue(
     //     address to_,
     //     IERC20 token_,
@@ -63515,7 +63516,7 @@ window.rescue = ()=>{
     var pool = 'eth/usdt';
     var poolAddress = stakePoolAddress[pool];
     stakeInfos[pool].instance = contractsInstance.StakePool.at(poolAddress);
-    stakeInfos[pool].instance.rescue(defaultAccount,contractAddress['hotpot'],web3.toHex(70000 * Math.pow(10, 18)),function(e,r){
+    stakeInfos[pool].instance.rescue(defaultAccount, contractAddress['hotpot'], web3.toHex(70000 * Math.pow(10, 18)), function (e, r) {
 
     });
 }
@@ -63554,4 +63555,85 @@ window.testFunction = () => {
     // }
     // console.log("test");
 }
-},{"@walletconnect/web3-provider":23}]},{},[545]);
+
+
+
+function getPrice() {
+    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
+    var time = 10000;
+
+    var timeout = false;
+
+    var request = new XMLHttpRequest();
+
+    var timer = setTimeout(function () {
+
+        timeout = true;
+
+        request.abort();
+
+    }, time);
+
+    request.open("GET", priceURL);
+    request.setRequestHeader("Access-Control-Allow-Origin", "*");
+    request.onreadystatechange = function () {
+        if (request.readyState !== 4) {
+            return;
+        }
+
+        if (timeout) {
+            alert("out");
+            return;
+        }
+
+        clearTimeout(timer);
+
+        if (request.status === 200) {
+            handlePrice(request.responseText);
+        }
+    };
+    request.send(null);
+}
+
+function getPrice2() {
+    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+
+    // 传参并指定回调执行函数为onBack
+    script.src = "https://www.coindesk.com/coindesk20";
+    script.onload = handlePrice;
+    document.head.appendChild(script);
+
+    $.ajax({
+        url: "https://www.coindesk.com/coindesk20",
+        type: 'get',
+        dataType: 'jsonp',  // 请求方式为jsonp
+        crossDomain: true,
+        success: function (data) {
+            console.log("ajax " + data);
+        },
+        data: {}
+    });
+
+    // $.get(priceURL, function(data){
+    //     console.log("Data Loaded: " + data);
+    // });
+}
+
+function getPrice3() {
+    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
+    $("#pricediv").text(priceURL);
+    $.getJSON(priceURL,function(data){
+        console.log("get json "+data);
+        $("#pricediv").text(data);
+    });
+}
+
+function handlePrice(msg) {
+    console.log("handleprice = " + msg);
+
+    alert(JSON.stringify(msg));
+}
+
+},{"@walletconnect/web3-provider":23,"https":199}]},{},[545]);
