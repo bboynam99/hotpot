@@ -169,7 +169,7 @@ Stake = {
             console.log("pool balance name=" + name + ",balance=" + result);
             balanceOfHotpot[name] = result;
             Stake.count++;
-            if (Stake.count == 5) {
+            if (Stake.count == allPoolTokens.length-1) {
                 Stake.calTotalCirculation();
             }
         });
@@ -178,7 +178,7 @@ Stake = {
         var total = balanceOfHotpot['total'];
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if(token)
+            if(balanceOfHotpot[token])
             total = total.minus(balanceOfHotpot[token]);
         }
         total = total.div(Math.pow(10, 18));
@@ -426,6 +426,7 @@ Stake = {
         if (name == "eth/usdt") name = "ethusdt";
         if (name == "uni/eth") name = "unieth";
         if (name == "hotpot/eth") name = "hotpoteth";
+        if (name == "wbtc/eth") name = "wbtceth";
 
         var apyp = ".poolyield" + name;
         console.log("apy str=" + apyStr);

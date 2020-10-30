@@ -63186,11 +63186,20 @@ App = {
                 console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
                 var reserve0 = result[0];
                 var reserve1 = result[1];
+                if(reserve0==0){
+                    reserve0=reserve0.plus(1);
+                }
+                if(reserve1==0){
+                    reserve1=reserve1.plus(1);
+                }
                 univ2PairInfo[pair].reserve0 = reserve0;
                 univ2PairInfo[pair].reserve1 = reserve1;
 
                 univ2PairInfo[pair].contractInstance.totalSupply(function (e, result) {
                     console.log("getUniV2Pair totalSupply=" + result + ",name=" + pair);
+                    if(result==0){
+                        result = result.plus(1);
+                    }
                     univ2PairInfo[pair].totalSupply = result;
                     univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
                     console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
