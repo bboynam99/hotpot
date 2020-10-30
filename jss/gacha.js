@@ -57,7 +57,7 @@ Gacha = {
     pull: function () {
         console.log("pull");
 
-        if (App.defaultBalance.lt(new BigNumber(20 * 10 ** 18))) {
+        if (defaultBalance.lt(new BigNumber(20 * 10 ** 18))) {
             toastAlert(getString('hotnotenough'));
             return;
         }
@@ -74,7 +74,7 @@ Gacha = {
     },
     pull10: function () {
         console.log("pull10");
-        if (App.defaultBalance.lt(new BigNumber(190 * 10 ** 18))) {
+        if (defaultBalance.lt(new BigNumber(190 * 10 ** 18))) {
             toastAlert(getString('hotnotenough'));
             return;
         }

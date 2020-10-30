@@ -36,18 +36,10 @@ Stake = {
         console.log("stake approve:" + currentPagePoolID);
         if (currentPagePoolID != "") {
             var stakeToken = stakeERCContract[currentPagePoolID];
+            console.log("approve "+stakeToken.address);
             stakeToken.approve(stakePoolAddress[currentPagePoolID], web3.toHex(Math.pow(10, 30)), function (e, result) {
-                if (e) {
-                    console.log("stake approve error " + e);
-                } else {
-                    var url = "https://etherscan.io/tx/" + result;
-                    if (ETHENV.chainId == '0x1') {
-                        url = "https://etherscan.io/tx/" + result;
-                    } else if (ETHENV.chainId == '0x3') {
-                        url = "https://ropsten.etherscan.io/tx/" + result;
-                    }
-                    showTopMsg("Pending...", 0, url);
-                    startListenTX(result);
+                afterSendTx(e,result);
+                if(!e){
                     $("#approvestake").text(getString('approvestake') + "...");
                 }
             });
@@ -125,7 +117,7 @@ Stake = {
             }
 
             var hex = web3.toHex(stake * Math.pow(10, token.decimals));
-            token.instance.stake(hex, function (e, result) {
+            token.instance.withdraw(hex, function (e, result) {
                 if (e) {
                     return console.error('Error with stake:', e);
                 }
@@ -253,7 +245,9 @@ Stake = {
         var totalPrice = new BigNumber(0);
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            if(poolName)
+            if(!poolName){
+                break;
+            }
             var periodFinish = stakeInfos[poolName].periodFinish;
             if (!periodFinish) {
                 return;
@@ -265,7 +259,9 @@ Stake = {
 
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            if(poolName)
+            if(!poolName){
+                break;
+            }
             var stake = stakeInfos[poolName].poolTotalStake;
             if(stakeInfos[poolName])
             console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);

@@ -101,6 +101,8 @@ function getEthersanUrl(tx) {
         url = "https://etherscan.io/tx/" + tx;
     } else if (ETHENV.chainId == ChainId[1]) {
         url = "https://ropsten.etherscan.io/tx/" + tx;
+    } else if(ETHENV.chainId == ChainId[2]){
+        url = "https://rinkeby.etherscan.io/tx/" + tx;
     }
     return url;
 }

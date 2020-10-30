@@ -60,7 +60,7 @@ var rinkebyContracts = {
     "loan": "0x8d6Db51dB7381DdacE7Def41404148af90cAC648",
     "market": "0x9D9c94B0567Af5275Aa053d898234528692a1826",
     "reward": "0x8D923313feE6ce408FDfb5fD3F94bC8d628dcD71",
-    'invite':'0x774d406BBFD9D34C022B26A3D0160e9cE353fD7C',
+    'invite':'0x0Ec45f1CB7B4f3002EBbADDF2Bd22013C36735F0',
 }
 
 var ganacheContracts = {

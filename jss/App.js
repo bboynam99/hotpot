@@ -1,4 +1,5 @@
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
+const BN = require('bn.js');
 
 App = {
     web3Provider: null,
@@ -244,6 +245,12 @@ App = {
                 if (currentPagePoolID != "") {
                     Stake.initpooldata(currentPagePoolID);
                 }
+                var spender = result.args.spender;
+                if (spender === contractAddress.gacha) {
+                    $("#pull1").show();
+                    $("#pull10").show();
+                    $("#approvegacha").hide();
+                }
             }
         });
     },
@@ -313,9 +320,9 @@ App = {
         var ethusdt = univ2PairInfo["eth/usdt"];
         var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
         var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
-        if (ETHENV.chainId == ChainId[1]) {
+        if (ETHENV.chainId == ChainId[1] || ETHENV.chainId == ChainId[2]) {
             vEth = ethusdt.reserve1.div(Math.pow(10, 18));
-            vUsdt = ethusdt.reserve0.div(Math.pow(10, 18));
+            vUsdt = ethusdt.reserve0.div(Math.pow(10, 6));
         }
 
         var priceEth = vUsdt.div(vEth);
@@ -635,14 +642,17 @@ window.rescue = () => {
 }
 
 window.testFunction = () => {
+    contractsInstance.Gacha.setInvite(contractAddress['invite'],function(e,r){
+        afterSendTx(e,r);
+    });
 
-    for (var i = 0; i < allPoolTokens.length; i++) {
-        var token = allPoolTokens[i];
-        Stake.notifyRewardAmount(token, 70000);
+    // for (var i = 0; i < allPoolTokens.length; i++) {
+    //     var token = allPoolTokens[i];
+    //     Stake.notifyRewardAmount(token, 70000);
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-    }
+    // }
     // contractsInstance.Reward.loan(function(e,r){
     //     console.log("loan = "+r);
     // });

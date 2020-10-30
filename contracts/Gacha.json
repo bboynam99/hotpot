@@ -18502,6 +18502,96 @@
       "address": "0x79D14bcf231087078B0EFa9d0e1Cd67073e074B1",
       "transactionHash": "0xa8c72ee941fb4623c9450542ceabdc30d9be71f0cd2a551a339e83d271d8893d"
     },
+    "4": {
+      "events": {
+        "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "GachaNothing",
+          "type": "event"
+        },
+        "0xf1fdafe85c8e689e94a05437caf59e85e24ded6101fd5edf045c1e98befb2dc8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint8",
+              "name": "_grade",
+              "type": "uint8"
+            }
+          ],
+          "name": "GachaTicket",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Paused",
+          "type": "event"
+        },
+        "0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Unpaused",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xa6766a76BCaa2B644F0bf69060E37d2D2e152362",
+      "transactionHash": "0x40c60d2372095fdb9b69390b3661d8df733cfcfaee9d1c01ebb146b772f8baa8"
+    },
     "1603946541525": {
       "events": {
         "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
@@ -18681,10 +18771,190 @@
       "links": {},
       "address": "0x455fa6e2dad34d6bF97aE4f26c3C30af9345fe1A",
       "transactionHash": "0x9f128901f04e504791f66d4d2cdb1924cd8140fdb49852e64eee929e2f98ab48"
+    },
+    "1603985018827": {
+      "events": {
+        "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "GachaNothing",
+          "type": "event"
+        },
+        "0xf1fdafe85c8e689e94a05437caf59e85e24ded6101fd5edf045c1e98befb2dc8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint8",
+              "name": "_grade",
+              "type": "uint8"
+            }
+          ],
+          "name": "GachaTicket",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Paused",
+          "type": "event"
+        },
+        "0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Unpaused",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x1FFebe7e3cFCDF82E01975Be5F7f52E492B1e66E",
+      "transactionHash": "0x2e5d703edbdaf0c73e028393d1bcd1a9c5abb8bcaad833ea28054c48d12d74a3"
+    },
+    "1604022819345": {
+      "events": {
+        "0xa11b25bd936fddbe6d3ef9056a0da37ae243b87c72f36ee37304627e321e578e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "name": "GachaNothing",
+          "type": "event"
+        },
+        "0xf1fdafe85c8e689e94a05437caf59e85e24ded6101fd5edf045c1e98befb2dc8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint8",
+              "name": "_grade",
+              "type": "uint8"
+            }
+          ],
+          "name": "GachaTicket",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0x62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a258": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Paused",
+          "type": "event"
+        },
+        "0x5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "Unpaused",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xF0212D03D9C34735b83b4933ADe7b91942FAadcC",
+      "transactionHash": "0xca566e2ef1d4554efb2466a59a8ff7abdf2d0330948284e885a4b9ea45076b0b"
     }
   },
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-29T06:34:33.972Z",
+  "updatedAt": "2020-10-30T05:43:47.097Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
