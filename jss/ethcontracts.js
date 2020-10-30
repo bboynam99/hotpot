@@ -53,6 +53,16 @@ var ropstenContracts = {
     'invite':'0xEECc6288566CFAb69df891894cC85eeE24dEa9d5',
 }
 
+var rinkebyContracts = {
+    "nft": "0x1331b1784B258dE8b734bD9D80d3cdDf772d1Ab4",
+    "hotpot": "0xc30394D25537003BAab11F0E370aa9421081092A",
+    "gacha": "0xa6766a76BCaa2B644F0bf69060E37d2D2e152362",
+    "loan": "0x8d6Db51dB7381DdacE7Def41404148af90cAC648",
+    "market": "0x9D9c94B0567Af5275Aa053d898234528692a1826",
+    "reward": "0x8D923313feE6ce408FDfb5fD3F94bC8d628dcD71",
+    'invite':'0x774d406BBFD9D34C022B26A3D0160e9cE353fD7C',
+}
+
 var ganacheContracts = {
     "nft": "0x37D910ac5f8628702E5B1839838dC0E52f1E407A",
     "hotpot": "0x829B25171ee154d6deFFA2eC2C1385AF9b356b42",
@@ -79,6 +89,23 @@ var ropstenStakeERC = {
     "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
     "wbtc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",
     "hotpot/eth":"0x4F0BE49909c59e7D832a717c09F4A83A17D4B965"
+}
+
+var rinkebyPool = {
+    "usdt":"0x2074195527cd4c1bE39888B163Fb96A7EdeEd4e7",
+    "eth/usdt":"0x3c9BFC46EAe00302C3f3FA2a17d6AE03542C1bA8",
+    "wbtc":"0xE2A81Cc30c2bd5bCa860F2F329985bd60eBB8457",
+    "usdc":"0xC044095A9560AE291f9c0f18082Bd54817d3D637",
+    "hotpot":"0x9a2126F9a2a3F183f258eD220A1a70F6A45FDd61",
+    "hotpot/eth":"0x8E2140Ac7d0Ccd36fA9D72a091334d6D291654eA"
+}
+
+var rinkebyStakeERC = {
+    "usdt":"0x2448ee2641d78cc42d7ad76498917359d961a783",  
+    "eth/usdt":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",  
+    "usdc":"0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",  
+    "wbtc":"0x01be23585060835e02b77ef475b0cc51aa1e0709",
+    "hotpot/eth":"0x904e49cBe4756e19Eb63cbc90a8a482AF3DeF2B7"
 }
 
 var ganachePool = {
@@ -132,6 +159,12 @@ function setChainId(chainId){
     }
      else if (chainId === ChainId[2]) {
         console.log("connect rinkeby");
+
+        contractAddress = rinkebyContracts;
+        stakePoolAddress = rinkebyPool;
+        stakeERCAddress = rinkebyStakeERC;
+        ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
+
     } else if (chainId === "0x29a") {
         console.log("connect ganache");
         contractAddress = ganacheContracts;

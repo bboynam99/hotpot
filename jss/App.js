@@ -193,9 +193,7 @@ App = {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             console.log("getUniV2Pairs " + token);
-            if (token === "usdt" || token === "hotpot") {
-                // getUniV2Token(token);
-            } else {
+            if(token == 'eth/usdt' || token == "hotpot/eth"){
                 App.getUniV2Pair(token);
             }
             App.getStakeERCInfo(token);
@@ -292,7 +290,7 @@ App = {
     checkAllUni: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if (token != "usdt" && token != "hotpot") {
+            if (token == 'eth/usdt' || token == "hotpot/eth") {
                 if (univ2PairInfo[token].lpPrice == 0) {
                     return
                 }
@@ -323,7 +321,7 @@ App = {
         stakeInfos["hotpot"].price = priceHot;
         for (var i = 0; i < allPoolTokens.length; i++) {
             var name = allPoolTokens[i];
-            if (name != "usdt" && name != "hotpot") {
+            if (name == 'eth/usdt' || name == "hotpot/eth") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
             console.log("calTokenPrice stake token price name:" + name + ",price=" + stakeInfos[name].price);
@@ -597,7 +595,19 @@ window.checkInt = (n, max) => {
     }
 }
 
+window.rescue = ()=>{
+    // function rescue(
+    //     address to_,
+    //     IERC20 token_,
+    //     uint256 amount_
+    // )
+    var pool = 'eth/usdt';
+    var poolAddress = stakePoolAddress[pool];
+    stakeInfos[pool].instance = contractsInstance.StakePool.at(poolAddress);
+    stakeInfos[pool].instance.rescue(defaultAccount,contractAddress['hotpot'],web3.toHex(70000 * Math.pow(10, 18)),function(e,r){
 
+    });
+}
 
 window.testFunction = () => {
 
