@@ -35,7 +35,7 @@ var contractURL = {
 
 var mainContracts = {
     "nft": "0xeB7197AcD05f2E1B361B5D6b7fD7abFDcfE18d8F",
-    "hotpot": "0x1091cF23823b1F6172e9AB362052fAc20b296e0E",
+    "hotpot": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
     "gacha": "0x8264cB34e0cB675a9a7a863B6301f16512570130",
     "loan": "0x006fDBe6E50826ed1a815f77c82413f6FF8a6Ba7",
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
@@ -105,7 +105,8 @@ var rinkebyStakeERC = {
     "eth/usdt":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",  
     "usdc":"0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",  
     "wbtc":"0x01be23585060835e02b77ef475b0cc51aa1e0709",
-    "hotpot/eth":"0x904e49cBe4756e19Eb63cbc90a8a482AF3DeF2B7"
+    "hotpot/eth":"0x904e49cBe4756e19Eb63cbc90a8a482AF3DeF2B7",
+    "wbtc/eth":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23"
 }
 
 var ganachePool = {
@@ -120,7 +121,7 @@ var ganachePool = {
 var ganacheStakeERC = {
     "usdt":"0x2Ba8B39C22e796d65e32FF6afcbFD4075379041e",
     "eth/usdt":"0x71aa19b27DE4272c9189d3228796A3518f79F4d4",
-    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
+    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  
     "wbtc":"",
     "hotpot/eth":"0x82538e5dF3E3457502EfFB6b1C3D94e8dFDEf485"
 }
@@ -135,11 +136,12 @@ var mainPool = {
 }
 
 var mainStakeERC = {
-    "usdt":"0xdac17f958d2ee523a2206206994597c13d831ec7",
-    "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
-    "usdc":"0xB709f47e5FA51Fe61085Ab40302A25Fc7dbCe590",  //uni/eth
-    "wbtc":"",
-    "hotpot/eth":""
+    "usdt":"0xdac17f958d2ee523a2206206994597c13d831ec7",  //usdt
+    "eth/usdt":"0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", //eth/usdt
+    "usdc":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",   //usdc
+    "wbtc":"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",  //wbtc
+    "hotpot/eth":"0xd3d2e2692501a5c9ca623199d38826e513033a17",
+    "wbtc/eth":"0xbb2b8038a1640196fbe3e38816f3e67cba72d940" //wbtc/eth
 }
 
 
@@ -258,6 +260,7 @@ var allPoolTokens = [
     "usdc",
     "hotpot",
     "hotpot/eth",
+    "wbtc/eth"
 ]
 
 function createTokenInfo(name){

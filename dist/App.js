@@ -62910,14 +62910,13 @@ XMLHttpRequest.prototype.nodejsBaseUrl = null;
 arguments[4][292][0].apply(exports,arguments)
 },{"dup":292}],545:[function(require,module,exports){
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-const https = require('https');
+
 App = {
     web3Provider: null,
     erc20Contract: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
-        getPrice3();
         return App.initWeb3();
     },
     connectMetamask: function () {
@@ -63105,9 +63104,10 @@ App = {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             console.log("getUniV2Pairs " + token);
-            if (token == 'eth/usdt' || token == "hotpot/eth") {
+            if (token == 'eth/usdt' || token == "hotpot/eth" || token=="wbtc/eth") {
                 App.getUniV2Pair(token);
             }
+            if(token!="wbtc/eth")
             App.getStakeERCInfo(token);
         }
     },
@@ -63202,7 +63202,7 @@ App = {
     checkAllUni: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if (token == 'eth/usdt' || token == "hotpot/eth") {
+            if (token == 'eth/usdt' || token == "hotpot/eth"|| token=="wbtc/eth") {
                 if (univ2PairInfo[token].lpPrice == 0) {
                     return
                 }
@@ -63222,22 +63222,37 @@ App = {
 
         var priceEth = vUsdt.div(vEth);
         console.log("calTokenPrice price eth=" + priceEth);
+
+
         var hotpoteth = univ2PairInfo["hotpot/eth"];
         var vHot = hotpoteth.reserve0.div(Math.pow(10, 18));
         var vE = hotpoteth.reserve1.div(Math.pow(10, 18));
 
         var priceHot = vE.div(vHot).times(priceEth);
         console.log("calTokenPrice eth price=" + priceEth + ",hot price=" + priceHot);
+
+
+        var btceth = univ2PairInfo["wbtc/eth"];
+        var vbtc = btceth.reserve0.div(Math.pow(10, 8));
+        var vE2 = btceth.reserve1.div(Math.pow(10, 18));
+
+        var pricebtc = vE2.div(vbtc).times(priceEth);
+        console.log("calTokenPrice eth price=" + priceEth + ",btc price=" + pricebtc);
+
         //usdt
         stakeInfos["usdt"].price = 1;
+        stakeInfos["usdc"].price = 1;
         stakeInfos["hotpot"].price = priceHot;
+        stakeInfos['wbtc'].price = pricebtc;
+        
         for (var i = 0; i < allPoolTokens.length; i++) {
             var name = allPoolTokens[i];
-            if (name == 'eth/usdt' || name == "hotpot/eth") {
+            if (name == 'eth/usdt' || name == "hotpot/eth"|| name=="wbtc/eth") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
             console.log("calTokenPrice stake token price name:" + name + ",price=" + stakeInfos[name].price);
         }
+        delete allPoolTokens[allPoolTokens.length-1];
         Stake.initStakePool();
     },
     getStakePools: function () {
@@ -63557,83 +63572,4 @@ window.testFunction = () => {
 }
 
 
-
-function getPrice() {
-    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
-    var time = 10000;
-
-    var timeout = false;
-
-    var request = new XMLHttpRequest();
-
-    var timer = setTimeout(function () {
-
-        timeout = true;
-
-        request.abort();
-
-    }, time);
-
-    request.open("GET", priceURL);
-    request.setRequestHeader("Access-Control-Allow-Origin", "*");
-    request.onreadystatechange = function () {
-        if (request.readyState !== 4) {
-            return;
-        }
-
-        if (timeout) {
-            alert("out");
-            return;
-        }
-
-        clearTimeout(timer);
-
-        if (request.status === 200) {
-            handlePrice(request.responseText);
-        }
-    };
-    request.send(null);
-}
-
-function getPrice2() {
-    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-
-    // 传参并指定回调执行函数为onBack
-    script.src = "https://www.coindesk.com/coindesk20";
-    script.onload = handlePrice;
-    document.head.appendChild(script);
-
-    $.ajax({
-        url: "https://www.coindesk.com/coindesk20",
-        type: 'get',
-        dataType: 'jsonp',  // 请求方式为jsonp
-        crossDomain: true,
-        success: function (data) {
-            console.log("ajax " + data);
-        },
-        data: {}
-    });
-
-    // $.get(priceURL, function(data){
-    //     console.log("Data Loaded: " + data);
-    // });
-}
-
-function getPrice3() {
-    var priceURL = "https://fxhapi.feixiaohao.com/public/v1/ticker?limit=2";
-    $("#pricediv").text(priceURL);
-    $.getJSON(priceURL,function(data){
-        console.log("get json "+data);
-        $("#pricediv").text(data);
-    });
-}
-
-function handlePrice(msg) {
-    console.log("handleprice = " + msg);
-
-    alert(JSON.stringify(msg));
-}
-
-},{"@walletconnect/web3-provider":23,"https":199}]},{},[545]);
+},{"@walletconnect/web3-provider":23}]},{},[545]);

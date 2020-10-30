@@ -157,12 +157,14 @@ Stake = {
     getAllPoolBalance: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
+            if(token)
             Stake.getSinglePoolBalance(token);
         }
     },
     getSinglePoolBalance: function (name) {
         console.log("getSinglePoolBalance name=" + name);
         var poolAddress = stakePoolAddress[name];
+        if(poolAddress)
         contractsInstance.HotPot.balanceOf(poolAddress, function (e, result) {
             console.log("pool balance name=" + name + ",balance=" + result);
             balanceOfHotpot[name] = result;
@@ -176,6 +178,7 @@ Stake = {
         var total = balanceOfHotpot['total'];
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
+            if(token)
             total = total.minus(balanceOfHotpot[token]);
         }
         total = total.div(Math.pow(10, 18));
@@ -239,6 +242,7 @@ Stake = {
         console.log("initStakePool");
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
+            if(poolName)
             Stake.initSinglePool(poolName);
         }
     },
@@ -249,6 +253,7 @@ Stake = {
         var totalPrice = new BigNumber(0);
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
+            if(poolName)
             var periodFinish = stakeInfos[poolName].periodFinish;
             if (!periodFinish) {
                 return;
@@ -260,8 +265,9 @@ Stake = {
 
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-
+            if(poolName)
             var stake = stakeInfos[poolName].poolTotalStake;
+            if(stakeInfos[poolName])
             console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);
             if (stake == 0) {
                 continue;
