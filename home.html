@@ -354,14 +354,14 @@
 					</div>
 
 				</div>
-				<div style="margin-top: 5%;" id='inputinvitecode'>
+				<div style="margin-top: 2%;" id='inputinvitecode'>
 					<input name="name" type="number" style="width: 200px;" autofocus="autofocus" value="" id="inviteInput">
-					<button class='green button' data-lang='btninvite'></button>
+					<button class='green button' data-lang='btninvite' onclick="Invite.inputCode()"></button>
 				</div>
-				<div style="margin-top: 5%;display: none;" data-lang="inviteinputed" id='inviteinputed'>
+				<div style="margin-top: 2%;display: none;" data-lang="inviteinputed" id='inviteinputed'>
 					
 				</div>
-				<div style="margin-top: 5%;display: none;" data-lang="invitevalidated" id='invitevalidated'>
+				<div style="margin-top: 2%;display: none;" data-lang="invitevalidated" id='invitevalidated'>
 				  	
 				</div>
 
@@ -434,12 +434,12 @@
 				</div>
 
 				<div class="table-users" id="divloantable" style="display: none;">
-
+					<p data-lang="loanmin"></p>
 					<table cellspacing="0" id="tableloan">
 						
 					</table>
-				</div>
 
+				</div>
 			</main>
 
 			<main role="main" class="inner cover reward" STYLE="DISPLAY:NONE">
@@ -659,7 +659,7 @@
 					
 				</div>
 				<p style="margin-top: 3%!important;" data-lang="stakeinfo"></p>
-				<p style="margin-top: 1%;"><span  data-lang="inviteintro"></span><span id="cliamratio"> 5%</span><span data-lang="inviteinfo1"></span></p>
+				<p style="margin-top: 1%;"><span  data-lang="inviteintro"></span> <span class="cliamratio"> 5%</span><span data-lang="inviteinfo1"></span></p>
 				<p style="margin-top: 1%;" data-lang="inviteinfo2"></p>
 
 				<button class='green button' data-lang='invitea' onclick="nav('invite')" >INVITE</button>
@@ -678,7 +678,6 @@
 
 	<footer class="mastfoot footer">
 		<div class="inner">
-			
 			<p>
 				<select id="selectcontract"></select>
 			  

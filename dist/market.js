@@ -14344,15 +14344,18 @@ Market = {
     },
     getNFTInfo: async function (id) {
         console.log("getNFTInfo id=" + id);
-        contractsInstance.NFTHotPot.ownerOf(id,function(e,r){
+        contractsInstance.NFTMarket.sellerOf(id,function(e,r){
             if(r == defaultAccount){
                 var nft = NFT.createNFTInfo(id,defaultAccount);
                 UserNFT.sellNFTs[id] = nft;
                 UserNFT.sellNFTs[id].sell = true;
                 UserNFT.sellIds.push(id);
+                UserNFT.userBalance = UserNFT.userBalance.plus(1);
+                UserNFT.updateUserNFT();
             }
             contractsInstance.NFTHotPot.getGrade(id, function (e, r) {
                 var grade = r;
+                if(UserNFT.sellNFTs[id])
                 UserNFT.sellNFTs[id].grade = r;
                 var nft = Market.createSellNft(id, grade);
                 Market.listTokens[id] = nft;

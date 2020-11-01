@@ -59299,8 +59299,12 @@ App = {
                 if (currentPagePoolID != "") {
                     Stake.initpooldata(currentPagePoolID);
                 }
-                var spender = result.args.spender;
-                if (spender === contractAddress.gacha) {
+                var spender = result.args.spender.replace(/\ +/g,"");
+                var gacha  = contractAddress.gacha.replace(/\ +/g,"")
+                console.log("spender="+spender+",gacha="+contractAddress.gacha);
+                var ss = encodeURIComponent(spender);
+                var ga = encodeURIComponent(contractAddress.gacha);
+                if (spender==gacha) {
                     $("#pull1").show();
                     $("#pull10").show();
                     $("#approvegacha").hide();
@@ -59451,8 +59455,12 @@ App = {
                 }
 
                 hideTopMsg();
-                var spender = result.args.spender;
-                if (spender === contractAddress.gacha) {
+                var spender = result.args.spender.replace(/\ +/g,"");
+                var gacha = contractAddress.gacha.replace(/\ +/g,"");
+                console.log("spender="+spender+",gacha="+contractAddress.gacha);
+                var ss = encodeURIComponent(spender);
+                var ga = encodeURIComponent(contractAddress.gacha);
+                if(spender===gacha){
                     $("#pull1").show();
                     $("#pull10").show();
                     $("#approvegacha").hide();
@@ -59696,17 +59704,20 @@ window.rescue = () => {
 }
 
 window.testFunction = () => {
-    contractsInstance.Gacha.setInvite(contractAddress['invite'],function(e,r){
-        afterSendTx(e,r);
-    });
+    // contractsInstance.Gacha.setInvite(contractAddress['invite'],function(e,r){
+    //     afterSendTx(e,r);
+    // });
 
-    // for (var i = 0; i < allPoolTokens.length; i++) {
-    //     var token = allPoolTokens[i];
-    //     Stake.notifyRewardAmount(token, 70000);
+    for (var i = 0; i < allPoolTokens.length; i++) {
+        var token = allPoolTokens[i];
+        // Stake.notifyRewardAmount(token, 70000);
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-    // }
+        stakeInfos[token].instance.setInvite(contractAddress['invite'],function(e,r){
+            afterSendTx(e,r);
+        });
+    }
     // contractsInstance.Reward.loan(function(e,r){
     //     console.log("loan = "+r);
     // });

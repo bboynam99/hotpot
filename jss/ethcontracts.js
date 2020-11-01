@@ -56,7 +56,7 @@ var ropstenContracts = {
 var rinkebyContracts = {
     "nft": "0x1331b1784B258dE8b734bD9D80d3cdDf772d1Ab4",
     "hotpot": "0xc30394D25537003BAab11F0E370aa9421081092A",
-    "gacha": "0xa6766a76BCaa2B644F0bf69060E37d2D2e152362",
+    "gacha": "0xa6766a76bcaa2b644f0bf69060e37d2d2e152362",
     "loan": "0x8d6Db51dB7381DdacE7Def41404148af90cAC648",
     "market": "0x9D9c94B0567Af5275Aa053d898234528692a1826",
     "reward": "0x8D923313feE6ce408FDfb5fD3F94bC8d628dcD71",

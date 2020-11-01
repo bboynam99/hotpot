@@ -13818,11 +13818,12 @@ Loan = {
 
             contractsInstance.Loan.reservations(id, function (e, r) {
                 var tokenId = r[0];
-                var borrower = r[1];
-                var borrowEndTime = r[2];
-                var pricePerDay = r[3];
-                var start = r[4];
-                var times = r[5];
+                var owner = r[1];
+                var borrower = r[2];
+                var borrowEndTime = r[3];
+                var pricePerDay = r[4];
+                var start = r[5];
+                var times = r[6];
 
                 var nft = Loan.listTokens[id];
 

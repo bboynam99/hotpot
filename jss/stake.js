@@ -52,6 +52,14 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         } else {
+
+        var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
+        var now = Math.floor(((new Date()).getTime()) / 1000);
+        var delay = lastRewardTime + 86400 - now;
+        if(delay>0){
+            toastAlert(getString('canclaimtoday'));
+            return;
+        }
             token.instance.getRewardFree(function (e, r) {
                 afterSendTx(e, r);
             });
@@ -166,6 +174,12 @@ Stake = {
             }
         });
     },
+    getFreeRewardRatio:function(){
+        stakeInfos['usdt'].instance.freeRewardRatio(function(e,r){
+            console.log("freeRewardRatio="+r);
+            $(".cliamratio").text(r+"%");
+        });
+    },
     calTotalCirculation: function () {
         var total = balanceOfHotpot['total'];
         for (var i = 0; i < allPoolTokens.length; i++) {
@@ -232,11 +246,13 @@ Stake = {
     },
     initStakePool: function () {
         console.log("initStakePool");
+        
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
             if(poolName)
             Stake.initSinglePool(poolName);
         }
+        Stake.getFreeRewardRatio();
     },
     checkTotalStaked: function () {
         if (Stake.totalStake) {

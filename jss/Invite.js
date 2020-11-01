@@ -1,12 +1,14 @@
 Invite = {
     claimRatio: 0,
+    myInviteCode:0,
+    inputvalidated:false,
     eventBlocks: new Set(),
     initInviteInfo: function () {
         // event InviteCreated(address creator);
         // event InviteInput(address user,uint256 code);
         // event InviteValidate(address validator);
 
-        contractsInstance.Invite.InviteCreated({ creator: defaultAccount }, function (e, result) {
+        contractsInstance.Invite.InviteCreated({ creator: defaultAccount }, function (error, result) {
             if (!error) {
                 console.log("InviteCreated");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
@@ -17,7 +19,7 @@ Invite = {
             }
         });
 
-        contractsInstance.Invite.InviteInput({ user: defaultAccount }, function (e, r) {
+        contractsInstance.Invite.InviteInput({ user: defaultAccount }, function (error, result) {
             if (!error) {
                 console.log("InviteInput");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
@@ -28,7 +30,7 @@ Invite = {
                 Invite.getInputInviteCode();
             }
         });
-        contractsInstance.Invite.InviteValidate({ validator: defaultAccount }, function (e, r) {
+        contractsInstance.Invite.InviteValidate({ validator: defaultAccount }, function (error, result) {
             if (!error) {
                 console.log("InviteValidate");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
@@ -59,11 +61,10 @@ Invite = {
 
         contractsInstance.Invite.checkValidated(defaultAccount, function (e, r) {
             console.log("checkValidated="+r);
+            Invite.inputvalidated = r;
             if (r) {
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();
-                Invite.claimRatio += 0.01;
-                Invite.updateRatio();
             } else {
                 $("#invitevalidated").hide();
             }
@@ -77,6 +78,7 @@ Invite = {
                 $("#inviteinputed").hide();
             } else {
                 $("#inputinvitecode").hide();
+                if(!Invite.inputvalidated)
                 $("#inviteinputed").show();
             }
         });
@@ -85,6 +87,7 @@ Invite = {
         contractsInstance.Invite.getMyInviteCode(defaultAccount, function (e, r) {
             console.log("getMyInviteCode="+r);
             if (r != 0) {
+                Invite.myInviteCode=r;
                 $("#myinvitecode").text(r);
                 $("#nocodetip").hide();
                 $("#myinvitecode").show();
@@ -97,5 +100,22 @@ Invite = {
     },
     updateRatio: function () {
         $("#claimratioup").text(100 * Invite.claimRatio + "%");
-    }
+    },
+    inputCode:function(){
+        var code = $("#inviteInput").val();
+        console.log("code="+code);
+        var regex = /^\d+$/;
+        if (regex.test(code)) {
+            if(code==Invite.myInviteCode){
+                toastAlert(getString('inputyourcode'));
+            }else if(code<1000){
+                toastAlert(getString('inputwrong'));
+            }else
+            contractsInstance.Invite.inputCode(code,function(e,r){
+                afterSendTx(e,r);
+            });
+        }else{
+            toastAlert(getString('inputwrong'));
+        }
+    },
 }
