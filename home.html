@@ -438,8 +438,24 @@
 					<table cellspacing="0" id="tableloan">
 						
 					</table>
-
+					
 				</div>
+
+				<div id='sellhistory' style="display: block;">
+					<p style="margin-top: 5%;color: wheat;font-size:larger!important;" data-lang="sellhistory"></p>
+					<table cellspacing="0" id="tablesellhistory">
+						
+					</table>
+				</div>
+
+				<div id='loanhistory' style="display: none;">
+					<p style="margin-top: 5%;color: wheat;font-size:larger!important;" data-lang="loanhistory"></p>
+					<table cellspacing="0" id="tableloanhistory">
+						
+					</table>
+				</div>
+				
+
 			</main>
 
 			<main role="main" class="inner cover reward" STYLE="DISPLAY:NONE">
@@ -666,9 +682,32 @@
 			</main>
 
 
-			<div class="pricingTable" style="display: none; color:black;width: 100%!important;">
+			<div class="pricingTable" id="pricingTable" style="display: none; color:black;width: 100%!important;">
 			</div>
 
+			<div class="pricingTable" style="display: none; color:black;width: 100%!important;" hidden>
+				<ul class='pricingTable-firstTable'>
+					<li class='pricingTable-firstTable_table'>
+						<h1 class='pricingTable-firstTable_table__header'>
+							<span data-lang='grade1mb'></span>
+						</h1>
+						<p class='pricingTable-firstTable_table__pricing'>
+							<span>ID:</span><span></span>
+						</p>
+						<ul class='pricingTable-firstTable_table__options'></ul>
+						<table>
+							<tr>
+								<th style="background-color: white!important;">
+									<div data-lang='loan' class='pricingTable-firstTable_table__getstart'></div>
+								</th>
+								<th style="background-color: white!important;">
+									<div data-lang='sell' class='pricingTable-firstTable_table__getstart'></div>
+								</th>
+							  </tr>
+						</table>
+					</li>
+				</ul>
+			</div>
 		</div>
 
 		<button class='green button' onclick="testFunction()" hidden >测试</button>		

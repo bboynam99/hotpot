@@ -6,10 +6,6 @@ var nftUse = [
 
 NFT = {
     createNFT: function (nft, use) {
-        // if (nft.id == 3) {
-        //     nft.usetime = Math.floor((new Date()).getTime() / 1000);
-        // }
-
         var nodeli = $("<li class='pricingTable-firstTable_table'></li>");
 
         var nodename = $("<span data-lang='grade1mb'></span>").text(getString('grade1mb'));
@@ -25,7 +21,7 @@ NFT = {
         var phtml = "<span>ID:</span><span>" + formatZero(nft.id, 3) + "</span><span>/1000</span>";
         var nodep = $("<p class='pricingTable-firstTable_table__pricing'></p>").html(phtml);
         var nodeul = $("<ul class='pricingTable-firstTable_table__options'></ul>");
-        var nodeavailable = $("<span data-lang='available'></span>");
+        var nodeavailable = $("<span data-lang='available'></span>").text(getString('available'));
         var canUse = true;
 
         if (nft.loan) {
@@ -85,9 +81,17 @@ NFT = {
                 }
             } else if (use === nftUse[2]) {
                 if (!nft.loan && !nft.sell) {
-                    nodediv = $("<div data-lang='loan' class='pricingTable-firstTable_table__getstart' onclick='Loan.loanNFT(" + nft.id + ")'></div>").text(getString('loan'));
-                    var nodedivsell = $("<div data-lang='sell' class='pricingTable-firstTable_table__getstart' onclick='Market.sellNFT(" + nft.id + ")'></div>").text(getString('sell'));
-                    nodeli.append(nodedivsell);
+                    nodediv = $("<table></table>");
+                    var nodetr = $("<tr></tr>");
+                    var nodeth1 = $("<th style='background-color: white!important;padding:0px!important;'></th>");
+                    var nodebtn1 = $("<div style='margin-right:5px;margin-left:5px;' data-lang='loan' class='pricingTable-firstTable_table__getstart' onclick='Loan.loanNFT(" + nft.id + ")'></div>").text(getString('loan'));
+                    nodeth1.append(nodebtn1);
+                    var nodeth2 = $("<th style='background-color: white!important;padding:0px!important;'></th>");
+                    var nodedivsell = $("<div style='margin-right:5px;margin-left:5px;' data-lang='sell' class='pricingTable-firstTable_table__getstart' onclick='Market.sellNFT(" + nft.id + ")'></div>").text(getString('sell'));
+                    nodeth2.append(nodedivsell);
+                    nodetr.append(nodeth1);
+                    nodetr.append(nodeth2);
+                    nodediv.append(nodetr);
                 }
             }
         } else {
@@ -95,9 +99,7 @@ NFT = {
                 nodediv = $("<div data-lang='cancelloan' class='pricingTable-firstTable_table__getstart' onclick='Loan.cancelDeposit(" + nft.id + ")'></div>").text(getString('cancelloan'));
             if (nft.sell)
                 nodediv = $("<div data-lang='cancelsell' class='pricingTable-firstTable_table__getstart' onclick='Market.cancelSell(" + nft.id + ")'></div>").text(getString('cancelsell'));
-
         }
-
         nodeli.append(nodediv);
         return nodeli;
     },
@@ -303,7 +305,7 @@ UserNFT = {
         });
     },
     initNFTTable: function (use) {
-        $(".pricingTable").empty();
+        $("#pricingTable").empty();
         var totalIds = Array();
         var nfts = {};
         for(var i=0;i<UserNFT.nftIds.length;i++){
@@ -317,8 +319,7 @@ UserNFT = {
             nfts[id] = UserNFT.sellNFTs[id];
         }
         
-        $(".pricingTable").append(NFT.createNFTs(totalIds, nfts, use));
-        // $(".pricingTable").append(NFT.createNFTs(UserNFT.sellIds, UserNFT.sellNFTs, use));
+        $("#pricingTable").append(NFT.createNFTs(totalIds, nfts, use));
     },
     updateNFTTable: function () {
         console.log("updateNFTTable page=" + currentPage);

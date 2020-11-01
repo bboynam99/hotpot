@@ -149,12 +149,6 @@ App = {
             return App.getBalances();
         });
 
-        $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-            contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
-            contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
-            return UserNFT.getNFTBalances();
-        });
-
         $.getJSON('contracts/Reward.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.Reward = web3.eth.contract(data.abi);
@@ -173,6 +167,12 @@ App = {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
             contractsInstance.Loan = web3.eth.contract(data.abi);
             contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
+
+            $.getJSON('contracts/NFTokenHotPot.json', function (data) {
+                contractsInstance.NFTHotPot = web3.eth.contract(data.abi);
+                contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
+                return UserNFT.getNFTBalances();
+            });
             return Loan.getLoan();
         });
 
@@ -194,11 +194,11 @@ App = {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
             console.log("getUniV2Pairs " + token);
-            if (token == 'eth/usdt' || token == "hotpot/eth" || token=="wbtc/eth") {
+            if (token == 'eth/usdt' || token == "hotpot/eth" || token == "wbtc/eth") {
                 App.getUniV2Pair(token);
             }
-            if(token!="wbtc/eth")
-            App.getStakeERCInfo(token);
+            if (token != "wbtc/eth")
+                App.getStakeERCInfo(token);
         }
     },
     getStakeERCInfo: function (token) {
@@ -245,12 +245,12 @@ App = {
                 if (currentPagePoolID != "") {
                     Stake.initpooldata(currentPagePoolID);
                 }
-                var spender = result.args.spender.replace(/\ +/g,"");
-                var gacha  = contractAddress.gacha.replace(/\ +/g,"")
-                console.log("spender="+spender+",gacha="+contractAddress.gacha);
+                var spender = result.args.spender.replace(/\ +/g, "");
+                var gacha = contractAddress.gacha.replace(/\ +/g, "")
+                console.log("spender=" + spender + ",gacha=" + contractAddress.gacha);
                 var ss = encodeURIComponent(spender);
                 var ga = encodeURIComponent(contractAddress.gacha);
-                if (spender==gacha) {
+                if (spender == gacha) {
                     $("#pull1").show();
                     $("#pull10").show();
                     $("#approvegacha").hide();
@@ -286,18 +286,18 @@ App = {
                 console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
                 var reserve0 = result[0];
                 var reserve1 = result[1];
-                if(reserve0==0){
-                    reserve0=reserve0.plus(1);
+                if (reserve0 == 0) {
+                    reserve0 = reserve0.plus(1);
                 }
-                if(reserve1==0){
-                    reserve1=reserve1.plus(1);
+                if (reserve1 == 0) {
+                    reserve1 = reserve1.plus(1);
                 }
                 univ2PairInfo[pair].reserve0 = reserve0;
                 univ2PairInfo[pair].reserve1 = reserve1;
 
                 univ2PairInfo[pair].contractInstance.totalSupply(function (e, result) {
                     console.log("getUniV2Pair totalSupply=" + result + ",name=" + pair);
-                    if(result==0){
+                    if (result == 0) {
                         result = result.plus(1);
                     }
                     univ2PairInfo[pair].totalSupply = result;
@@ -311,7 +311,7 @@ App = {
     checkAllUni: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if (token == 'eth/usdt' || token == "hotpot/eth"|| token=="wbtc/eth") {
+            if (token == 'eth/usdt' || token == "hotpot/eth" || token == "wbtc/eth") {
                 if (univ2PairInfo[token].lpPrice == 0) {
                     return
                 }
@@ -353,15 +353,15 @@ App = {
         stakeInfos["usdc"].price = 1;
         stakeInfos["hotpot"].price = priceHot;
         stakeInfos['wbtc'].price = pricebtc;
-        
+
         for (var i = 0; i < allPoolTokens.length; i++) {
             var name = allPoolTokens[i];
-            if (name == 'eth/usdt' || name == "hotpot/eth"|| name=="wbtc/eth") {
+            if (name == 'eth/usdt' || name == "hotpot/eth" || name == "wbtc/eth") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
             console.log("calTokenPrice stake token price name:" + name + ",price=" + stakeInfos[name].price);
         }
-        delete allPoolTokens[allPoolTokens.length-1];
+        delete allPoolTokens[allPoolTokens.length - 1];
         Stake.initStakePool();
     },
     getStakePools: function () {
@@ -401,12 +401,12 @@ App = {
                 }
 
                 hideTopMsg();
-                var spender = result.args.spender.replace(/\ +/g,"");
-                var gacha = contractAddress.gacha.replace(/\ +/g,"");
-                console.log("spender="+spender+",gacha="+contractAddress.gacha);
+                var spender = result.args.spender.replace(/\ +/g, "");
+                var gacha = contractAddress.gacha.replace(/\ +/g, "");
+                console.log("spender=" + spender + ",gacha=" + contractAddress.gacha);
                 var ss = encodeURIComponent(spender);
                 var ga = encodeURIComponent(contractAddress.gacha);
-                if(spender===gacha){
+                if (spender === gacha) {
                     $("#pull1").show();
                     $("#pull10").show();
                     $("#approvegacha").hide();
@@ -475,12 +475,16 @@ App = {
         $("#selectloan").removeClass('tableselect');
         $("#divbuytable").show();
         $("#divloantable").hide();
+        $("#sellhistory").show();
+        $("#loanhistory").hide();
     },
     selectLoan: function () {
         $("#selectloan").addClass('tableselect');
         $("#selectbuy").removeClass('tableselect');
         $("#divbuytable").hide();
         $("#divloantable").show();
+        $("#sellhistory").hide();
+        $("#loanhistory").show();
     }
 };
 
@@ -660,8 +664,8 @@ window.testFunction = () => {
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-        stakeInfos[token].instance.setInvite(contractAddress['invite'],function(e,r){
-            afterSendTx(e,r);
+        stakeInfos[token].instance.setInvite(contractAddress['invite'], function (e, r) {
+            afterSendTx(e, r);
         });
     }
     // contractsInstance.Reward.loan(function(e,r){

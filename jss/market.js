@@ -1,5 +1,6 @@
 const utils = require('web3-utils');
 const BigNumber = require("big-number");
+const BN = require('bn.js');
 
 function getPriceBytes(price) {
     var p = new BigNumber(price);
@@ -20,7 +21,7 @@ Market = {
         Market.initSellTable();
         contractsInstance.HotPot.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket.address }, function (error, result) {
             if (!error) {
-                // toastAlert("Approve success!");
+                console.log("Market Approval");
                 if (Market.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
@@ -89,6 +90,90 @@ Market = {
             Market.eventBlocks.add(result.blockNumber);
             Market.removeNFT(r.args._tokenId);
         });
+        Market.addHistory();
+    },
+    addHistory:function(){
+        console.log("addHistory");
+        $("#tablesellhistory").empty();
+        var node = $("<tr  style='height:60px!important;'></tr>");
+        var nodeid = $("<td>ID</td>");
+        var nodegrade = $("<td data-lang='grade'></td>").text(getString('grade'));
+        var nodeprice = $("<td data-lang='price'></td>").text(getString('price'));
+        var nodeaction = $("<td data-lang='buyer' style='text-align: center!important;'></td>").text(getString('buyer'));
+        var nodeblock = $("<td data-lang='blocknum' style='text-align: center;'></td>").text(getString('blocknum'));
+        node.append(nodeid);
+        node.append(nodegrade);
+        node.append(nodeprice);
+        node.append(nodeaction);
+        node.append(nodeblock);
+        $("#tablesellhistory").append(node);
+
+        var events = contractsInstance.NFTMarket.allEvents({filter:{event:'Swapped'},fromBlock: 0, toBlock: 'latest'});
+        events.get(function(e,r){
+            for(var i=0;i<r.length;i++){
+                var event = r[i];
+                if(event.event == 'Swapped'){
+                    console.log("Swapped");
+                    var info = Market.createSellInfo(event.args._buyer,event.args._tokenId,
+                        event.args._price,event.transactionHash,event.blockNumber);
+                    Market.addSellInfo(info);
+                }
+            }
+        });
+        events.stopWatching();
+    },
+    createSellInfo:function(buyer,tokenId,price,hash,blockNumber){
+        var info =new Object();
+        info.buyer=buyer;
+        info.id=tokenId;
+        info.price=price;
+        info.grade = 1;
+        info.hash = hash;
+        info.blockNumber=blockNumber;
+        return info;
+    },
+    addSellInfo:function(nft){
+        // var h = $("<p></p>").text(info.borrower+" borrowed ID="+info.tokenId+",price per day "+info.pricePerDay/10**18+" HotPot");
+        // $("#loanhistory").append(h);
+        var node = $("<tr  style='height:60px!important;'></tr>");
+
+        var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
+        node.append(nodeid);
+
+        var nodegradein;
+        if(nft.grade==1){
+            nodegradein=$("<span data-lang='grade1'></span>").text(getString('grade1'));
+        }
+        else if (nft.grade == 2) {
+            nodegradein=$("<span data-lang='grade2'></span>").text(getString('grade2'));
+        } else if (nft.grade == 3) {
+            nodegradein=$("<span data-lang='grade3'></span>").text(getString('grade3'));
+        }
+
+        var nodegrade = $("<td></td>");
+        nodegrade.append(nodegradein);
+        node.append(nodegrade);
+
+        var price = nft.price.div(Math.pow(10, 18));
+        if (price > 10000) {
+            price = 0;
+        }
+        var nodeprice = $("<td></td>").text(price.toFixed(2));
+        node.append(nodeprice);
+
+        var pre = nft.buyer.substr(0,5);
+        var last = nft.buyer.substr(nft.buyer.length-5,nft.buyer.length-1);
+        var text = pre +"..."+last;
+        var nodea = $("<a target='_blank' style='color:blue'></a>").text(text);
+        nodea.attr("href",getEthersanUrl(nft.hash));
+        var nodetdbtn = $("<td style='text-align: center;'></td>").append(nodea);
+
+        node.append(nodetdbtn);
+
+        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(nft.blockNumber);
+        node.append(nodeblockNumber);
+
+        $("#tablesellhistory").append(node);
     },
     removeNFT:function(tokenId){
         console.log("removeNFT="+tokenId);
@@ -111,7 +196,7 @@ Market = {
             afterSendTx(e, r);
         });
     },
-    cancleSell: function (id) {
+    cancelSell: function (id) {
         console.log("cancleSell " + id);
         contractsInstance.NFTMarket.unlist(id, function (e, r) {
             afterSendTx(e, r);
@@ -253,7 +338,7 @@ Market = {
         }else{
             if (nft.seller == defaultAccount) {
                 var nodebtn = $("<button class='green button' data-lang='cancelsell'></button>").text(getString('cancelsell'));
-                nodetdbtn.on("click", nodebtn, function () { Market.cancleSell(nft.id) });
+                nodetdbtn.on("click", nodebtn, function () { Market.cancelSell(nft.id) });
                 nodetdbtn.append(nodebtn);
             } else {
                 var nodebtn = $("<button class='green button' data-lang='buy'></button>").text(getString('buy'));
