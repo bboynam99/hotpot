@@ -17856,7 +17856,6 @@ Market = {
         // var h = $("<p></p>").text(info.borrower+" borrowed ID="+info.tokenId+",price per day "+info.pricePerDay/10**18+" HotPot");
         // $("#loanhistory").append(h);
         var node = $("<tr  style='height:60px!important;'></tr>");
-        node.attr("id","tr"+nft.id);
 
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);

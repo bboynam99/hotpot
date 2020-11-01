@@ -15,7 +15,6 @@ function formatFomoTime(t) {
     return h + "h " + m + "m " + ' ' + + s + "s";
 }
 
-
 function showAlert() {
     document.getElementById('light').style.display = 'block';
     // document.getElementById('fade').style.display = 'block';

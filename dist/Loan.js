@@ -17304,7 +17304,7 @@ Loan = {
 
                 var nb = new BN(10);
                 nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                if (result.args.value.lt(nb)) {
                     return;
                 }
                 Loan.allowance = result.args.value;
@@ -17348,7 +17348,7 @@ Loan = {
         });
         Loan.addHistory();
     },
-    addHistory:function(){
+    addHistory: function () {
         console.log("addHistory");
         $("#tableloanhistory").empty();
         var node = $("<tr  style='height:60px!important;'></tr>");
@@ -17367,50 +17367,50 @@ Loan = {
         node.append(nodeblock);
         $("#tableloanhistory").append(node);
 
-        var loanEvents = contractsInstance.Loan.allEvents({filter:{event:'TokenBorrowed'},fromBlock: 0, toBlock: 'latest'});
-        loanEvents.get(function(e,r){
-            for(var i=0;i<r.length;i++){
+        var loanEvents = contractsInstance.Loan.allEvents({ filter: { event: 'TokenBorrowed' }, fromBlock: 0, toBlock: 'latest' });
+        loanEvents.get(function (e, r) {
+            for (var i = 0; i < r.length; i++) {
                 var event = r[i];
-                if(event.event == 'TokenBorrowed'){
+                if (event.event == 'TokenBorrowed') {
                     console.log("TokenBorrowed");
                     // grade
-                    var borrow = Loan.createBorrowInfo(event.args.borrower,event.args.tokenId,
-                        event.args.pricePerDay,event.args.borrowDays,event.transactionHash,event.blockNumber);
+                    var borrow = Loan.createBorrowInfo(event.args.borrower, event.args.tokenId,
+                        event.args.pricePerDay, event.args.borrowDays, event.transactionHash, event.blockNumber);
                     Loan.addBorrowInfo(borrow);
                 }
             }
         });
         loanEvents.stopWatching();
     },
-    createBorrowInfo:function(borrower,tokenId,pricePerDay,borrowDays,hash,blockNumber){
-        var info =new Object();
-        info.borrower=borrower;
-        info.id=tokenId;
-        info.price=pricePerDay;
-        info.borrowDays=borrowDays;
+    createBorrowInfo: function (borrower, tokenId, pricePerDay, borrowDays, hash, blockNumber) {
+        var info = new Object();
+        info.borrower = borrower;
+        info.id = tokenId;
+        info.price = pricePerDay;
+        info.borrowDays = borrowDays;
         info.grade = 1;
         info.hash = hash;
-        info.blockNumber=blockNumber;
+        info.blockNumber = blockNumber;
         return info;
     },
-    addBorrowInfo:function(nft){
+    addBorrowInfo: function (nft) {
         // var h = $("<p></p>").text(info.borrower+" borrowed ID="+info.tokenId+",price per day "+info.pricePerDay/10**18+" HotPot");
         // $("#loanhistory").append(h);
 
         var node = $("<tr style='height:60px!important;'></tr>");
-        node.attr("id","tr"+nft.id);
+
 
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);
 
         var nodegradein;
-        if(nft.grade==1){
-            nodegradein=$("<span data-lang='grade1'></span>").text(getString('grade1'));
+        if (nft.grade == 1) {
+            nodegradein = $("<span data-lang='grade1'></span>").text(getString('grade1'));
         }
         else if (nft.grade == 2) {
-            nodegradein=$("<span data-lang='grade2'></span>").text(getString('grade2'));
+            nodegradein = $("<span data-lang='grade2'></span>").text(getString('grade2'));
         } else if (nft.grade == 3) {
-            nodegradein=$("<span data-lang='grade3'></span>").text(getString('grade3'));
+            nodegradein = $("<span data-lang='grade3'></span>").text(getString('grade3'));
         }
 
         var nodegrade = $("<td></td>");
@@ -17423,15 +17423,15 @@ Loan = {
         }
         var nodeprice = $("<td></td>").text(price.toFixed(2));
         node.append(nodeprice);
-        
-        var nodeendtime = $("<td></td>").text(nft.borrowDays+getString('day'));
+
+        var nodeendtime = $("<td></td>").text(nft.borrowDays + getString('day'));
         node.append(nodeendtime);
 
-        var pre = nft.borrower.substr(0,5);
-        var last = nft.borrower.substr(nft.borrower.length-5,nft.borrower.length-1);
-        var text = pre +"..."+last;
+        var pre = nft.borrower.substr(0, 5);
+        var last = nft.borrower.substr(nft.borrower.length - 5, nft.borrower.length - 1);
+        var text = pre + "..." + last;
         var nodea = $("<a target='_blank' style='color:blue'></a>").text(text);
-        nodea.attr("href",getEthersanUrl(nft.hash));
+        nodea.attr("href", getEthersanUrl(nft.hash));
         var nodetdbtn = $("<td style='text-align: center;'></td>").append(nodea);
 
         node.append(nodetdbtn);
@@ -17465,18 +17465,33 @@ Loan = {
                 nft.startTime = start;
                 nft.borrower = borrower;
                 nft.borrowEndTime = borrowEndTime;
-
-                contractsInstance.NFTHotPot.ownerOf(id,function(e,r){
-                    if(!e){
-                        Loan.listTokens[id].owner = r;
-                        Loan.addNFTToTable(nft);
-                    }
-                });
-
+                nft.owner = owner;
+                Loan.addNFTToTable(nft);
+                Loan.checkMyBorrowed(nft);
             });
         });
     },
-    initLoanTable:function(){
+    checkMyBorrowed: function (nft) {
+        if (nft.borrower == defaultAccount) {
+            var id = nft.id;
+            var timenow = Math.floor((new Date()).getTime() / 1000);
+            if(nft.borrowEndTime<timenow){
+                return;
+            }
+            UserNFT.borrowIds.push(nft.id);
+            var borrow = NFT.createNFTInfo(nft.id, nft.owner);
+            borrow.grade = nft.grade;
+            borrow.borrowed=true;
+            borrow.borrowEndTime=nft.borrowEndTime;
+            UserNFT.borrowNFTs[nft.id] = borrow;
+            contractsInstance.NFTHotPot.getUseTime(id,function(e,r){
+                if(!e){
+                    UserNFT.borrowNFTs[id].usetime=r;
+                }
+            });
+        }
+    },
+    initLoanTable: function () {
         console.log("initLoanTable");
         $("#tableloan").empty();
         var node = $("<tr></tr>");
@@ -17492,27 +17507,38 @@ Loan = {
         node.append(nodeaction);
         $("#tableloan").append(node);
 
-        for(var i=0;i<Loan.listIds.length;i++){
+        for (var i = 0; i < Loan.listIds.length; i++) {
             var id = Loan.listIds[i];
             var nft = Loan.listTokens[id];
             Loan.addNFTToTable(nft);
         }
     },
     addNFTToTable: function (nft) {
+        var lasttime = nft.days.mul(86400).plus(nft.startTime);
+        var timenow = Math.floor((new Date()).getTime() / 1000);
+        if (timenow > lasttime) {
+            console.log("this token is out of date");
+            return;
+        }
+        if (nft.borrowEndTime > timenow) {
+            console.log("This token is borrowed");
+            return;
+        }
+
         var node = $("<tr></tr>");
-        node.attr("id","tr"+nft.id);
+        node.attr("id", "tr" + nft.id);
 
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);
 
         var nodegradein;
-        if(nft.grade==1){
-            nodegradein=$("<span data-lang='grade1'></span>").text(getString('grade1'));
+        if (nft.grade == 1) {
+            nodegradein = $("<span data-lang='grade1'></span>").text(getString('grade1'));
         }
         else if (nft.grade == 2) {
-            nodegradein=$("<span data-lang='grade2'></span>").text(getString('grade2'));
+            nodegradein = $("<span data-lang='grade2'></span>").text(getString('grade2'));
         } else if (nft.grade == 3) {
-            nodegradein=$("<span data-lang='grade3'></span>").text(getString('grade3'));
+            nodegradein = $("<span data-lang='grade3'></span>").text(getString('grade3'));
         }
 
         var nodegrade = $("<td></td>");
@@ -17525,29 +17551,19 @@ Loan = {
         }
         var nodeprice = $("<td></td>").text(price.toFixed(2));
         node.append(nodeprice);
-        
-        var lasttime = nft.days.mul(86400).plus(nft.startTime);
-        var timenow = Math.floor((new Date()).getTime()/1000);
-        if(timenow>lasttime){
-            console.log("this token is out of date");
-            return;
-        }
-        if(nft.borrowEndTime>timenow){
-            console.log("This token is borrowed");
-            return;
-        }
-        var delay =  lasttime - timenow;
+
+        var delay = lasttime - timenow;
 
         var nodeendtime = $("<td></td>").text(formatTime2Min(delay));
         node.append(nodeendtime);
 
         var nodetdbtn = $("<td style='text-align: center;'></td>");
 
-        if(Loan.allowance==0){
+        if (Loan.allowance == 0) {
             var nodebtn = $("<button class='green button' data-lang='approve'></button>").text(getString('approve'));
             nodetdbtn.on("click", nodebtn, function () { Loan.approve() });
-            nodetdbtn.append(nodebtn);            
-        }else{
+            nodetdbtn.append(nodebtn);
+        } else {
             if (nft.owner == defaultAccount) {
                 var nodebtn = $("<button class='green button' data-lang='cancelloan'></button>").text(getString('cancelloan'));
                 nodetdbtn.on("click", nodebtn, function () { Loan.cancelDeposit(nft.id) });
@@ -17562,23 +17578,28 @@ Loan = {
 
         $("#tableloan").append(node);
     },
-    cancelDeposit:function(id){
-        console.log("cancelDeposit "+id);
-        contractsInstance.Loan.cancelDeposit(id,function(e,r){
-            afterSendTx(e,r);
+    cancelDeposit: function (id) {
+        console.log("cancelDeposit " + id);
+        var timenow = Math.floor((new Date()).getTime() / 1000);
+        if(UserNFT.nftInfos[id].borrowEndTime>timenow){
+            toastAlert(getString('isborrowed'));
+            return;
+        }
+        contractsInstance.Loan.cancelDeposit(id, function (e, r) {
+            afterSendTx(e, r);
         });
     },
-    borrowNFT:function(id){
-        console.log("borrowNFT "+id);
+    borrowNFT: function (id) {
+        console.log("borrowNFT " + id);
         showBorrowAlert(id);
     },
-    borrowSure:function(){
+    borrowSure: function () {
         console.log("borrowSure");
         var id = getSellAlertId();
         console.log("loan sure id=" + id);
 
         hideSellAlert();
-        
+
         id = parseInt(id);
 
         //loanInput
@@ -17610,22 +17631,22 @@ Loan = {
         var starttime = nft.startTime;
 
         var lasttime = nft.days.mul(86400).plus(nft.startTime);
-        var timenow = Math.floor((new Date()).getTime()/1000);
-        var timedelay = lasttime.sub(timenow).sub(30*60);
-        var loantime = new BN((day-1)*86400);
-        if(timedelay.lt(loantime)){
+        var timenow = Math.floor((new Date()).getTime() / 1000);
+        var timedelay = lasttime.sub(timenow).sub(30 * 60);
+        var loantime = new BN((day - 1) * 86400);
+        if (timedelay.lt(loantime)) {
             toastAlert(getString('cannotloanthislong'));
             return;
         }
-        if(price.mul(day).gt(defaultBalance)){
+        if (price.mul(day).gt(defaultBalance)) {
             toastAlert(getString('hotnotenough'));
             return;
         }
         contractsInstance.Loan.borrow(id, day, function (e, result) {
-            afterSendTx(e,result);
+            afterSendTx(e, result);
         });
     },
-    approve:function(){
+    approve: function () {
         contractsInstance.HotPot.approve(contractsInstance.Loan.address, web3.toHex(Math.pow(10, 30)), function (e, r) {
             afterSendTx(e, r);
         });
@@ -17636,7 +17657,7 @@ Loan = {
             toastAlert(getString('nftnotavailable'));
             return;
         }
-        if(nft.loan){
+        if (nft.loan) {
             toastAlert(getString('loaning'));
             return;
         }
@@ -17675,10 +17696,10 @@ Loan = {
         var day = parseInt(time);
 
         contractsInstance.Loan.deposit(id, day, price, function (e, result) {
-            afterSendTx(e,result);
+            afterSendTx(e, result);
         });
     },
-    createLoanNft:function(id,grade){
+    createLoanNft: function (id, grade) {
         var object = new Object;
         object.id = id;
         object.grade = grade;
@@ -17686,7 +17707,7 @@ Loan = {
         object.days = 0;
         object.startTime = 0;
         object.owner = null;
-        object.borrowEndTime=0;
+        object.borrowEndTime = 0;
         object.borrower = null;
         return object;
     }
