@@ -41,6 +41,7 @@ var mainContracts = {
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
     "invite":"",
+    "reserve":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
 }
 
 var ropstenContracts = {
@@ -51,16 +52,18 @@ var ropstenContracts = {
     "market": "0xE6C549f4599E051889699a616AC1816d8D2c0Be7",
     "reward": "0xEDcdDD6ED6DD29c7bfe4b7eF6Cc05B7b064506Cb",
     'invite':'0xEECc6288566CFAb69df891894cC85eeE24dEa9d5',
+    "reserve":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
 }
 
 var rinkebyContracts = {
-    "nft": "0x621CCeDcf61c15a258ED6D703183AaE1D38BC83E",
-    "hotpot": "0x3dEe8FAb57209CE2984ee6DfebdCB1600BF8E60E",
-    "gacha": "0x92285492d6c6455b1AD6081C5ED6D6F4f9D57d20",
-    "loan": "0x2CF7A7a18d5EdA21ab0101b7020D2de773cA75E7",
-    "market": "0x12880406515fD866e8D38c4E781c9e4FCe05dD11",
-    "reward": "0xE0449a6c84520c65f29bE4E7a51ED865e542224b",
-    'invite':'0xa3c7531104e453aEBD960D414c25B53a2f39D606',
+    "nft": "0xE8216d16D6CDA2A9f4A94d3C5AA8389583220FBc",
+    "hotpot": "0x570b9c42e8f0E69F31F010bB63e254b6461cD2b0",
+    "gacha": "0x0A2BD79e653c011b83041a7B73dB96d9Ca551857",
+    "loan": "0xc2f960c18965d0EA6B32a082118E4813B14f0280",
+    "market": "0xC275552bC2DFE15204e08D5CCEeDCd90D1a9f09f",
+    "reward": "0x7E7833229Bc35fFFFB780AEAa68eCcE881b549c6",
+    'invite':'0xbddD60A4dCFd837A571F5a4E3E51b32A1D5628Bb',
+    "reserve":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
 }
 
 var ganacheContracts = {
@@ -92,12 +95,12 @@ var ropstenStakeERC = {
 }
 
 var rinkebyPool = {
-    "usdt":"0x3611920F48A8D093c9C7b0b49F53eFbb723EC680",
-    "eth/usdt":"0x76a8dB501c97Ee4e80d770eA2Ef95Ca626D19e9b",
-    "wbtc":"0x8f14a96486406ba5927157D3D6F3A4d02780F048",
-    "usdc":"0x84D655a164d435224d3ebc8258dE3bE668c5BB33",
-    "hotpot":"0x1DAb228f078266d8A846CDf7abf3666AFb6adebE",
-    "hotpot/eth":"0x256d89ac4f2d347d89FaA830Ed312ff1743c332b"
+    "usdt":"0xA996C3Ae10B261B2456D973570E800934D7Ec372",
+    "eth/usdt":"0xe8BFe980cB9E176ADB80f0419f393C7e32FC3CC0",
+    "wbtc":"0x8f8285c7A0460ab93249DCcb3Cef531Ba205E643",
+    "usdc":"0x910C9E921D77813f12f95755930BB9e6d76bEf01",
+    "hotpot":"0xe95A2c37c82207bd5042aC2c05F962E1C8B8e958",
+    "hotpot/eth":"0x7A3ad3eCbF8daf6762DF5Ad80878b8B5B1B171B3"
 }
 
 var rinkebyStakeERC = {
@@ -105,8 +108,8 @@ var rinkebyStakeERC = {
     "eth/usdt":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",  
     "usdc":"0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",  
     "wbtc":"0x01be23585060835e02b77ef475b0cc51aa1e0709",
-    "hotpot/eth":"0x925385d319731Fffc5a595E821C70CB32f57120f",
-    "wbtc/eth":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23"
+    "wbtc/eth":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",
+    "hotpot/eth":"0x97dB9B4e4Bd76e847864D7d5cd53931748C8bca1",
 }
 
 var ganachePool = {
