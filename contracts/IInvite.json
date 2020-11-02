@@ -41,6 +41,25 @@
           "type": "address"
         }
       ],
+      "name": "calValidNum2",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
       "name": "calRatioUpdate",
       "outputs": [
         {
@@ -66,21 +85,21 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"calRatioUpdate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"calValidNum\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"generateCode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"validCode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{\"calRatioUpdate(address)\":{\"notice\":\"calculate the total ratio of stake claim\"},\"calValidNum(address)\":{\"notice\":\"calculate the valid users the inviter invite\"},\"generateCode(address)\":{\"notice\":\"generate an invite code when user trigger pull\"},\"validCode(address)\":{\"notice\":\"validate the invite code when user trigger pull\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol\":\"IInvite\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":6666},\"remappings\":[]},\"sources\":{\"/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol\":{\"keccak256\":\"0xd4069a75ea5b3a4c8c59022620dcacbfa997f4e8c5c5bce39b3ff654f08ce88d\",\"urls\":[\"bzz-raw://5f338c262a03ef09fa5ab271f61a4ddd85236434c4c3ec63e2bd269d29aecbc0\",\"dweb:/ipfs/QmTHz9kf64rqW7tC4kyGRatQ7Be5CaRmoMFGB86akfcDxu\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"calRatioUpdate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"calValidNum\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"calValidNum2\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"generateCode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"validCode\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{\"calRatioUpdate(address)\":{\"notice\":\"calculate the total ratio of stake claim\"},\"calValidNum(address)\":{\"notice\":\"calculate the valid users the inviter invite\"},\"calValidNum2(address)\":{\"notice\":\"calculate the valid users the inviter invite\"},\"generateCode(address)\":{\"notice\":\"generate an invite code when user trigger pull\"},\"validCode(address)\":{\"notice\":\"validate the invite code when user trigger pull\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol\":\"IInvite\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":6666},\"remappings\":[]},\"sources\":{\"/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol\":{\"keccak256\":\"0x143ff0ee501808b545d7af9ccb5308737d8802900dd67525fea2ed5efc4fdf6a\",\"urls\":[\"bzz-raw://277f24d181155295308d0f7cb57ab68c86080034b60b85e1aae4c787fff27f8c\",\"dweb:/ipfs/Qmchioac7n6mMqkXZSaq49o6wBUtmcs4uDf8rrMMkHnj9K\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.6.0;\n\ninterface IInvite{\n    /**\n        validate the invite code when user trigger pull\n     */\n    function validCode(address user) external;\n\n    /**\n        calculate the valid users the inviter invite\n     */\n    function calValidNum(address user) external view returns(uint256);\n\n    /**\n        calculate the total ratio of stake claim\n     */\n    function calRatioUpdate(address user) external view returns(uint256);\n\n    /**\n        generate an invite code when user trigger pull\n     */\n    function generateCode(address user) external;\n}",
+  "source": "pragma solidity ^0.6.0;\n\ninterface IInvite{\n    /**\n        validate the invite code when user trigger pull\n     */\n    function validCode(address user) external;\n\n    /**\n        calculate the valid users the inviter invite\n     */\n    function calValidNum(address user) external view returns(uint256);\n\n        /**\n        calculate the valid users the inviter invite\n     */\n    function calValidNum2(address user) external view returns(uint256);\n\n    /**\n        calculate the total ratio of stake claim\n     */\n    function calRatioUpdate(address user) external view returns(uint256);\n\n    /**\n        generate an invite code when user trigger pull\n     */\n    function generateCode(address user) external;\n}",
   "sourcePath": "/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol",
   "ast": {
     "absolutePath": "/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol",
     "exportedSymbols": {
       "IInvite": [
-        26
+        33
       ]
     },
-    "id": 27,
+    "id": 34,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -101,9 +120,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 26,
+        "id": 33,
         "linearizedBaseContracts": [
-          26
+          33
         ],
         "name": "IInvite",
         "nodeType": "ContractDefinition",
@@ -160,7 +179,7 @@
               "parameters": [],
               "src": "161:0:0"
             },
-            "scope": 26,
+            "scope": 33,
             "src": "120:42:0",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -246,7 +265,7 @@
               ],
               "src": "293:9:0"
             },
-            "scope": 26,
+            "scope": 33,
             "src": "237:66:0",
             "stateMutability": "view",
             "virtual": false,
@@ -254,13 +273,13 @@
           },
           {
             "body": null,
-            "documentation": "calculate the total ratio of stake claim",
-            "functionSelector": "b96a1f8b",
+            "documentation": "calculate the valid users the inviter invite",
+            "functionSelector": "50e4e46e",
             "id": 20,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "calRatioUpdate",
+            "name": "calValidNum2",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
@@ -274,7 +293,7 @@
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
                   "scope": 20,
-                  "src": "398:12:0",
+                  "src": "404:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -285,7 +304,7 @@
                     "id": 14,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "398:7:0",
+                    "src": "404:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -296,7 +315,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "397:14:0"
+              "src": "403:14:0"
             },
             "returnParameters": {
               "id": 19,
@@ -309,7 +328,7 @@
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
                   "scope": 20,
-                  "src": "434:7:0",
+                  "src": "440:7:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -320,7 +339,7 @@
                     "id": 17,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "434:7:0",
+                    "src": "440:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -330,23 +349,23 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "433:9:0"
+              "src": "439:9:0"
             },
-            "scope": 26,
-            "src": "374:69:0",
+            "scope": 33,
+            "src": "382:67:0",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "generate an invite code when user trigger pull",
-            "functionSelector": "1299a2e2",
-            "id": 25,
+            "documentation": "calculate the total ratio of stake claim",
+            "functionSelector": "b96a1f8b",
+            "id": 27,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "generateCode",
+            "name": "calRatioUpdate",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
@@ -359,8 +378,8 @@
                   "name": "user",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 25,
-                  "src": "542:12:0",
+                  "scope": 27,
+                  "src": "544:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -371,7 +390,7 @@
                     "id": 21,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "542:7:0",
+                    "src": "544:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -382,35 +401,121 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "541:14:0"
+              "src": "543:14:0"
             },
             "returnParameters": {
-              "id": 24,
+              "id": 26,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 25,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 27,
+                  "src": "580:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 24,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "580:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "579:9:0"
+            },
+            "scope": 33,
+            "src": "520:69:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "generate an invite code when user trigger pull",
+            "functionSelector": "1299a2e2",
+            "id": 32,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "generateCode",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 30,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 29,
+                  "name": "user",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 32,
+                  "src": "688:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 28,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "688:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "687:14:0"
+            },
+            "returnParameters": {
+              "id": 31,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "564:0:0"
+              "src": "710:0:0"
             },
-            "scope": 26,
-            "src": "520:45:0",
+            "scope": 33,
+            "src": "666:45:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 27,
-        "src": "25:542:0"
+        "scope": 34,
+        "src": "25:688:0"
       }
     ],
-    "src": "0:567:0"
+    "src": "0:713:0"
   },
   "legacyAST": {
     "absolutePath": "/Users/junhu/git/hotpotcontract/truffle/contracts/common/IInvite.sol",
     "exportedSymbols": {
       "IInvite": [
-        26
+        33
       ]
     },
-    "id": 27,
+    "id": 34,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -431,9 +536,9 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 26,
+        "id": 33,
         "linearizedBaseContracts": [
-          26
+          33
         ],
         "name": "IInvite",
         "nodeType": "ContractDefinition",
@@ -490,7 +595,7 @@
               "parameters": [],
               "src": "161:0:0"
             },
-            "scope": 26,
+            "scope": 33,
             "src": "120:42:0",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -576,7 +681,7 @@
               ],
               "src": "293:9:0"
             },
-            "scope": 26,
+            "scope": 33,
             "src": "237:66:0",
             "stateMutability": "view",
             "virtual": false,
@@ -584,13 +689,13 @@
           },
           {
             "body": null,
-            "documentation": "calculate the total ratio of stake claim",
-            "functionSelector": "b96a1f8b",
+            "documentation": "calculate the valid users the inviter invite",
+            "functionSelector": "50e4e46e",
             "id": 20,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "calRatioUpdate",
+            "name": "calValidNum2",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
@@ -604,7 +709,7 @@
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
                   "scope": 20,
-                  "src": "398:12:0",
+                  "src": "404:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -615,7 +720,7 @@
                     "id": 14,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "398:7:0",
+                    "src": "404:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -626,7 +731,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "397:14:0"
+              "src": "403:14:0"
             },
             "returnParameters": {
               "id": 19,
@@ -639,7 +744,7 @@
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
                   "scope": 20,
-                  "src": "434:7:0",
+                  "src": "440:7:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -650,7 +755,7 @@
                     "id": 17,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "434:7:0",
+                    "src": "440:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -660,23 +765,23 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "433:9:0"
+              "src": "439:9:0"
             },
-            "scope": 26,
-            "src": "374:69:0",
+            "scope": 33,
+            "src": "382:67:0",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
             "body": null,
-            "documentation": "generate an invite code when user trigger pull",
-            "functionSelector": "1299a2e2",
-            "id": 25,
+            "documentation": "calculate the total ratio of stake claim",
+            "functionSelector": "b96a1f8b",
+            "id": 27,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
-            "name": "generateCode",
+            "name": "calRatioUpdate",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
@@ -689,8 +794,8 @@
                   "name": "user",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 25,
-                  "src": "542:12:0",
+                  "scope": 27,
+                  "src": "544:12:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -701,7 +806,7 @@
                     "id": 21,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "542:7:0",
+                    "src": "544:7:0",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -712,26 +817,112 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "541:14:0"
+              "src": "543:14:0"
             },
             "returnParameters": {
-              "id": 24,
+              "id": 26,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 25,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 27,
+                  "src": "580:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 24,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "580:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "579:9:0"
+            },
+            "scope": 33,
+            "src": "520:69:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": "generate an invite code when user trigger pull",
+            "functionSelector": "1299a2e2",
+            "id": 32,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "generateCode",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 30,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 29,
+                  "name": "user",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 32,
+                  "src": "688:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 28,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "688:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "687:14:0"
+            },
+            "returnParameters": {
+              "id": 31,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "564:0:0"
+              "src": "710:0:0"
             },
-            "scope": 26,
-            "src": "520:45:0",
+            "scope": 33,
+            "src": "666:45:0",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 27,
-        "src": "25:542:0"
+        "scope": 34,
+        "src": "25:688:0"
       }
     ],
-    "src": "0:567:0"
+    "src": "0:713:0"
   },
   "compiler": {
     "name": "solc",
@@ -739,7 +930,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-28T16:05:04.513Z",
+  "updatedAt": "2020-11-02T03:13:48.277Z",
   "devdoc": {
     "methods": {}
   },
@@ -749,6 +940,9 @@
         "notice": "calculate the total ratio of stake claim"
       },
       "calValidNum(address)": {
+        "notice": "calculate the valid users the inviter invite"
+      },
+      "calValidNum2(address)": {
         "notice": "calculate the valid users the inviter invite"
       },
       "generateCode(address)": {
