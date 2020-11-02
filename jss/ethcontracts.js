@@ -54,13 +54,13 @@ var ropstenContracts = {
 }
 
 var rinkebyContracts = {
-    "nft": "0x1331b1784B258dE8b734bD9D80d3cdDf772d1Ab4",
-    "hotpot": "0xc30394D25537003BAab11F0E370aa9421081092A",
-    "gacha": "0xa6766a76bcaa2b644f0bf69060e37d2d2e152362",
-    "loan": "0x8d6Db51dB7381DdacE7Def41404148af90cAC648",
-    "market": "0x9D9c94B0567Af5275Aa053d898234528692a1826",
-    "reward": "0x8D923313feE6ce408FDfb5fD3F94bC8d628dcD71",
-    'invite':'0x0Ec45f1CB7B4f3002EBbADDF2Bd22013C36735F0',
+    "nft": "0x621CCeDcf61c15a258ED6D703183AaE1D38BC83E",
+    "hotpot": "0x3dEe8FAb57209CE2984ee6DfebdCB1600BF8E60E",
+    "gacha": "0x92285492d6c6455b1AD6081C5ED6D6F4f9D57d20",
+    "loan": "0x2CF7A7a18d5EdA21ab0101b7020D2de773cA75E7",
+    "market": "0x12880406515fD866e8D38c4E781c9e4FCe05dD11",
+    "reward": "0xE0449a6c84520c65f29bE4E7a51ED865e542224b",
+    'invite':'0xa3c7531104e453aEBD960D414c25B53a2f39D606',
 }
 
 var ganacheContracts = {
@@ -92,12 +92,12 @@ var ropstenStakeERC = {
 }
 
 var rinkebyPool = {
-    "usdt":"0x2074195527cd4c1bE39888B163Fb96A7EdeEd4e7",
-    "eth/usdt":"0x3c9BFC46EAe00302C3f3FA2a17d6AE03542C1bA8",
-    "wbtc":"0xE2A81Cc30c2bd5bCa860F2F329985bd60eBB8457",
-    "usdc":"0xC044095A9560AE291f9c0f18082Bd54817d3D637",
-    "hotpot":"0x9a2126F9a2a3F183f258eD220A1a70F6A45FDd61",
-    "hotpot/eth":"0x8E2140Ac7d0Ccd36fA9D72a091334d6D291654eA"
+    "usdt":"0x3611920F48A8D093c9C7b0b49F53eFbb723EC680",
+    "eth/usdt":"0x76a8dB501c97Ee4e80d770eA2Ef95Ca626D19e9b",
+    "wbtc":"0x8f14a96486406ba5927157D3D6F3A4d02780F048",
+    "usdc":"0x84D655a164d435224d3ebc8258dE3bE668c5BB33",
+    "hotpot":"0x1DAb228f078266d8A846CDf7abf3666AFb6adebE",
+    "hotpot/eth":"0x256d89ac4f2d347d89FaA830Ed312ff1743c332b"
 }
 
 var rinkebyStakeERC = {
@@ -105,7 +105,7 @@ var rinkebyStakeERC = {
     "eth/usdt":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",  
     "usdc":"0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",  
     "wbtc":"0x01be23585060835e02b77ef475b0cc51aa1e0709",
-    "hotpot/eth":"0x904e49cBe4756e19Eb63cbc90a8a482AF3DeF2B7",
+    "hotpot/eth":"0x925385d319731Fffc5a595E821C70CB32f57120f",
     "wbtc/eth":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23"
 }
 
