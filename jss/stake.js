@@ -187,6 +187,7 @@ Stake = {
             if(balanceOfHotpot[token])
             total = total.minus(balanceOfHotpot[token]);
         }
+        total = total.minus(200000*10**18);
         total = total.div(Math.pow(10, 18));
         console.log("calTotalCirculation=" + total);
         $("#totalcir").text(total.toFixed(2));
