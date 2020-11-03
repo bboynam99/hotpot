@@ -487,7 +487,7 @@ App = {
 Reward = {
     gotoPage: function () {
         console.log("Reward gotoPage");
-        // Reward.getRewardInfo();
+        Reward.getRewardInfo();
     },
     getRewardInfo: function () {
         console.log("getReward");
