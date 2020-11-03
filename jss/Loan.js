@@ -75,7 +75,7 @@ Loan = {
         var nodeprice = $("<td data-lang='priceday'></td>").text(getString('priceday'));
         var nodeendtime = $("<td data-lang='borrowtime'></td>").text(getString('borrowtime'));
         var nodeaction = $("<td data-lang='borrower' style='text-align: center!important;'></td>").text(getString('borrower'));
-        var nodeblock = $("<td data-lang='blocknum' style='text-align: center;'></td>").text(getString('blocknum'));
+        var nodeblock = $("<td data-lang='actiontime' style='text-align: center;'></td>").text(getString('actiontime'));
         node.append(nodeid);
         node.append(nodegrade);
         node.append(nodeprice);
@@ -153,7 +153,12 @@ Loan = {
 
         node.append(nodetdbtn);
 
-        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(nft.blockNumber);
+        var timestamp = web3.eth.getBlock(nft.blockNumber).timestamp;
+        var now = Math.floor((new Date()).getTime()/1000);
+        var delay = now - timestamp;
+        var delaystr = formatTime2Min(delay)+" "+getString('ago');
+
+        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
         node.append(nodeblockNumber);
 
         $("#tableloanhistory").append(node);

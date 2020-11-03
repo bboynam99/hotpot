@@ -3080,12 +3080,12 @@
         }
       },
       "links": {},
-      "address": "0x7A3ad3eCbF8daf6762DF5Ad80878b8B5B1B171B3",
-      "transactionHash": "0xc59ef57344893efc101418eb4aaf31db1ab0c75e7bff58930d7a7f601f9c11b6"
+      "address": "0x524B92380B08c8067f330d2a50c1D435f68eEB03",
+      "transactionHash": "0xbe021709c027721d6f3ff5c50fcaeb51cc5db56da771179d2284c0d446b1e67d"
     }
   },
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-11-02T06:09:33.902Z",
+  "updatedAt": "2020-11-03T06:23:58.052Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

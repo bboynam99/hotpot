@@ -59299,11 +59299,8 @@ App = {
                 if (currentPagePoolID != "") {
                     Stake.initpooldata(currentPagePoolID);
                 }
-                var spender = result.args.spender.replace(/\ +/g, "");
-                var gacha = contractAddress.gacha.replace(/\ +/g, "")
-                console.log("spender=" + spender + ",gacha=" + contractAddress.gacha);
-                var ss = encodeURIComponent(spender);
-                var ga = encodeURIComponent(contractAddress.gacha);
+                var spender = result.args.spender.toLowerCase();
+                var gacha = contractAddress.gacha.toLowerCase();
                 if (spender == gacha) {
                     $("#pull1").show();
                     $("#pull10").show();
@@ -59455,11 +59452,8 @@ App = {
                 }
 
                 hideTopMsg();
-                var spender = result.args.spender.replace(/\ +/g, "");
-                var gacha = contractAddress.gacha.replace(/\ +/g, "");
-                console.log("spender=" + spender + ",gacha=" + contractAddress.gacha);
-                var ss = encodeURIComponent(spender);
-                var ga = encodeURIComponent(contractAddress.gacha);
+                var spender = result.args.spender.toLowerCase();
+                var gacha = contractAddress.gacha.toLowerCase();
                 if (spender === gacha) {
                     $("#pull1").show();
                     $("#pull10").show();

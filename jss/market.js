@@ -100,7 +100,7 @@ Market = {
         var nodegrade = $("<td data-lang='grade'></td>").text(getString('grade'));
         var nodeprice = $("<td data-lang='price'></td>").text(getString('price'));
         var nodeaction = $("<td data-lang='buyer' style='text-align: center!important;'></td>").text(getString('buyer'));
-        var nodeblock = $("<td data-lang='blocknum' style='text-align: center;'></td>").text(getString('blocknum'));
+        var nodeblock = $("<td data-lang='actiontime' style='text-align: center;'></td>").text(getString('actiontime'));
         node.append(nodeid);
         node.append(nodegrade);
         node.append(nodeprice);
@@ -169,8 +169,13 @@ Market = {
         var nodetdbtn = $("<td style='text-align: center;'></td>").append(nodea);
 
         node.append(nodetdbtn);
+        
+        var timestamp = web3.eth.getBlock(nft.blockNumber).timestamp;
+        var now = Math.floor((new Date()).getTime()/1000);
+        var delay = now - timestamp;
+        var delaystr = formatTime2Min(delay)+" "+getString('ago');
 
-        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(nft.blockNumber);
+        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
         node.append(nodeblockNumber);
 
         $("#tablesellhistory").append(node);

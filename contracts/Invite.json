@@ -15336,8 +15336,8 @@
         }
       },
       "links": {},
-      "address": "0xbddD60A4dCFd837A571F5a4E3E51b32A1D5628Bb",
-      "transactionHash": "0x5a8dd36ea58954eb55d5f68cdfcc7ce83f1ef5234089da82a6bfadae8a58a06b"
+      "address": "0xa4B9a2854C43d02e365E770408759A063784901a",
+      "transactionHash": "0x540e039f7f6da5e4a0ee1ebcf9284f737231c411cbbdaeb6019f779eaa6642b7"
     },
     "1603889692465": {
       "events": {
@@ -16044,7 +16044,7 @@
     }
   },
   "schemaVersion": "3.3.0",
-  "updatedAt": "2020-11-02T06:09:33.936Z",
+  "updatedAt": "2020-11-03T06:23:58.093Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
