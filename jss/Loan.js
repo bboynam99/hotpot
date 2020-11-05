@@ -1,6 +1,3 @@
-const utils = require('web3-utils');
-const BN = require('bn.js');
-
 
 Loan = {
     listSize: 0,
@@ -13,25 +10,22 @@ Loan = {
         Loan.initLoanTable();
         contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.Loan._address }, function (error, result) {
             if (!error) {
-                console.log("Approve success!");
                 if (Loan.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Loan.eventBlocks.add(result.blockNumber);
-
-                var nb = new BN(10);
-                nb = nb.pow(new BN(30));
-                if (result.args.value.lt(nb)) {
+                result.returnValues.value = new BigNumber(result.returnValues.value);
+                if (result.returnValues.value.lt(new BigNumber(10**30))) {
                     return;
                 }
-                Loan.allowance = result.args.value;
-                console.log("approval spender=" + result.args.spender);
+                Loan.allowance = result.returnValues.value;
+                console.log("approval spender=" + result.returnValues.spender);
                 Loan.initLoanTable();
             }
         });
-        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.Loan._address).send(function (e, r) {
+        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.Loan._address).call(function (e, r) {
             if (!e) {
-                Loan.allowance = r;
+                Loan.allowance = new BigNumber(r);
             }
             contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
                 console.log("market getListToken=" + r);
@@ -90,8 +84,8 @@ Loan = {
                 if (event.event == 'TokenBorrowed') {
                     console.log("TokenBorrowed");
                     // grade
-                    var borrow = Loan.createBorrowInfo(event.args.borrower, event.args.tokenId,
-                        event.args.pricePerDay, event.args.borrowDays, event.transactionHash, event.blockNumber);
+                    var borrow = Loan.createBorrowInfo(event.returnValues.borrower, event.returnValues.tokenId,
+                        event.returnValues.pricePerDay, event.returnValues.borrowDays, event.transactionHash, event.blockNumber);
                     Loan.addBorrowInfo(borrow);
                 }
             }
@@ -305,7 +299,7 @@ Loan = {
             toastAlert(getString('isborrowed'));
             return;
         }
-        contractsInstance.Loan.cancelDeposit(id, function (e, r) {
+        contractsInstance.Loan.cancelDeposit(id).send({from:defaultAccount}, function (e, r) {
             afterSendTx(e, r);
         });
     },
@@ -353,7 +347,7 @@ Loan = {
         var lasttime = nft.days.mul(86400).plus(nft.startTime);
         var timenow = Math.floor((new Date()).getTime() / 1000);
         var timedelay = lasttime.sub(timenow).sub(30 * 60);
-        var loantime = new BN((day - 1) * 86400);
+        var loantime = (day - 1) * 86400;
         if (timedelay.lt(loantime)) {
             toastAlert(getString('cannotloanthislong'));
             return;
@@ -362,12 +356,12 @@ Loan = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Loan.borrow(id, day, function (e, result) {
+        contractsInstance.Loan.borrow(id, day).send({from:defaultAccount}, function (e, result) {
             afterSendTx(e, result);
         });
     },
     approve: function () {
-        contractsInstance.HotPot.methods.approve(contractsInstance.Loan._address, web3.utils.toHex(Math.pow(10, 30))).send(function (e, r) {
+        contractsInstance.HotPot.methods.approve(contractsInstance.Loan._address, web3.utils.numberToHex(new BigNumber(Math.pow(10, 30)))).send({from:defaultAccount},function (e, r) {
             afterSendTx(e, r);
         });
     },
@@ -394,7 +388,7 @@ Loan = {
             toastAlert(getString('priceerror'));
             return;
         }
-        price = web3.utils.toHex(price * Math.pow(10, 18));
+        price = web3.utils.numberToHex(new BigNumber(price * Math.pow(10, 18)));
         id = parseInt(id);
 
         //loanInput
@@ -415,7 +409,7 @@ Loan = {
 
         var day = parseInt(time);
 
-        contractsInstance.Loan.methods.deposit(id, day, price).send(function (e, result) {
+        contractsInstance.Loan.methods.deposit(id, day, price).send({from:defaultAccount},function (e, result) {
             afterSendTx(e, result);
         });
     },

@@ -1,4 +1,3 @@
-
 Gacha = {
     gachaHx: null,
     eventBlocks: new Set(),
@@ -13,21 +12,21 @@ Gacha = {
         contractsInstance.Gacha.events.GachaTicket(function (error, result) {
             if (error) { console.log("GachaTicket error " + error); }
             else {
-                console.log("GachaTicket block num=" + result.blockNumber);
+                // console.log("GachaTicket block num=" + result.blockNumber);
                 if (Gacha.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Gacha.eventBlocks.add(result.blockNumber);
-                console.log("GachaTicket " + result.args);
+                console.log("GachaTicket " + result.returnValues);
                 $("#globalmsg").show();
 
                 $("#globalmsg").attr("href", getEthersanUrl(result.transactionHash));
-                $("#gachauser").text(result.args._owner);
+                $("#gachauser").text(result.returnValues._owner);
                 setTimeout(function () {
                     $("#globalmsg").hide();
                 }, 5000);
 
-                if (result.args._owner == defaultAccount) {
+                if (result.returnValues._owner == defaultAccount) {
                     hideTopMsg();
                 }
 
@@ -43,13 +42,13 @@ Gacha = {
             if (e) {
                 console.log("GachaTicket error " + e);
             } else {
-                console.log("GachaNothing block num=" + result.blockNumber);
+                // console.log("GachaNothing block num=" + result.blockNumber);
                 if (Gacha.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Gacha.eventBlocks.add(result.blockNumber);
 
-                console.log("GachaNothing " + result.args);
+                console.log("GachaNothing " + result.returnValues);
                 showImportantMsg(getString('GachaNothing'), getEthersanUrl(result.transactionHash));
             }
         });
@@ -61,7 +60,7 @@ Gacha = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Gacha.methods.pull().send({ gas: 1200000 }, function (e, result) {
+        contractsInstance.Gacha.methods.pull().send({from:defaultAccount, gas: 1200000 }, function (e, result) {
             if (e) {
                 console.log("pull error:" + e);
             } else {
@@ -78,7 +77,7 @@ Gacha = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Gacha.methods.pull10().send({ gas: 1200000 }, function (e, result) {
+        contractsInstance.Gacha.methods.pull10().send({from:defaultAccount, gas: 1200000 }, function (e, result) {
             if (e) {
                 console.log("pull 10 error:" + e);
             } else {
@@ -90,7 +89,7 @@ Gacha = {
         });
     },
     approve: function () {
-        contractsInstance.HotPot.methods.approve(contractAddress.gacha, web3.utils.toHex(Math.pow(10, 30))).call(function (e, result) {
+        contractsInstance.HotPot.methods.approve(contractAddress.gacha, web3.utils.numberToHex(new BigNumber(Math.pow(10, 30)))).send({from:defaultAccount},function (e, result) {
             if (e) {
                 console.log("Gacha approve error " + e);
             } else {

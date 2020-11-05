@@ -7,34 +7,32 @@ Invite = {
 
         contractsInstance.Invite.events.InviteCreated({ creator: defaultAccount }, function (error, result) {
             if (!error) {
-                console.log("InviteCreated");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Invite.eventBlocks.add(result.blockNumber);
+                console.log("InviteCreated");
                 Invite.getMyInviteCode();
             }
         });
 
         contractsInstance.Invite.events.InviteInput({ user: defaultAccount }, function (error, result) {
             if (!error) {
-                console.log("InviteInput");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Invite.eventBlocks.add(result.blockNumber);
-
+                console.log("InviteInput");
                 Invite.getInputInviteCode();
             }
         });
         contractsInstance.Invite.events.InviteValidate({ validator: defaultAccount }, function (error, result) {
             if (!error) {
-                console.log("InviteValidate");
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Invite.eventBlocks.add(result.blockNumber);
-
+                console.log("InviteValidate");
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();
                 Invite.claimRatio += 0.01;
@@ -108,7 +106,7 @@ Invite = {
             }else if(code<1000){
                 toastAlert(getString('inputwrong'));
             }else
-            contractsInstance.Invite.inputCode(code,function(e,r){
+            contractsInstance.Invite.inputCode(code).send({from:defaultAccount},function(e,r){
                 afterSendTx(e,r);
             });
         }else{

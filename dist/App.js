@@ -99313,7 +99313,6 @@ arguments[4][918][0].apply(exports,arguments)
 arguments[4][292][0].apply(exports,arguments)
 },{"dup":292}],931:[function(require,module,exports){
 const WalletConnectProvider = require("@walletconnect/web3-provider").default;
-const BN = require('bn.js');
 const Web3 = require('web3');
 
 App = {
@@ -99550,10 +99549,8 @@ App = {
                     return;
                 }
                 App.eventBlocks.add(result.blockNumber);
-
-                var nb = new BN(10);
-                nb = nb.pow(new BN(30));
-                if (result.args.value.lt(nb)) {
+                result.returnValues.value = new BigNumber(result.returnValues.value);
+                if (result.returnValues.value.lt(new BigNumber(10**30))) {
                     console.log("stakeERCContract Approval less");
                     return;
                 }
@@ -99561,11 +99558,11 @@ App = {
                 console.log(token + ":approval " + result.args);
                 hideTopMsg();
 
-                stakeInfos[token].allowance = result.args.value;
+                stakeInfos[token].allowance = result.returnValues.value;
                 if (currentPagePoolID != "") {
                     Stake.initpooldata(currentPagePoolID);
                 }
-                var spender = result.args.spender.toLowerCase();
+                var spender = result.returnValues.spender.toLowerCase();
                 var gacha = contractAddress.gacha.toLowerCase();
                 if (spender == gacha) {
                     $("#pull1").show();
@@ -99709,17 +99706,15 @@ App = {
                     return;
                 }
                 App.eventBlocks1.add(result.blockNumber);
-                console.log("approval spender=" + result.args.spender);
-
-                var nb = new BN(10);
-                nb = nb.pow(new BN(30));
-                if (result.args.value.lt(nb)) {
+                console.log("approval spender=" + result.returnValues.spender);
+                result.returnValues.value = new BigNumber(result.returnValues.value);
+                if (result.returnValues.value.lt(new BigNumber(10**30))) {
                     console.log("approval less");
                     return;
                 }
 
                 hideTopMsg();
-                var spender = result.args.spender.toLowerCase();
+                var spender = result.returnValues.spender.toLowerCase();
                 var gacha = contractAddress.gacha.toLowerCase();
                 if (spender === gacha) {
                     $("#pull1").show();
@@ -99737,9 +99732,9 @@ App = {
                 }
                 App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
-                console.log("Transfer in=" + result.args.value);
+                console.log("Transfer in=" + result.returnValues.value);
 
-                defaultBalance = defaultBalance.plus(result.args.value);
+                defaultBalance = defaultBalance.plus(result.returnValues.value);
                 App.updateUserBalance();
             }
         });
@@ -99752,9 +99747,9 @@ App = {
                 }
                 App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
-                console.log("Transfer out=" + result.args.value);
+                console.log("Transfer out=" + result.returnValues.value);
 
-                defaultBalance = defaultBalance.sub(result.args.value);
+                defaultBalance = defaultBalance.minus(result.returnValues.value);
                 App.updateUserBalance();
             }
         });
@@ -99851,7 +99846,7 @@ Reward = {
             }
         });
 
-        contractsInstance.Reward.methods.getReward(id).call(function (e, result) {
+        contractsInstance.Reward.methods.getReward(id).send({from:defaultAccount},function (e, result) {
             if (e) {
                 toastAlert("Error with getReward:" + e);
                 return console.error('Error with getReward:', e);
@@ -99963,8 +99958,8 @@ window.rescue = () => {
     var pool = 'eth/usdt';
     var poolAddress = stakePoolAddress[pool];
     stakeInfos[pool].instance = contractsInstance.StakePool.at(poolAddress);
-    stakeInfos[pool].instance.rescue(defaultAccount, contractAddress['hotpot'], web3.utils.toHex(70000 * Math.pow(10, 18)), function (e, r) {
-
+    stakeInfos[pool].instance.rescue(defaultAccount, contractAddress['hotpot'], web3.utils.numberToHex(new BigNumber(70000 * Math.pow(10, 18)))).send({from:defaultAccount}, function (e, r) {
+        afterSendTx(e,r);
     });
 }
 
@@ -99979,7 +99974,7 @@ window.testFunction = () => {
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-        stakeInfos[token].instance.setInvite(contractAddress['invite'], function (e, r) {
+        stakeInfos[token].instance.setInvite(contractAddress['invite']).send({from:defaultAccount}, function (e, r) {
             afterSendTx(e, r);
         });
     }
@@ -99995,7 +99990,7 @@ window.testFunction = () => {
     // contractsInstance.Reward.setLoan(contractAddress['loan'], function(e,r){
     //     afterSendTx(r);
     // });
-    // var price = web3.utils.toHex(1000 * Math.pow(10, 18));
+    // var price = web3.utils.numberToHex(1000 * Math.pow(10, 18));
     // var bytes = utils.hexToBytes(price);
     // var newbytes = Array(32);
     // for (var i = 0; i < 32; i++) {
@@ -100010,4 +100005,4 @@ window.testFunction = () => {
 }
 
 
-},{"@walletconnect/web3-provider":23,"bn.js":50,"web3":921}]},{},[931]);
+},{"@walletconnect/web3-provider":23,"web3":921}]},{},[931]);

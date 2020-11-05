@@ -3,7 +3,7 @@ Stake = {
     cliamTimer: null,
     eventBlocks: new Set(),
     notifyRewardAmount: function (token, amount) {
-        var amount = web3.utils.toHex(amount * 10 ** 18);
+        var amount = web3.utils.numberToHex(new BigNumber(amount * 10 ** 18));
         stakeInfos[token].instance.methods.notifyRewardAmount(amount).call(function (e, result) {
             if (e) {
                 console.log("stake approve error " + e);
@@ -26,7 +26,7 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         } else {
-            token.instance.methods.getRewardByNFT(id).call(function (e, r) {
+            token.instance.methods.getRewardByNFT(id).send({from:defaultAccount},function (e, r) {
                 afterSendTx(e, r);
             });
         }
@@ -36,7 +36,8 @@ Stake = {
         if (currentPagePoolID != "") {
             var stakeToken = stakeERCContract[currentPagePoolID];
             console.log("approve "+stakeToken._address);
-            stakeToken.methods.approve(stakePoolAddress[currentPagePoolID], web3.utils.toHex(Math.pow(10, 30))).send(function (e, result) {
+            var num  = new BigNumber(10**30);
+            stakeToken.methods.approve(stakePoolAddress[currentPagePoolID], web3.utils.numberToHex(num)).send({from:defaultAccount},function (e, result) {
                 afterSendTx(e,result);
                 if(!e){
                     $("#approvestake").text(getString('approvestake') + "...");
@@ -59,7 +60,7 @@ Stake = {
             toastAlert(getString('canclaimtoday'));
             return;
         }
-            token.instance.methods.getRewardFree().send(function (e, r) {
+            token.instance.methods.getRewardFree().send({from:defaultAccount},function (e, r) {
                 afterSendTx(e, r);
             });
         }
@@ -122,9 +123,9 @@ Stake = {
                 toastAlert(getString('withdrawcannotbezero'));
                 return;
             }
-
-            var hex = web3.utils.toHex(stake * Math.pow(10, token.decimals));
-            token.instance.methods.withdraw(hex).send( function (e, result) {
+            var num = new BigNumber(stake * Math.pow(10, token.decimals));
+            var hex = web3.utils.numberToHex(num);
+            token.instance.methods.withdraw(hex).send({from:defaultAccount}, function (e, result) {
                 if (e) {
                     return console.error('Error with stake:', e);
                 }
@@ -142,9 +143,9 @@ Stake = {
                 toastAlert(getString('stakecannotbezero'));
                 return;
             }
-
-            var hex = web3.utils.toHex(stake * Math.pow(10, token.decimals));
-            token.instance.methods.stake(hex).send({from: defaultAccount},function (e, result) {
+            var num = new BigNumber(stake * Math.pow(10, token.decimals));
+            var hex = web3.utils.numberToHex(num);
+            token.instance.methods.stake(hex).send({from:defaultAccount},{from: defaultAccount},function (e, result) {
                 if (e) {
                     return console.error('Error with stake:', e);
                 }
@@ -308,8 +309,8 @@ Stake = {
                 // console.log('eventResult:', eventResult);
                 toastAlert("Stake success!");
                 console.log("Staked");
-                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.plus(result.args.amount);
-                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.plus(result.args.amount);
+                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.plus(result.returnValues.amount);
+                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.plus(result.returnValues.amount);
                 if (currentPagePoolID == poolName)
                     Stake.initpooldata(currentPagePoolID);
             }
@@ -327,8 +328,8 @@ Stake = {
                 Stake.eventBlocks.add(result.blockNumber);
                 toastAlert("Withdraw success!");
                 console.log("Withdrawn");
-                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.sub(result.args.amount);
-                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.sub(result.args.amount);
+                stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.minus(result.returnValues.amount);
+                stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.minus(result.returnValues.amount);
                 if (currentPagePoolID == poolName)
                     Stake.initpooldata(currentPagePoolID);
             }
@@ -346,10 +347,10 @@ Stake = {
                 // console.log('eventResult:', eventResult);
                 // toastAlert("Withdraw success!");
                 console.log("RewardPaid");
-                stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.sub(result.args.reward);
+                stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.minus(result.returnValues.reward);
                 
                 console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
-                if (result.args.percent < 7) {
+                if (result.returnValues.percent < 7) {
                     stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
                 }
                 if (currentPagePoolID == poolName)
@@ -366,7 +367,8 @@ Stake = {
                 stakeInfos[poolName].userStake = new BigNumber(result);
                 stakeInfos[poolName].instance.methods.earned(defaultAccount).call( function (e, result) {
                     console.log("initSinglePool pool=" + poolName + ",earned:" + result);
-                    stakeInfos[poolName].userEarn = result;
+
+                    stakeInfos[poolName].userEarn = new BigNumber(result);
                     stakeInfos[poolName].instance.methods.rewardRate().call(function (e, result) {
                         console.log("initSinglePool pool=" + poolName + ",rewardRate:" + result);
                         stakeInfos[poolName].rewardRate = new BigNumber(result);

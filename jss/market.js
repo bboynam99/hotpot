@@ -1,12 +1,10 @@
 const utils = require('web3-utils');
-const BigNumber = require("big-number");
-const BN = require('bn.js');
 
 function getPriceBytes(price) {
     var p = new BigNumber(price);
     p.mult(10**18);
     console.log("p="+p.toString());
-    return utils.padLeft(utils.toHex(p.toString()), 64)
+    return utils.padLeft(utils.numberToHex(p.toString()), 64)
 }
 
 Market = {
@@ -21,24 +19,23 @@ Market = {
         Market.initSellTable();
         contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket._address }, function (error, result) {
             if (!error) {
-                console.log("Market Approval");
+                // console.log("Market Approval");
                 if (Market.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 Market.eventBlocks.add(result.blockNumber);
-                
-                var nb = new BN(10);
-                nb = nb.pow(new BN(30));
-                if(result.args.value.lt(nb)){
+                result.returnValues.value = new BigNumber(result.returnValues.value);
+
+                if(result.returnValues.value.lt(new BigNumber(10**30))){
                     return;
                 }
                 
-                Market.allowance = result.args.value;
-                console.log("approval spender=" + result.args.spender);
+                Market.allowance = result.returnValues.value;
+                console.log("approval spender=" + result.returnValues.spender);
                 Market.initSellTable();
             }
         });
-        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.NFTMarket._address).send(function (e, r) {
+        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.NFTMarket._address).call(function (e, r) {
             if (!e) {
                 Market.allowance = r;
             }
@@ -65,9 +62,9 @@ Market = {
                 toastAlert("Error:" + e.message);
             } else {
                 showTopMsg("List Success", 4000);
-                var id = result.args._tokenId;
-                var price = result.args._price;
-                var seller = result.args._seller;
+                var id = result.returnValues._tokenId;
+                var price = result.returnValues._price;
+                var seller = result.returnValues._seller;
 
                 Market.listIds.push(id);
                 var nft = Market.createSellNft(id,1);
@@ -88,7 +85,7 @@ Market = {
                 return;
             }
             Market.eventBlocks.add(result.blockNumber);
-            Market.removeNFT(r.args._tokenId);
+            Market.removeNFT(r.returnValues._tokenId);
         });
         Market.addHistory();
     },
@@ -113,8 +110,8 @@ Market = {
                 var event = r[i];
                 if(event.event == 'Swapped'){
                     console.log("Swapped");
-                    var info = Market.createSellInfo(event.args._buyer,event.args._tokenId,
-                        event.args._price,event.transactionHash,event.blockNumber);
+                    var info = Market.createSellInfo(event.returnValues._buyer,event.returnValues._tokenId,
+                        event.returnValues._price,event.transactionHash,event.blockNumber);
                     Market.addSellInfo(info);
                 }
             }
@@ -195,13 +192,13 @@ Market = {
         $(id).remove();
     },
     approve:function(){
-        contractsInstance.HotPot.methods.approve(contractsInstance.NFTMarket._address, web3.utils.toHex(Math.pow(10, 30))).send(function (e, r) {
+        contractsInstance.HotPot.methods.approve(contractsInstance.NFTMarket._address, web3.utils.numberToHex(new BigNumber(Math.pow(10, 30)))).send({from:defaultAccount},function (e, r) {
             afterSendTx(e, r);
         });
     },
     cancelSell: function (id) {
         console.log("cancleSell " + id);
-        contractsInstance.NFTMarket.methods.unlist(id).send(function (e, r) {
+        contractsInstance.NFTMarket.methods.unlist(id).send({from:defaultAccount},function (e, r) {
             afterSendTx(e, r);
         });
     },
@@ -212,7 +209,7 @@ Market = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.NFTMarket.methods.swap(id).send( function (e, r) {
+        contractsInstance.NFTMarket.methods.swap(id).send({from:defaultAccount}, function (e, r) {
             afterSendTx(e, r);
         })
     },
@@ -239,11 +236,8 @@ Market = {
             toastAlert(getString('priceerror'));
             return;
         }
-        // price = web3.utils.toHex(price * Math.pow(10, 18));
-        // var bn = new BigNumber(price*10**18);
-        // price = utils.padLeft(utils.toHex(bn), 64)
         id = parseInt(id);
-        contractsInstance.NFTHotPot.methods.safeTransferFrom['address,address,uint256,bytes'](defaultAccount, contractAddress.market, id, getPriceBytes(price)).send( function (e, result) {
+        contractsInstance.NFTHotPot.methods.safeTransferFrom['address,address,uint256,bytes'](defaultAccount, contractAddress.market, id, getPriceBytes(price)).send({from:defaultAccount}, function (e, result) {
             if (e) {
                 toastAlert("Error:" + e.message);
             } else {
