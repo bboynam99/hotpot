@@ -8,7 +8,7 @@ Loan = {
     eventBlocks1: new Set(),
     getLoan: function () {
         Loan.initLoanTable();
-        contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.Loan._address }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({ filter:{owner: defaultAccount, spender: contractsInstance.Loan._address} }, function (error, result) {
             if (!error) {
                 if (Loan.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -29,9 +29,9 @@ Loan = {
             }
             contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
                 console.log("market getListToken=" + r);
-                Loan.listIds = r;
                 for (var i = 0; i < r.length; i++) {
-                    Loan.getNFTInfo(r[i]);
+                    Loan.listIds.push(parseInt(r[i]));
+                    Loan.getNFTInfo(parseInt(r[i]));
                 }
             });
         });
@@ -42,22 +42,55 @@ Loan = {
             }
         });
 
-        // contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
-        //     console.log("getLoanList=" + r);
-        //     if (!e) {
-        //         Loan.listIds = r;
-        //     }
-        // });
-        contractsInstance.Loan.events.TokenDeposit(function (e, r) {
+        contractsInstance.Loan.events.TokenDeposit(function (e, result) {
             console.log("TokenDeposit");
+            Loan.listIds.push(result.returnValues.tokenId);
+            Loan.getNFTInfo(result.returnValues.tokenId);
+            if(result.returnValues.owner==defaultAccount){
+                UserNFT.addLoanList(parseInt(result.returnValues.tokenId));
+            }
         });
-        contractsInstance.Loan.events.TokenCancelDeposit(function (e, r) {
-            console.log("TokenCancelDeposit");
+
+        contractsInstance.Loan.events.TokenCancelDeposit(function (e, result) {
+            if (Loan.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Loan.eventBlocks.add(result.blockNumber);
+            console.log("TokenCancelDeposit block num=" + result.blockNumber);
+
+            if(result.returnValues.owner==defaultAccount){
+                UserNFT.removeLoanList(parseInt(result.returnValues.tokenId));
+            }
+            Loan.removeNFT(parseInt(result.returnValues.tokenId));
         });
-        contractsInstance.Loan.events.TokenBorrowed(function (e, r) {
+        contractsInstance.Loan.events.TokenBorrowed(function (e, result) {
             console.log("TokenBorrowed");
+            if (Loan.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Loan.eventBlocks.add(result.blockNumber);
+            console.log("TokenBorrowed block num=" + result.blockNumber);
+
+            Loan.removeNFT(parseInt(result.returnValues.tokenId));
         });
         Loan.addHistory();
+    },
+    removeNFT:function(tokenId){
+        // listIds
+        // listTokens
+        var position = -1;
+        for (var i = 0; i < Loan.listIds.length; i++) {
+            if (tokenId == Loan.listIds[i]) {
+                position = i;
+                break;
+            }
+        }
+        if (position != -1) {
+            Loan.listIds.splice(position, 1);
+        }
+        delete Loan.listTokens[tokenId];
+
+        Loan.initLoanTable();
     },
     addHistory: function () {
         console.log("addHistory");
@@ -107,7 +140,6 @@ Loan = {
         // $("#loanhistory").append(h);
 
         var node = $("<tr style='height:60px!important;'></tr>");
-
 
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
         node.append(nodeid);
@@ -299,7 +331,7 @@ Loan = {
             toastAlert(getString('isborrowed'));
             return;
         }
-        contractsInstance.Loan.cancelDeposit(id).send({from:defaultAccount}, function (e, r) {
+        contractsInstance.Loan.methods.cancelDeposit(id).send({from:defaultAccount}, function (e, r) {
             afterSendTx(e, r);
         });
     },

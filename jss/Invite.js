@@ -5,7 +5,7 @@ Invite = {
     eventBlocks: new Set(),
     initInviteInfo: function () {
 
-        contractsInstance.Invite.events.InviteCreated({ creator: defaultAccount }, function (error, result) {
+        contractsInstance.Invite.events.InviteCreated({ filter:{creator: defaultAccount} }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -16,7 +16,7 @@ Invite = {
             }
         });
 
-        contractsInstance.Invite.events.InviteInput({ user: defaultAccount }, function (error, result) {
+        contractsInstance.Invite.events.InviteInput({ filter:{user: defaultAccount} }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -26,7 +26,7 @@ Invite = {
                 Invite.getInputInviteCode();
             }
         });
-        contractsInstance.Invite.events.InviteValidate({ validator: defaultAccount }, function (error, result) {
+        contractsInstance.Invite.events.InviteValidate({ filter:{validator: defaultAccount} }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;

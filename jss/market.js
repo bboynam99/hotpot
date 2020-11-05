@@ -18,7 +18,7 @@ Market = {
         Market.listIds.splice(0, 1);
 
         Market.initSellTable();
-        contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket._address }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({ filter:{owner: defaultAccount, spender: contractsInstance.NFTMarket._address} }, function (error, result) {
             if (!error) {
                 // console.log("Market Approval");
                 if (Market.eventBlocks.has(result.blockNumber)) {
@@ -85,11 +85,11 @@ Market = {
         });
         console.log("Unlisted");
         contractsInstance.NFTMarket.events.Unlisted(function (e, result) {
-            console.log("Unlisted block num=" + result.blockNumber);
             if (Market.eventBlocks.has(result.blockNumber)) {
                 return;
             }
             Market.eventBlocks.add(result.blockNumber);
+            console.log("Unlisted block num=" + result.blockNumber);
             if(result.returnValues._seller==defaultAccount){
                 UserNFT.removeSellList(parseInt(result.returnValues._tokenId));
             }

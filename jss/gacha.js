@@ -29,7 +29,7 @@ Gacha = {
                 if (result.returnValues._owner == defaultAccount) {
                     hideTopMsg();
                 }
-
+                
                 UserNFT.totalNFT=UserNFT.totalNFT.plus(1);
                 UserNFT.updateTotalNFT();
             }

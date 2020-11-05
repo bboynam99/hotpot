@@ -175,8 +175,15 @@ UserNFT = {
     gotoMyPage: function () {
 
     },
+    addLoanList:function(tokenId){
+        console.log("addLoanList "+tokenId);
+        UserNFT.nftInfos[tokenId].loan = true;
+        UserNFT.updateNFTTable();
+    },
     removeLoanList: function (tokenId) {
-
+        console.log("removeLoanList "+tokenId);
+        UserNFT.nftInfos[tokenId].loan = false;
+        UserNFT.updateNFTTable();
     },
     removeSellList: function (tokenId) {
         console.log("removeSellList " + tokenId);
@@ -273,7 +280,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.events.UseTicket({ owner: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.UseTicket({ filter:{owner: defaultAccount} }, function (e, r) {
 
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -286,7 +293,7 @@ UserNFT = {
 
             UserNFT.updateNFTTable();
         });
-        contractsInstance.NFTHotPot.events.UseTicket({ tokenId: UserNFT.borrowIds }, function (e, r) {
+        contractsInstance.NFTHotPot.events.UseTicket({ filter:{tokenId: UserNFT.borrowIds} }, function (e, r) {
 
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;

@@ -228,7 +228,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        stakeERCContract[token].events.Approval({ owner: defaultAccount }, function (error, result) {
+        stakeERCContract[token].events.Approval({ filter:{owner: defaultAccount} }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
@@ -385,7 +385,7 @@ App = {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Approval({ owner: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({filter:{owner: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -411,7 +411,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({ to: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({filter:{ to: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -426,7 +426,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({ from: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({filter:{ from: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -526,7 +526,7 @@ Reward = {
     },
     rewardByNFT: function (id) {
         console.log("rewardByNFT : " + id);
-        contractsInstance.Reward.events.WithdrawReward({ sender: defaultAccount }, function (e, result) {
+        contractsInstance.Reward.events.WithdrawReward({ filter:{sender: defaultAccount} }, function (e, result) {
             if (!e) {
                 toastAlert(getString('rewardsuccess'));
             }
