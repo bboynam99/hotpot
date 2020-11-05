@@ -229,7 +229,7 @@ Loan = {
         }
     },
     addNFTToTable: function (nft) {
-        var lasttime = nft.days.mul(86400).plus(nft.startTime);
+        var lasttime = nft.days*(86400)+(nft.startTime);
         var timenow = Math.floor((new Date()).getTime() / 1000);
         if (timenow > lasttime) {
             console.log("this token is out of date");
@@ -345,9 +345,9 @@ Loan = {
         var days = nft.days;
         var starttime = nft.startTime;
 
-        var lasttime = nft.days.mul(86400).plus(nft.startTime);
+        var lasttime = nft.days*(86400)+(nft.startTime);
         var timenow = Math.floor((new Date()).getTime() / 1000);
-        var timedelay = lasttime.sub(timenow).sub(30 * 60);
+        var timedelay = lasttime-(timenow)-(30 * 60);
         var loantime = (day - 1) * 86400;
         if (timedelay.lt(loantime)) {
             toastAlert(getString('cannotloanthislong'));

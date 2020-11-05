@@ -133,7 +133,7 @@ App = {
         );
         console.log("account=" + accounts[0]);
         // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
-        defaultAccount = accounts[0];
+        defaultAccount = web3.utils.toChecksumAddress(accounts[0]);
         return App.initContract();
     },
     initContract: function () {

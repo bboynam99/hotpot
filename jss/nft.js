@@ -199,12 +199,14 @@ UserNFT = {
             UserNFT.nftIds.splice(position, 1);
         }
         delete UserNFT.nftInfos[tokenId];
+        UserNFT.updateNFTTable();
     },
     addNFT: function (tokenId) {
         console.log("addNFT " + tokenId);
         UserNFT.nftIds.push(tokenId);
         var nft = NFT.createNFTInfo(tokenId, defaultAccount);
         UserNFT.nftInfos[tokenId] = nft;
+        UserNFT.updateNFTTable();
     },
     getNFTBalances: function () {
         console.log("getNFTBalances");
@@ -217,33 +219,33 @@ UserNFT = {
         // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
         // Transfer
         contractsInstance.NFTHotPot.events.Transfer({ from: defaultAccount }, function (e, r) {
-            console.log("nft out tokenid=" + r.returnValues.tokenId + ",to " + r.returnValues.to);
-            console.log("nft block num=" + r.blockNumber);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
             UserNFT.eventBlocks.add(r.blockNumber);
+            console.log("nft out tokenid=" + r.returnValues.tokenId + ",to " + r.returnValues.to);
+            console.log("nft block num=" + r.blockNumber);
             UserNFT.deleteNFT(r.returnValues.tokenId);
-            UserNFT.userBalance = UserNFT.userBalance.sub(1);
+            UserNFT.userBalance = UserNFT.userBalance.minus(1);
             UserNFT.updateUserNFT();
         });
         contractsInstance.NFTHotPot.events.Transfer({ to: defaultAccount }, function (e, r) {
-            console.log("nft in tokenid=" + r.returnValues.tokenId + ",from " + r.returnValues.from);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
             UserNFT.eventBlocks.add(r.blockNumber);
+            console.log("nft in tokenid=" + r.returnValues.tokenId + ",from " + r.returnValues.from);
             UserNFT.addNFT(r.returnValues.tokenId);
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
         contractsInstance.NFTHotPot.events.UseTicket({ owner: defaultAccount }, function (e, r) {
-            console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
+            
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
             UserNFT.eventBlocks.add(r.blockNumber);
-
+            console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
             var id = r.returnValues.tokenId;
             var time = r.returnValues.useTime;
             UserNFT.nftInfos[id].usetime = time;
@@ -251,12 +253,12 @@ UserNFT = {
             UserNFT.updateNFTTable();
         });
         contractsInstance.NFTHotPot.events.UseTicket({ tokenId: UserNFT.borrowIds }, function (e, r) {
-            console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
+            
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
             UserNFT.eventBlocks.add(r.blockNumber);
-
+            console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
             var id = r.returnValues.tokenId;
             var time = r.returnValues.useTime;
             UserNFT.borrowIds[id].usetime = time;
