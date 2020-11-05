@@ -11,7 +11,7 @@ Loan = {
     eventBlocks1: new Set(),
     getLoan: function () {
         Loan.initLoanTable();
-        contractsInstance.HotPot.Approval({ owner: defaultAccount, spender: contractsInstance.Loan.address }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.Loan._address }, function (error, result) {
             if (!error) {
                 console.log("Approve success!");
                 if (Loan.eventBlocks.has(result.blockNumber)) {
@@ -29,11 +29,11 @@ Loan = {
                 Loan.initLoanTable();
             }
         });
-        contractsInstance.HotPot.allowance(defaultAccount, contractsInstance.Loan.address, function (e, r) {
+        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.Loan._address).send(function (e, r) {
             if (!e) {
                 Loan.allowance = r;
             }
-            contractsInstance.Loan.getLoanList(function (e, r) {
+            contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
                 console.log("market getListToken=" + r);
                 Loan.listIds = r;
                 for (var i = 0; i < r.length; i++) {
@@ -41,26 +41,26 @@ Loan = {
                 }
             });
         });
-        contractsInstance.Loan.getLoanSize(function (e, r) {
+        contractsInstance.Loan.methods.getLoanSize().call(function (e, r) {
             console.log("getLoanSize=" + r);
             if (!e) {
                 Loan.listSize = r;
             }
         });
 
-        contractsInstance.Loan.getLoanList(function (e, r) {
+        contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
             console.log("getLoanList=" + r);
             if (!e) {
                 Loan.listIds = r;
             }
         });
-        contractsInstance.Loan.TokenDeposit(function (e, r) {
+        contractsInstance.Loan.events.TokenDeposit(function (e, r) {
             console.log("TokenDeposit");
         });
-        contractsInstance.Loan.TokenCancelDeposit(function (e, r) {
+        contractsInstance.Loan.events.TokenCancelDeposit(function (e, r) {
             console.log("TokenCancelDeposit");
         });
-        contractsInstance.Loan.TokenBorrowed(function (e, r) {
+        contractsInstance.Loan.events.TokenBorrowed(function (e, r) {
             console.log("TokenBorrowed");
         });
         Loan.addHistory();
@@ -84,8 +84,7 @@ Loan = {
         node.append(nodeblock);
         $("#tableloanhistory").append(node);
 
-        var loanEvents = contractsInstance.Loan.allEvents({ filter: { event: 'TokenBorrowed' }, fromBlock: 0, toBlock: 'latest' });
-        loanEvents.get(function (e, r) {
+        contractsInstance.Loan.events.allEvents({ filter: { event: 'TokenBorrowed' }, fromBlock: 0, toBlock: 'latest' },function(e,r){
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'TokenBorrowed') {
@@ -97,7 +96,6 @@ Loan = {
                 }
             }
         });
-        loanEvents.stopWatching();
     },
     createBorrowInfo: function (borrower, tokenId, pricePerDay, borrowDays, hash, blockNumber) {
         var info = new Object();
@@ -165,12 +163,12 @@ Loan = {
     },
     getNFTInfo: function (id) {
         console.log("getNFTInfo id=" + id);
-        contractsInstance.NFTHotPot.getGrade(id, function (e, r) {
+        contractsInstance.NFTHotPot.methods.getGrade(id).call( function (e, r) {
             var grade = r;
             var nft = Loan.createLoanNft(id, grade);
             Loan.listTokens[id] = nft;
 
-            contractsInstance.Loan.reservations(id, function (e, r) {
+            contractsInstance.Loan.methods.reservations(id).call(function (e, r) {
                 var tokenId = r[0];
                 var owner = r[1];
                 var borrower = r[2];
@@ -206,7 +204,7 @@ Loan = {
             borrow.borrowed=true;
             borrow.borrowEndTime=nft.borrowEndTime;
             UserNFT.borrowNFTs[nft.id] = borrow;
-            contractsInstance.NFTHotPot.getUseTime(id,function(e,r){
+            contractsInstance.NFTHotPot.methods.getUseTime(id).call(function(e,r){
                 if(!e){
                     UserNFT.borrowNFTs[id].usetime=r;
                 }
@@ -369,7 +367,7 @@ Loan = {
         });
     },
     approve: function () {
-        contractsInstance.HotPot.approve(contractsInstance.Loan.address, web3.toHex(Math.pow(10, 30)), function (e, r) {
+        contractsInstance.HotPot.methods.approve(contractsInstance.Loan._address, web3.utils.toHex(Math.pow(10, 30))).send(function (e, r) {
             afterSendTx(e, r);
         });
     },
@@ -396,7 +394,7 @@ Loan = {
             toastAlert(getString('priceerror'));
             return;
         }
-        price = web3.toHex(price * Math.pow(10, 18));
+        price = web3.utils.toHex(price * Math.pow(10, 18));
         id = parseInt(id);
 
         //loanInput
@@ -417,7 +415,7 @@ Loan = {
 
         var day = parseInt(time);
 
-        contractsInstance.Loan.deposit(id, day, price, function (e, result) {
+        contractsInstance.Loan.methods.deposit(id, day, price).send(function (e, result) {
             afterSendTx(e, result);
         });
     },

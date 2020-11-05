@@ -210,13 +210,13 @@ UserNFT = {
         console.log("getNFTBalances");
         // initiate contract for an address
 
-        contractsInstance.NFTHotPot.totalSupply(function (e, result) {
+        contractsInstance.NFTHotPot.methods.totalSupply().call(function (e, result) {
             UserNFT.totalNFT = result;
             UserNFT.updateTotalNFT();
         });
         // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
         // Transfer
-        contractsInstance.NFTHotPot.Transfer({ from: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.Transfer({ from: defaultAccount }, function (e, r) {
             console.log("nft out tokenid=" + r.args.tokenId + ",to " + r.args.to);
             console.log("nft block num=" + r.blockNumber);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
@@ -227,7 +227,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.sub(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.Transfer({ to: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.Transfer({ to: defaultAccount }, function (e, r) {
             console.log("nft in tokenid=" + r.args.tokenId + ",from " + r.args.from);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -237,7 +237,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.UseTicket({ owner: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.UseTicket({ owner: defaultAccount }, function (e, r) {
             console.log("nft UseTicket tokenid=" + r.args.tokenId);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -250,7 +250,7 @@ UserNFT = {
 
             UserNFT.updateNFTTable();
         });
-        contractsInstance.NFTHotPot.UseTicket({ tokenId: UserNFT.borrowIds }, function (e, r) {
+        contractsInstance.NFTHotPot.events.UseTicket({ tokenId: UserNFT.borrowIds }, function (e, r) {
             console.log("nft UseTicket tokenid=" + r.args.tokenId);
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
@@ -265,7 +265,7 @@ UserNFT = {
         });
 
         // call constant function
-        contractsInstance.NFTHotPot.balanceOf(defaultAccount, function (error, result) {
+        contractsInstance.NFTHotPot.methods.balanceOf(defaultAccount).call(function (error, result) {
             console.log("getNFTBalances balanceOf=" + result) // '0x25434534534'
             UserNFT.userBalance = result;
             UserNFT.nftIds = Array();
@@ -273,7 +273,7 @@ UserNFT = {
             $(".myticketbalance").text(result);
 
             for (var i = 0; i < result; i++) {
-                contractsInstance.NFTHotPot.tokenOfOwnerByIndex(defaultAccount, i, function (e, result) {
+                contractsInstance.NFTHotPot.methods.tokenOfOwnerByIndex(defaultAccount, i).call(function (e, result) {
                     console.log("tokenOfOwnerByIndex id=" + result);
                     UserNFT.nftIds.push(result);
                     var nft = NFT.createNFTInfo(result, defaultAccount);
@@ -284,7 +284,7 @@ UserNFT = {
         });
     },
     getNFTInfo: function (id) {
-        contractsInstance.NFTHotPot.getGrade(id, function (e, result) {
+        contractsInstance.NFTHotPot.methods.getGrade(id).call(function (e, result) {
             console.log("get grade id=" + id + ",grade=" + result);
             UserNFT.nftInfos[id].grade = result;
             if (result == 1) {
@@ -297,7 +297,7 @@ UserNFT = {
             UserNFT.getUseTime(id);
         });
 
-        contractsInstance.Loan.reservations(id, function (e, r) {
+        contractsInstance.Loan.methods.reservations(id).call( function (e, r) {
             var tokenId = r[0];
             var owner = r[1];
             var borrower = r[2];
@@ -319,7 +319,7 @@ UserNFT = {
         });
     },
     getUseTime: function (id) {
-        contractsInstance.NFTHotPot.getUseTime(id, function (e, result) {
+        contractsInstance.NFTHotPot.methods.getUseTime(id).call(function (e, result) {
             console.log("get use time id=" + id + ",time=" + result);
             UserNFT.nftInfos[id].usetime = result;
             var endTime = result + 86400;

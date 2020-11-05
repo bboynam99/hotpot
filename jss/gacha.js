@@ -4,13 +4,13 @@ Gacha = {
     eventBlocks: new Set(),
     getGacha: function () {
         console.log("getGacha init");
-        contractsInstance.Gacha.getPosibilityNow(function(e,r){
+        contractsInstance.Gacha.methods.getPosibilityNow().call(function(e,r){
             if(!e){
                 $("#posibilitynow").text("1/"+r);
-                $("#posibilitylater").text("1/"+r.mul(2));
+                $("#posibilitylater").text("1/"+r/100);
             }
         });
-        contractsInstance.Gacha.GachaTicket(function (error, result) {
+        contractsInstance.Gacha.events.GachaTicket(function (error, result) {
             if (error) { console.log("GachaTicket error " + error); }
             else {
                 console.log("GachaTicket block num=" + result.blockNumber);
@@ -36,7 +36,7 @@ Gacha = {
             }
         });
         console.log("getGacha");
-        contractsInstance.Gacha.GachaNothing({
+        contractsInstance.Gacha.events.GachaNothing({
             fromBlock: 'latest',
             toBlock: 'latest'
         }, function (e, result) {
@@ -61,7 +61,7 @@ Gacha = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Gacha.pull({ gas: 1200000 }, function (e, result) {
+        contractsInstance.Gacha.methods.pull().send({ gas: 1200000 }, function (e, result) {
             if (e) {
                 console.log("pull error:" + e);
             } else {
@@ -78,7 +78,7 @@ Gacha = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Gacha.pull10({ gas: 1200000 }, function (e, result) {
+        contractsInstance.Gacha.methods.pull10().send({ gas: 1200000 }, function (e, result) {
             if (e) {
                 console.log("pull 10 error:" + e);
             } else {
@@ -90,7 +90,7 @@ Gacha = {
         });
     },
     approve: function () {
-        contractsInstance.HotPot.approve(contractAddress.gacha, web3.toHex(Math.pow(10, 30)), function (e, result) {
+        contractsInstance.HotPot.methods.approve(contractAddress.gacha, web3.utils.toHex(Math.pow(10, 30))).call(function (e, result) {
             if (e) {
                 console.log("Gacha approve error " + e);
             } else {

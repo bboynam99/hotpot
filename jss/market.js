@@ -19,7 +19,7 @@ Market = {
     initMarketInfo: function () {
         console.log("initMarketInfo");
         Market.initSellTable();
-        contractsInstance.HotPot.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket.address }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({ owner: defaultAccount, spender: contractsInstance.NFTMarket._address }, function (error, result) {
             if (!error) {
                 console.log("Market Approval");
                 if (Market.eventBlocks.has(result.blockNumber)) {
@@ -38,11 +38,11 @@ Market = {
                 Market.initSellTable();
             }
         });
-        contractsInstance.HotPot.allowance(defaultAccount, contractsInstance.NFTMarket.address, function (e, r) {
+        contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.NFTMarket._address).send(function (e, r) {
             if (!e) {
                 Market.allowance = r;
             }
-            contractsInstance.NFTMarket.getListToken(function (e, r) {
+            contractsInstance.NFTMarket.methods.getListToken().call(function (e, r) {
                 console.log("market getListToken=" + r);
                 Market.listIds = r;
                 for (var i = 0; i < r.length; i++) {
@@ -50,12 +50,12 @@ Market = {
                 }
             });
         });
-        contractsInstance.NFTMarket.getListSize(function (e, r) {
+        contractsInstance.NFTMarket.methods.getListSize().call(function (e, r) {
             console.log("market size=" + r);
             Market.listSize = r;
         });
         console.log("Listed");
-        contractsInstance.NFTMarket.Listed(function (e, result) {
+        contractsInstance.NFTMarket.events.Listed(function (e, result) {
             console.log("Listed block num=" + result.blockNumber);
             if (Market.eventBlocks.has(result.blockNumber)) {
                 return;
@@ -73,7 +73,7 @@ Market = {
                 var nft = Market.createSellNft(id,1);
                 nft.price = price;
                 nft.seller = seller;
-                contractsInstance.NFTHotPot.getGrade(id,function(e,r){
+                contractsInstance.NFTHotPot.methods.getGrade(id).call(function(e,r){
                     if(!e){
                         nft.grade = r;
                         Market.addNFTToTable(nft);
@@ -82,7 +82,7 @@ Market = {
             }
         });
         console.log("Unlisted");
-        contractsInstance.NFTMarket.Unlisted(function (e, r) {
+        contractsInstance.NFTMarket.events.Unlisted(function (e, r) {
             console.log("Unlisted block num=" + result.blockNumber);
             if (Market.eventBlocks.has(result.blockNumber)) {
                 return;
@@ -108,8 +108,7 @@ Market = {
         node.append(nodeblock);
         $("#tablesellhistory").append(node);
 
-        var events = contractsInstance.NFTMarket.allEvents({filter:{event:'Swapped'},fromBlock: 0, toBlock: 'latest'});
-        events.get(function(e,r){
+        contractsInstance.NFTMarket.events.allEvents({filter:{event:'Swapped'},fromBlock: 0, toBlock: 'latest'},function(e,r){
             for(var i=0;i<r.length;i++){
                 var event = r[i];
                 if(event.event == 'Swapped'){
@@ -120,7 +119,6 @@ Market = {
                 }
             }
         });
-        events.stopWatching();
     },
     createSellInfo:function(buyer,tokenId,price,hash,blockNumber){
         var info =new Object();
@@ -197,13 +195,13 @@ Market = {
         $(id).remove();
     },
     approve:function(){
-        contractsInstance.HotPot.approve(contractsInstance.NFTMarket.address, web3.toHex(Math.pow(10, 30)), function (e, r) {
+        contractsInstance.HotPot.methods.approve(contractsInstance.NFTMarket._address, web3.utils.toHex(Math.pow(10, 30))).send(function (e, r) {
             afterSendTx(e, r);
         });
     },
     cancelSell: function (id) {
         console.log("cancleSell " + id);
-        contractsInstance.NFTMarket.unlist(id, function (e, r) {
+        contractsInstance.NFTMarket.methods.unlist(id).send(function (e, r) {
             afterSendTx(e, r);
         });
     },
@@ -214,7 +212,7 @@ Market = {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.NFTMarket.swap(id, function (e, r) {
+        contractsInstance.NFTMarket.methods.swap(id).send( function (e, r) {
             afterSendTx(e, r);
         })
     },
@@ -241,11 +239,11 @@ Market = {
             toastAlert(getString('priceerror'));
             return;
         }
-        // price = web3.toHex(price * Math.pow(10, 18));
+        // price = web3.utils.toHex(price * Math.pow(10, 18));
         // var bn = new BigNumber(price*10**18);
         // price = utils.padLeft(utils.toHex(bn), 64)
         id = parseInt(id);
-        contractsInstance.NFTHotPot.safeTransferFrom['address,address,uint256,bytes'](defaultAccount, contractAddress.market, id, getPriceBytes(price), function (e, result) {
+        contractsInstance.NFTHotPot.methods.safeTransferFrom['address,address,uint256,bytes'](defaultAccount, contractAddress.market, id, getPriceBytes(price)).send( function (e, result) {
             if (e) {
                 toastAlert("Error:" + e.message);
             } else {
@@ -256,7 +254,7 @@ Market = {
     },
     getNFTInfo: async function (id) {
         console.log("getNFTInfo id=" + id);
-        contractsInstance.NFTMarket.sellerOf(id,function(e,r){
+        contractsInstance.NFTMarket.methods.sellerOf(id).call(function(e,r){
             if(r == defaultAccount){
                 var nft = NFT.createNFTInfo(id,defaultAccount);
                 UserNFT.sellNFTs[id] = nft;
@@ -265,17 +263,17 @@ Market = {
                 UserNFT.userBalance = UserNFT.userBalance.plus(1);
                 UserNFT.updateUserNFT();
             }
-            contractsInstance.NFTHotPot.getGrade(id, function (e, r) {
+            contractsInstance.NFTHotPot.methods.getGrade(id).call( function (e, r) {
                 var grade = r;
                 if(UserNFT.sellNFTs[id])
                 UserNFT.sellNFTs[id].grade = r;
                 var nft = Market.createSellNft(id, grade);
                 Market.listTokens[id] = nft;
     
-                contractsInstance.NFTMarket.priceOf(id, function (e, r) {
+                contractsInstance.NFTMarket.methods.priceOf(id).call(function (e, r) {
                     var price = r;
                     Market.listTokens[id].price = price;
-                    contractsInstance.NFTMarket.sellerOf(id, function (e, r) {
+                    contractsInstance.NFTMarket.methods.sellerOf(id).call(function (e, r) {
                         Market.listTokens[id].seller = r;
                         Market.addNFTToTable(Market.listTokens[id]);
                     });

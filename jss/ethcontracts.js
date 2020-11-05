@@ -6,6 +6,10 @@ var stakeERCAddress = {}
 
 var stakeERCContract={}
 
+var contractABI={
+    
+}
+
 //createToken
 var stakeInfos = {}
 
