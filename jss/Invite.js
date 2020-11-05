@@ -3,14 +3,15 @@ Invite = {
     myInviteCode:0,
     inputvalidated:false,
     eventBlocks: new Set(),
+    eventBlocks1: new Set(),
     initInviteInfo: function () {
 
         contractsInstance.Invite.events.InviteCreated({ filter:{creator: defaultAccount} }, function (error, result) {
             if (!error) {
-                if (Invite.eventBlocks.has(result.blockNumber)) {
+                if (Invite.eventBlocks1.has(result.blockNumber)) {
                     return;
                 }
-                Invite.eventBlocks.add(result.blockNumber);
+                Invite.eventBlocks1.add(result.blockNumber);
                 console.log("InviteCreated");
                 Invite.getMyInviteCode();
             }
@@ -106,7 +107,7 @@ Invite = {
             }else if(code<1000){
                 toastAlert(getString('inputwrong'));
             }else
-            contractsInstance.Invite.inputCode(code).send({from:defaultAccount},function(e,r){
+            contractsInstance.Invite.methods.inputCode(code).send({from:defaultAccount},function(e,r){
                 afterSendTx(e,r);
             });
         }else{

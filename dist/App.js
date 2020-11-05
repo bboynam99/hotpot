@@ -99542,7 +99542,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        stakeERCContract[token].events.Approval({ owner: defaultAccount }, function (error, result) {
+        stakeERCContract[token].events.Approval({ filter:{owner: defaultAccount} }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
@@ -99699,7 +99699,7 @@ App = {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Approval({ owner: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({filter:{owner: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -99725,7 +99725,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({ to: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({filter:{ to: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -99740,7 +99740,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({ from: defaultAccount }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({filter:{ from: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -99797,65 +99797,6 @@ App = {
         $("#loanhistory").show();
     }
 };
-
-
-
-Reward = {
-    gotoPage: function () {
-        console.log("Reward gotoPage");
-        Reward.getRewardInfo();
-    },
-    getRewardInfo: function () {
-        console.log("getReward");
-
-        // call constant function
-        contractsInstance.Reward.methods.getBalance().call(function (error, result) {
-            if (error) {
-                console.log("Reward.getBalance error : " + error);
-                return;
-            }
-            console.log("reward balanceOf=" + result) // '0x25434534534'
-            var total = (result/Math.pow(10, 18)).toFixed(2);
-            $(".totalreward").text(total + " HotPot");
-        });
-        contractsInstance.Reward.methods.calNormalReward(1).call(function (e, result) {
-            if (e) {
-                toastAlert("Error with calReward:" + e);
-                return console.error('Error with getReward:', e);
-            }
-
-            var total = (result/Math.pow(10, 18)).toFixed(2);
-            console.log("calReward " + total);
-            $("#rewardpercard").text(total);
-        });
-    },
-    claim: function () {
-        if (UserNFT.nftIds.length == 0) {
-            //$.i18n.map[i]
-            toastAlert($.i18n.map['nocard']);
-        } else {
-            UserNFT.initNFTTable(nftUse[0]);
-            showTable(true);
-        }
-    },
-    rewardByNFT: function (id) {
-        console.log("rewardByNFT : " + id);
-        contractsInstance.Reward.events.WithdrawReward({ sender: defaultAccount }, function (e, result) {
-            if (!e) {
-                toastAlert(getString('rewardsuccess'));
-            }
-        });
-
-        contractsInstance.Reward.methods.getReward(id).send({from:defaultAccount},function (e, result) {
-            if (e) {
-                toastAlert("Error with getReward:" + e);
-                return console.error('Error with getReward:', e);
-            }
-            showTopMsg("Pending...", 0, getEthersanUrl(result));
-            startListenTX(result);
-        });
-    },
-}
 
 
 function hidepages() {

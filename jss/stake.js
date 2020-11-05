@@ -71,7 +71,7 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         }
-        if (UserNFT.nftIds.length == 0) {
+        if (UserNFT.nftIds.length+UserNFT.borrowIds.length == 0) {
             //$.i18n.map[i]
             toastAlert($.i18n.map['nocard']);
         } else {

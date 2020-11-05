@@ -72,7 +72,19 @@ Loan = {
             console.log("TokenBorrowed block num=" + result.blockNumber);
 
             Loan.removeNFT(parseInt(result.returnValues.tokenId));
+
+            UserNFT.nftBorrowed(result.returnValues);
         });
+
+    // event TokenBorrowed(
+    //     address indexed borrower,
+    //     uint256 indexed tokenId,
+    //     uint256 indexed start,
+    //     uint256 borrowDays,
+    //     uint256 pricePerDay,
+    //     uint8 grade
+    // );
+
         Loan.addHistory();
     },
     removeNFT:function(tokenId){
@@ -213,29 +225,9 @@ Loan = {
                 nft.borrowEndTime = parseInt(borrowEndTime);
                 nft.owner = owner;
                 Loan.addNFTToTable(nft);
-                Loan.checkMyBorrowed(nft);
+                UserNFT.checkMyBorrowed(nft);
             });
         });
-    },
-    checkMyBorrowed: function (nft) {
-        if (nft.borrower == defaultAccount) {
-            var id = nft.id;
-            var timenow = Math.floor((new Date()).getTime() / 1000);
-            if(nft.borrowEndTime<timenow){
-                return;
-            }
-            UserNFT.borrowIds.push(nft.id);
-            var borrow = NFT.createNFTInfo(nft.id, nft.owner);
-            borrow.grade = nft.grade;
-            borrow.borrowed=true;
-            borrow.borrowEndTime=nft.borrowEndTime;
-            UserNFT.borrowNFTs[nft.id] = borrow;
-            contractsInstance.NFTHotPot.methods.getUseTime(id).call(function(e,r){
-                if(!e){
-                    UserNFT.borrowNFTs[id].usetime=r;
-                }
-            });
-        }
     },
     initLoanTable: function () {
         console.log("initLoanTable");
@@ -380,15 +372,15 @@ Loan = {
         var timenow = Math.floor((new Date()).getTime() / 1000);
         var timedelay = lasttime-(timenow)-(30 * 60);
         var loantime = (day - 1) * 86400;
-        if (timedelay.lt(loantime)) {
+        if (timedelay<loantime) {
             toastAlert(getString('cannotloanthislong'));
             return;
         }
-        if (price.mul(day).gt(defaultBalance)) {
+        if (price.times(day).gt(defaultBalance)) {
             toastAlert(getString('hotnotenough'));
             return;
         }
-        contractsInstance.Loan.borrow(id, day).send({from:defaultAccount}, function (e, result) {
+        contractsInstance.Loan.methods.borrow(id, day).send({from:defaultAccount}, function (e, result) {
             afterSendTx(e, result);
         });
     },
