@@ -37,7 +37,7 @@ NFT = {
                 canUse = false;
 
                 let fomoTime = Math.floor(delay);
-                console.log("charger time=" + fomoTime);                
+                console.log("charger time=" + fomoTime);
                 nodeavailable = $("<span></span>");
                 var nodetime0 = $("<span  data-lang='charging'></span>").text(getString('charging'));
                 nodeavailable.append(nodetime0);
@@ -60,12 +60,12 @@ NFT = {
         var borrowEndTime = nft.borrowEndTime;
         var now = Math.floor(((new Date()).getTime()) / 1000);
 
-        if(borrowEndTime>now){
+        if (borrowEndTime > now) {
             var nodeli2 = $("<li></li>");
             var nodeborrow = $("<span></span>");
-            var nodeborrowinfo =$("<span  data-lang='borrowed'></span>").text(getString('borrowed'));
+            var nodeborrowinfo = $("<span  data-lang='borrowed'></span>").text(getString('borrowed'));
             nodeborrow.append(nodeborrowinfo);
-            var nodeborrowtime = $("<span></span>").text(" : "+formatTime2Min(borrowEndTime-now));
+            var nodeborrowtime = $("<span></span>").text(" : " + formatTime2Min(borrowEndTime - now));
             nodeborrow.append(nodeborrowtime);
             nodeli2.append(nodeborrow);
             nodeul.append(nodeli2);
@@ -167,17 +167,51 @@ UserNFT = {
     nftInfos: {},
     sellIds: Array(),
     sellNFTs: {},
-    borrowIds:Array(),
-    borrowNFTs:{},
+    borrowIds: Array(),
+    borrowNFTs: {},
     totalNFT: 0,
     userBalance: 0,
     eventBlocks: new Set(),
     gotoMyPage: function () {
 
     },
+    removeLoanList: function (tokenId) {
+
+    },
+    removeSellList: function (tokenId) {
+        console.log("removeSellList " + tokenId);
+        var position = -1;
+        for (var i = 0; i < UserNFT.sellIds.length; i++) {
+            if (tokenId == UserNFT.sellIds[i]) {
+                position = i;
+                break;
+            }
+        }
+        if (position != -1) {
+            UserNFT.sellIds.splice(position, 1);
+        }
+        delete UserNFT.sellNFTs[tokenId];
+        UserNFT.updateNFTTable();
+        UserNFT.userBalance = UserNFT.userBalance.minus(1);
+        UserNFT.updateUserNFT();
+    },
+    addSellList: function (nft) {
+        console.log("addSellList id=" + nft.id);
+        UserNFT.sellNFTs[id] = nft;
+        UserNFT.sellNFTs[id].sell = true;
+        UserNFT.sellIds.push(id);
+        UserNFT.userBalance = UserNFT.userBalance.plus(1);
+        UserNFT.updateUserNFT();
+    },
     isAvailable: function (id) {
         var nft = UserNFT.nftInfos[id];
         return NFT.isAvailable(nft.usetime);
+    },
+    updateMysell:function(){
+        $(".mysell").text(sellIds.length);
+    },
+    updateMyLoan:function(){
+        $(".myloan").text();
     },
     updateTotalNFT: function () {
         $(".ticketbalance").text(UserNFT.totalNFT);
@@ -218,7 +252,7 @@ UserNFT = {
         });
         // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
         // Transfer
-        contractsInstance.NFTHotPot.events.Transfer({ from: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.Transfer({ filter: { from: defaultAccount } }, function (e, r) {
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -229,7 +263,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.minus(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.events.Transfer({ to: defaultAccount }, function (e, r) {
+        contractsInstance.NFTHotPot.events.Transfer({ filter: { to: defaultAccount } }, function (e, r) {
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -240,7 +274,7 @@ UserNFT = {
             UserNFT.updateUserNFT();
         });
         contractsInstance.NFTHotPot.events.UseTicket({ owner: defaultAccount }, function (e, r) {
-            
+
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -253,7 +287,7 @@ UserNFT = {
             UserNFT.updateNFTTable();
         });
         contractsInstance.NFTHotPot.events.UseTicket({ tokenId: UserNFT.borrowIds }, function (e, r) {
-            
+
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -299,7 +333,7 @@ UserNFT = {
             UserNFT.getUseTime(id);
         });
 
-        contractsInstance.Loan.methods.reservations(id).call( function (e, r) {
+        contractsInstance.Loan.methods.reservations(id).call(function (e, r) {
             var tokenId = r[0];
             var owner = r[1];
             var borrower = r[2];
@@ -308,13 +342,13 @@ UserNFT = {
             var start = r[5];
             var times = r[6];
 
-            var lasttime = times*(86400)+(start);
+            var lasttime = times * (86400) + (start);
             var timenow = Math.floor((new Date()).getTime() / 1000);
             if (timenow < lasttime) {
                 console.log("this token is loan");
                 UserNFT.nftInfos[id].loan = true;
             }
-            if(borrowEndTime>timenow){
+            if (borrowEndTime > timenow) {
                 UserNFT.nftInfos[id].borrowed = true;
                 UserNFT.nftInfos[id].borrowEndTime = borrowEndTime;
             }
@@ -346,17 +380,17 @@ UserNFT = {
         $("#pricingTable").empty();
         var totalIds = Array();
         var nfts = {};
-        for(var i=0;i<UserNFT.nftIds.length;i++){
+        for (var i = 0; i < UserNFT.nftIds.length; i++) {
             var id = UserNFT.nftIds[i];
             totalIds.push(id);
             nfts[id] = UserNFT.nftInfos[id];
         }
-        for(var i=0;i<UserNFT.sellIds.length;i++){
+        for (var i = 0; i < UserNFT.sellIds.length; i++) {
             var id = UserNFT.sellIds[i];
             totalIds.push(id);
             nfts[id] = UserNFT.sellNFTs[id];
         }
-        for(var i=0;i<UserNFT.borrowIds.length;i++){
+        for (var i = 0; i < UserNFT.borrowIds.length; i++) {
             var id = UserNFT.borrowIds[i];
             totalIds.push(id);
             nfts[id] = UserNFT.borrowNFTs[id];

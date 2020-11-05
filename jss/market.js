@@ -75,8 +75,12 @@ Market = {
                     if (!e) {
                         nft.grade = r;
                         Market.addNFTToTable(nft);
+                        if(nft.seller==defaultAccount){
+                            UserNFT.addSellList(nft);
+                        }
                     }
                 });
+
             }
         });
         console.log("Unlisted");
@@ -86,6 +90,9 @@ Market = {
                 return;
             }
             Market.eventBlocks.add(result.blockNumber);
+            if(result.returnValues._seller==defaultAccount){
+                UserNFT.removeSellList(parseInt(result.returnValues._tokenId));
+            }
             Market.removeNFT(parseInt(result.returnValues._tokenId));
         });
         Market.addHistory();
@@ -188,7 +195,7 @@ Market = {
         if (position != -1) {
             Market.listIds.splice(0, 1);
         }
-        delete UserNFT.listTokens[tokenId];
+        delete Market.listTokens[tokenId];
         var id = "#tr" + tokenId;
         $(id).remove();
     },

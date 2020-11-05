@@ -42,12 +42,12 @@ Loan = {
             }
         });
 
-        contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
-            console.log("getLoanList=" + r);
-            if (!e) {
-                Loan.listIds = r;
-            }
-        });
+        // contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
+        //     console.log("getLoanList=" + r);
+        //     if (!e) {
+        //         Loan.listIds = r;
+        //     }
+        // });
         contractsInstance.Loan.events.TokenDeposit(function (e, r) {
             console.log("TokenDeposit");
         });
@@ -85,7 +85,7 @@ Loan = {
                     console.log("TokenBorrowed");
                     // grade
                     var borrow = Loan.createBorrowInfo(event.returnValues.borrower, event.returnValues.tokenId,
-                        event.returnValues.pricePerDay, event.returnValues.borrowDays, event.transactionHash, event.blockNumber);
+                        new BigNumber(event.returnValues.pricePerDay), event.returnValues.borrowDays, event.transactionHash, event.blockNumber);
                     Loan.addBorrowInfo(borrow);
                 }
             }
@@ -173,12 +173,12 @@ Loan = {
 
                 var nft = Loan.listTokens[id];
 
-                nft.id = tokenId;
-                nft.price = pricePerDay;
-                nft.days = times;
-                nft.startTime = start;
+                nft.id = parseInt(tokenId);
+                nft.price = new BigNumber(pricePerDay);
+                nft.days = parseInt(times);
+                nft.startTime = parseInt(start);
                 nft.borrower = borrower;
-                nft.borrowEndTime = borrowEndTime;
+                nft.borrowEndTime = parseInt(borrowEndTime);
                 nft.owner = owner;
                 Loan.addNFTToTable(nft);
                 Loan.checkMyBorrowed(nft);
