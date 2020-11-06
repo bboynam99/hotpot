@@ -61,14 +61,14 @@ var ropstenContracts = {
 }
 
 var rinkebyContracts = {
-    "nft": "0x157bbc6BdbD1c9d0dB5FeB18dA029dB2C59087ae",
-    "hotpot": "0x4C4eB9dF7a97C226736e4c138890fE1bc64c7892",
-    "gacha": "0x6890a8fEC9D1D24cADDA4e0CBa522184AA2C4bC6",
-    "loan": "0x9afCEc0FF114608ED9eF7a707fb1e8722138439C",
-    "market": "0x8131f295BB7eFF830620Ce46970c6289CA6cFc91",
-    "reward": "0x0793549B6186da91189b3eDd7cEfD5c5dD2cFFb2",
-    'invite':'0x68977d2DF62B3782D4F2f8565830e9Ceb40aebEd',
-    "reverse":"0x83817e84984111Ddd42eF1a20aE35E4fF697E9E3",
+    "nft": "0xc47A007952E21ACB165E1E6E3853F537f4c31523",
+    "hotpot": "0x1e425c858ace0c7FF32Ce0a59E8D023f5d836934",
+    "gacha": "0x2403b4833B932a905832CD15EaE5cE49156b8888",
+    "loan": "0x22Fe4eB07Ac23cE374ff7920a71031CF2DD3d6Af",
+    "market": "0xcD17D75901df2533380f0251a1Ee7B6a40bdD67E",
+    "reward": "0xFE5792Cf698A2E596cE3d72d5960a0Ba7b920131",
+    'invite':'0xa2980A0c5F0536A958DB63C635B4847D094da7ed',
+    "reverse":"0x3019eD2f702281448f09Fc612c224C772e27af07",
 }
 
 var ganacheContracts = {
@@ -100,12 +100,12 @@ var ropstenStakeERC = {
 }
 
 var rinkebyPool = {
-    "usdt":"0xe99aB1032650B27b2177da1B42fDeA8f0685BAcf",
-    "eth/usdt":"0x7212FB6513b6D4bdF2946d1AfAD14F1dE486b3D4",
-    "wbtc":"0x01A771e156497623Ab22E111F47e53322Eb69674",
-    "usdc":"0x520D9363eFdC1Ed86C2959B23190D085e305E03F",
-    "hotpot":"0xbb3951Eef14279a67ABB10eDf0b898955C4A06C2",
-    "hotpot/eth":"0x00238293950bC89947963E4fE3d0573a154F3584"
+    "usdt":"0xF6D85dE97eDc18fa3fc3BA6D9937166dE5DDbC49",
+    "eth/usdt":"0xA3dE50d98E5408f18271Cf202cC6D4Cc51A9a0C3",
+    "wbtc":"0xa6b05c147717647bE51c3417399e64C7d6D775E7",
+    "usdc":"0x7B8A3932b3881619E95868724b579C1C9A20a38f",
+    "hotpot":"0x13c1D3bD2b37D27Aa0489499782Ad35f7Cf5e815",
+    "hotpot/eth":"0x0eA533244B69D46944817Ba1C9511c45d195826A"
 }
 
 var rinkebyStakeERC = {
@@ -114,7 +114,7 @@ var rinkebyStakeERC = {
     "usdc":"0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",  
     "wbtc":"0x01be23585060835e02b77ef475b0cc51aa1e0709",
     "wbtc/eth":"0x78ab2e85eaf22dc7b6981e54432e17521bdadc23",
-    "hotpot/eth":"0x263322fA7171E0Fc49AE2d0fE32b9B767Be32bc4",
+    "hotpot/eth":"0xA2E5899152eE46f4720397130f15F99bA8A57F63",
 }
 
 var ganachePool = {

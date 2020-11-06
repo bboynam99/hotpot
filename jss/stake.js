@@ -1,5 +1,5 @@
 Stake = {
-    count:0,
+    count: 0,
     cliamTimer: null,
     eventBlocks: new Set(),
     notifyRewardAmount: function (token, amount) {
@@ -26,7 +26,7 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         } else {
-            token.instance.methods.getRewardByNFT(id).send({from:defaultAccount},function (e, r) {
+            token.instance.methods.getRewardByNFT(id).send({ from: defaultAccount }, function (e, r) {
                 afterSendTx(e, r);
             });
         }
@@ -35,11 +35,11 @@ Stake = {
         console.log("stake approve:" + currentPagePoolID);
         if (currentPagePoolID != "") {
             var stakeToken = stakeERCContract[currentPagePoolID];
-            console.log("approve "+stakeToken._address);
-            var num  = new BigNumber(10**30);
-            stakeToken.methods.approve(stakePoolAddress[currentPagePoolID], web3.utils.numberToHex(num)).send({from:defaultAccount},function (e, result) {
-                afterSendTx(e,result);
-                if(!e){
+            console.log("approve " + stakeToken._address);
+            var num = new BigNumber(10 ** 30);
+            stakeToken.methods.approve(stakePoolAddress[currentPagePoolID], web3.utils.numberToHex(num)).send({ from: defaultAccount }, function (e, result) {
+                afterSendTx(e, result);
+                if (!e) {
                     $("#approvestake").text(getString('approvestake') + "...");
                 }
             });
@@ -53,14 +53,14 @@ Stake = {
             return;
         } else {
 
-        var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
-        var now = Math.floor(((new Date()).getTime()) / 1000);
-        var delay = lastRewardTime + 86400 - now;
-        if(delay>0){
-            toastAlert(getString('canclaimtoday'));
-            return;
-        }
-            token.instance.methods.getRewardFree().send({from:defaultAccount},function (e, r) {
+            var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
+            var now = Math.floor(((new Date()).getTime()) / 1000);
+            var delay = lastRewardTime + 86400 - now;
+            if (delay > 0) {
+                toastAlert(getString('canclaimtoday'));
+                return;
+            }
+            token.instance.methods.getRewardFree().send({ from: defaultAccount }, function (e, r) {
                 afterSendTx(e, r);
             });
         }
@@ -71,7 +71,7 @@ Stake = {
             toastAlert(getString('noearned'));
             return;
         }
-        if (UserNFT.nftIds.length+UserNFT.borrowIds.length == 0) {
+        if (UserNFT.nftIds.length + UserNFT.borrowIds.length == 0) {
             //$.i18n.map[i]
             toastAlert($.i18n.map['nocard']);
         } else {
@@ -125,7 +125,7 @@ Stake = {
             }
             var num = new BigNumber(stake * Math.pow(10, token.decimals));
             var hex = web3.utils.numberToHex(num);
-            token.instance.methods.withdraw(hex).send({from:defaultAccount}, function (e, result) {
+            token.instance.methods.withdraw(hex).send({ from: defaultAccount }, function (e, result) {
                 if (e) {
                     return console.error('Error with stake:', e);
                 }
@@ -145,7 +145,7 @@ Stake = {
             }
             var num = new BigNumber(stake * Math.pow(10, token.decimals));
             var hex = web3.utils.numberToHex(num);
-            token.instance.methods.stake(hex).send({from:defaultAccount},{from: defaultAccount},function (e, result) {
+            token.instance.methods.stake(hex).send({ from: defaultAccount }, { from: defaultAccount }, function (e, result) {
                 if (e) {
                     return console.error('Error with stake:', e);
                 }
@@ -157,37 +157,37 @@ Stake = {
     getAllPoolBalance: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if(token)
-            Stake.getSinglePoolBalance(token);
+            if (token)
+                Stake.getSinglePoolBalance(token);
         }
     },
     getSinglePoolBalance: function (name) {
         console.log("getSinglePoolBalance name=" + name);
         var poolAddress = stakePoolAddress[name];
-        if(poolAddress)
-        contractsInstance.HotPot.methods.balanceOf(poolAddress).call(function (e, result) {
-            console.log("pool balance name=" + name + ",balance=" + result);
-            balanceOfHotpot[name] = result;
-            Stake.count++;
-            if (Stake.count == allPoolTokens.length-1) {
-                Stake.calTotalCirculation();
-            }
-        });
+        if (poolAddress)
+            contractsInstance.HotPot.methods.balanceOf(poolAddress).call(function (e, result) {
+                console.log("pool balance name=" + name + ",balance=" + result);
+                balanceOfHotpot[name] = result;
+                Stake.count++;
+                if (Stake.count == allPoolTokens.length - 1) {
+                    Stake.calTotalCirculation();
+                }
+            });
     },
-    getFreeRewardRatio:function(){
-        stakeInfos['usdt'].instance.methods.freeRewardRatio().call(function(e,r){
-            console.log("freeRewardRatio="+r);
-            $(".cliamratio").text(r+"%");
+    getFreeRewardRatio: function () {
+        stakeInfos['usdt'].instance.methods.freeRewardRatio().call(function (e, r) {
+            console.log("freeRewardRatio=" + r);
+            $(".cliamratio").text(r + "%");
         });
     },
     calTotalCirculation: function () {
         var total = balanceOfHotpot['total'];
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if(balanceOfHotpot[token])
-            total = total.minus(balanceOfHotpot[token]);
+            if (balanceOfHotpot[token])
+                total = total.minus(balanceOfHotpot[token]);
         }
-        total = total.minus(200000*10**18);
+        total = total.minus(200000 * 10 ** 18);
         total = total.div(Math.pow(10, 18));
         console.log("calTotalCirculation=" + total);
         $("#totalcir").text(total.toFixed(2));
@@ -197,7 +197,7 @@ Stake = {
             clearInterval(Stake.cliamTimer);
             Stake.cliamTimer = null;
         }
-        var upername = (name+"").toUpperCase();
+        var upername = (name + "").toUpperCase();
 
         $('.farmname').text(upername);
         currentPagePoolID = name;
@@ -247,11 +247,11 @@ Stake = {
     },
     initStakePool: function () {
         console.log("initStakePool");
-        
+
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            if(poolName)
-            Stake.initSinglePool(poolName);
+            if (poolName)
+                Stake.initSinglePool(poolName);
         }
         Stake.getFreeRewardRatio();
     },
@@ -262,7 +262,7 @@ Stake = {
         var totalPrice = new BigNumber(0);
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            if(!poolName){
+            if (!poolName) {
                 break;
             }
             var periodFinish = stakeInfos[poolName].periodFinish;
@@ -276,12 +276,12 @@ Stake = {
 
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
-            if(!poolName){
+            if (!poolName) {
                 break;
             }
             var stake = stakeInfos[poolName].poolTotalStake;
-            if(stakeInfos[poolName])
-            console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);
+            if (stakeInfos[poolName])
+                console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);
             if (stake == 0) {
                 continue;
             }
@@ -295,9 +295,9 @@ Stake = {
     initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
         console.log("initSinglePool poolname=" + poolName);
-        stakeInfos[poolName].instance = new web3.eth.Contract(contractABI['stakepool'],poolAddress);
+        stakeInfos[poolName].instance = new web3.eth.Contract(contractABI['stakepool'], poolAddress);
 
-        stakeInfos[poolName].instance.events.Staked({ filter:{user: defaultAccount} }, function (err, result) {
+        stakeInfos[poolName].instance.events.Staked({ filter: { user: defaultAccount } }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -316,7 +316,7 @@ Stake = {
             }
         });
 
-        stakeInfos[poolName].instance.events.Withdrawn({ filter:{user: defaultAccount} }, function (err, result) {
+        stakeInfos[poolName].instance.events.Withdrawn({ filter: { user: defaultAccount } }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -335,7 +335,7 @@ Stake = {
             }
         });
 
-        stakeInfos[poolName].instance.events.RewardPaid({ filter:{user: defaultAccount} }, function (err, result) {
+        stakeInfos[poolName].instance.events.RewardPaid({ filter: { user: defaultAccount } }, function (err, result) {
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -348,10 +348,10 @@ Stake = {
                 // toastAlert("Withdraw success!");
                 console.log("RewardPaid");
                 stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.minus(result.returnValues.reward);
-                
+
                 console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
                 // stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
-                stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call( function (e, r) {
+                stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
                     console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                     stakeInfos[poolName].lastRewardTime = r;
                     if (currentPagePoolID == poolName)
@@ -368,7 +368,7 @@ Stake = {
             stakeInfos[poolName].instance.methods.balanceOf(defaultAccount).call(function (e, result) {
                 console.log("initSinglePool pool=" + poolName + ",balanceOf:" + result);
                 stakeInfos[poolName].userStake = new BigNumber(result);
-                stakeInfos[poolName].instance.methods.earned(defaultAccount).call( function (e, result) {
+                stakeInfos[poolName].instance.methods.earned(defaultAccount).call(function (e, result) {
                     console.log("initSinglePool pool=" + poolName + ",earned:" + result);
 
                     stakeInfos[poolName].userEarn = new BigNumber(result);
@@ -387,7 +387,7 @@ Stake = {
 
                             Stake.checkTotalStaked();
                         });
-                        stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call( function (e, r) {
+                        stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                             stakeInfos[poolName].lastRewardTime = r;
                         });

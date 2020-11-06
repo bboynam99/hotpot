@@ -4,7 +4,7 @@ const Web3 = require('web3');
 App = {
     web3Provider: null,
     erc20ABI: null,
-    uniV2PairABI:null,
+    uniV2PairABI: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     init: function () {
@@ -125,14 +125,13 @@ App = {
             $('body').addClass('web3');
         }
         var v = web3.version;
-        console.log("web3 version="+v);
+        console.log("web3 version=" + v);
         let accounts = await ethereum.request(
             {
                 method: 'eth_requestAccounts'
             }
         );
         console.log("account=" + accounts[0]);
-        // console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         defaultAccount = web3.utils.toChecksumAddress(accounts[0]);
         return App.initContract();
     },
@@ -147,7 +146,7 @@ App = {
         });
         $.getJSON('contracts/HotPot.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.HotPot = new web3.eth.Contract(data.abi,contractAddress.hotpot);
+            contractsInstance.HotPot = new web3.eth.Contract(data.abi, contractAddress.hotpot);
             erc20ABI = data.abi;
             // erc20Contract = new web3.eth.Contract(data.abi,contractAddress.hotpot);
             // contractsInstance.HotPot = contractsInstance.HotPot.at(contractAddress.hotpot);
@@ -156,25 +155,25 @@ App = {
 
         $.getJSON('contracts/Reward.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Reward = new web3.eth.Contract(data.abi,contractAddress.reward);
+            contractsInstance.Reward = new web3.eth.Contract(data.abi, contractAddress.reward);
             // contractsInstance.Reward = contractsInstance.Reward.at(contractAddress.reward);
             return Reward.getRewardInfo();
         });
 
         $.getJSON('contracts/Gacha.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Gacha = new web3.eth.Contract(data.abi,contractAddress.gacha);
+            contractsInstance.Gacha = new web3.eth.Contract(data.abi, contractAddress.gacha);
             // contractsInstance.Gacha = contractsInstance.Gacha.at(contractAddress.gacha);
             return Gacha.getGacha();
         });
 
         $.getJSON('contracts/Loan.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Loan = new web3.eth.Contract(data.abi,contractAddress['loan']);
+            contractsInstance.Loan = new web3.eth.Contract(data.abi, contractAddress['loan']);
             // contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
 
             $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-                contractsInstance.NFTHotPot = new web3.eth.Contract(data.abi,contractAddress.nft);
+                contractsInstance.NFTHotPot = new web3.eth.Contract(data.abi, contractAddress.nft);
                 // contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
                 return UserNFT.getNFTBalances();
             });
@@ -183,14 +182,14 @@ App = {
 
         $.getJSON('contracts/NFTMarket.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.NFTMarket = new web3.eth.Contract(data.abi,contractAddress['market']);
+            contractsInstance.NFTMarket = new web3.eth.Contract(data.abi, contractAddress['market']);
             // contractsInstance.NFTMarket = contractsInstance.NFTMarket.at(contractAddress['market']);
             return Market.initMarketInfo();
         });
 
         $.getJSON('contracts/Invite.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Invite = new web3.eth.Contract(data.abi,contractAddress['invite']);
+            contractsInstance.Invite = new web3.eth.Contract(data.abi, contractAddress['invite']);
             // contractsInstance.Invite = contractsInstance.Invite.at(contractAddress['invite']);
             return Invite.initInviteInfo();
         });
@@ -210,14 +209,14 @@ App = {
         if (stakeERCAddress[token] == null || stakeERCAddress[token] == "") {
             return;
         }
-        stakeERCContract[token] = new web3.eth.Contract(erc20ABI,stakeERCAddress[token]);
+        stakeERCContract[token] = new web3.eth.Contract(erc20ABI, stakeERCAddress[token]);
         console.log("getStakeERCInfo token=" + token);
         stakeERCContract[token].methods.balanceOf(defaultAccount).call(function (e, result) {
             stakeInfos[token].userBalance = result;
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].methods.decimals().call(function (e, result) {
                 stakeInfos[token].decimals = result;
-                stakeERCContract[token].methods.allowance(defaultAccount,stakePoolAddress[token]).call(function (e, result) {
+                stakeERCContract[token].methods.allowance(defaultAccount, stakePoolAddress[token]).call(function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = result;
                     if (currentPagePoolID != "") {
@@ -228,7 +227,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        stakeERCContract[token].events.Approval({ filter:{owner: defaultAccount} }, function (error, result) {
+        stakeERCContract[token].events.Approval({ filter: { owner: defaultAccount } }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
@@ -236,7 +235,7 @@ App = {
                 }
                 App.eventBlocks.add(result.blockNumber);
                 result.returnValues.value = new BigNumber(result.returnValues.value);
-                if (result.returnValues.value.lt(new BigNumber(10**30))) {
+                if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
                     console.log("stakeERCContract Approval less");
                     return;
                 }
@@ -269,7 +268,7 @@ App = {
         if (stakeERCAddress[pair] == null || stakeERCAddress[pair] == "") {
             return;
         }
-        univ2PairInfo[pair].contractInstance = new web3.eth.Contract(App.uniV2PairABI,stakeERCAddress[pair]);
+        univ2PairInfo[pair].contractInstance = new web3.eth.Contract(App.uniV2PairABI, stakeERCAddress[pair]);
         univ2PairInfo[pair].contractInstance.methods.token0().call(function (e, r) {
             univ2PairInfo[pair].token0 = r;
             console.log("getUniV2Pair pair=" + pair + ", token0=" + r);
@@ -385,7 +384,7 @@ App = {
         console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Approval({filter:{owner: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
@@ -394,7 +393,7 @@ App = {
                 App.eventBlocks1.add(result.blockNumber);
                 console.log("approval spender=" + result.returnValues.spender);
                 result.returnValues.value = new BigNumber(result.returnValues.value);
-                if (result.returnValues.value.lt(new BigNumber(10**30))) {
+                if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
                     console.log("approval less");
                     return;
                 }
@@ -411,7 +410,7 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({filter:{ to: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({ filter: { to: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -419,6 +418,7 @@ App = {
                 App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
                 console.log("Transfer in=" + result.returnValues.value);
+                console.log("to =" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
 
                 defaultBalance = defaultBalance.plus(new BigNumber(result.returnValues.value));
                 App.updateUserBalance();
@@ -426,15 +426,16 @@ App = {
         });
 
         // watch for an event with {some: 'args'}
-        contractsInstance.HotPot.events.Transfer({filter:{ from: defaultAccount} }, { fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
+        contractsInstance.HotPot.events.Transfer({ filter: { from: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
                 App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
-                console.log("Transfer out=" + result.returnValues.value);
+                // console.log("Transfer out=" + result.returnValues.value);
 
+                console.log("out  to=" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
                 defaultBalance = defaultBalance.minus(new BigNumber(result.returnValues.value));
                 App.updateUserBalance();
             }
@@ -585,8 +586,8 @@ window.rescue = () => {
     var pool = 'eth/usdt';
     var poolAddress = stakePoolAddress[pool];
     stakeInfos[pool].instance = contractsInstance.StakePool.at(poolAddress);
-    stakeInfos[pool].instance.rescue(defaultAccount, contractAddress['hotpot'], web3.utils.numberToHex(new BigNumber(70000 * Math.pow(10, 18)))).send({from:defaultAccount}, function (e, r) {
-        afterSendTx(e,r);
+    stakeInfos[pool].instance.rescue(defaultAccount, contractAddress['hotpot'], web3.utils.numberToHex(new BigNumber(70000 * Math.pow(10, 18)))).send({ from: defaultAccount }, function (e, r) {
+        afterSendTx(e, r);
     });
 }
 
@@ -601,7 +602,7 @@ window.testFunction = () => {
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-        stakeInfos[token].instance.setInvite(contractAddress['invite']).send({from:defaultAccount}, function (e, r) {
+        stakeInfos[token].instance.setInvite(contractAddress['invite']).send({ from: defaultAccount }, function (e, r) {
             afterSendTx(e, r);
         });
     }

@@ -1,12 +1,12 @@
 Invite = {
     claimRatio: 0,
-    myInviteCode:0,
-    inputvalidated:false,
+    myInviteCode: 0,
+    inputvalidated: false,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
     initInviteInfo: function () {
 
-        contractsInstance.Invite.events.InviteCreated({ filter:{creator: defaultAccount} }, function (error, result) {
+        contractsInstance.Invite.events.InviteCreated({ filter: { creator: defaultAccount } }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks1.has(result.blockNumber)) {
                     return;
@@ -17,7 +17,7 @@ Invite = {
             }
         });
 
-        contractsInstance.Invite.events.InviteInput({ filter:{user: defaultAccount} }, function (error, result) {
+        contractsInstance.Invite.events.InviteInput({ filter: { user: defaultAccount } }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -27,7 +27,7 @@ Invite = {
                 Invite.getInputInviteCode();
             }
         });
-        contractsInstance.Invite.events.InviteValidate({ filter:{validator: defaultAccount} }, function (error, result) {
+        contractsInstance.Invite.events.InviteValidate({ filter: { validator: defaultAccount } }, function (error, result) {
             if (!error) {
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -49,14 +49,14 @@ Invite = {
         });
         contractsInstance.Invite.methods.calRatioUpdate(defaultAccount).call(function (e, r) {
             var ratio = r / 1000;
-            console.log("calRatioUpdate="+ratio);
+            console.log("calRatioUpdate=" + ratio);
             Invite.claimRatio += ratio;
             Invite.updateRatio();
         });
         Invite.getInputInviteCode();
 
         contractsInstance.Invite.methods.checkValidated(defaultAccount).call(function (e, r) {
-            console.log("checkValidated="+r);
+            console.log("checkValidated=" + r);
             Invite.inputvalidated = r;
             if (r) {
                 $("#invitevalidated").show();
@@ -66,24 +66,24 @@ Invite = {
             }
         });
     },
-    getInputInviteCode:function(){
+    getInputInviteCode: function () {
         contractsInstance.Invite.methods.getInputInviteCode(defaultAccount).call(function (e, r) {
-            console.log("getInputInviteCode="+r);
+            console.log("getInputInviteCode=" + r);
             if (r == 0) {
                 $("#inputinvitecode").show();
                 $("#inviteinputed").hide();
             } else {
                 $("#inputinvitecode").hide();
-                if(!Invite.inputvalidated)
-                $("#inviteinputed").show();
+                if (!Invite.inputvalidated)
+                    $("#inviteinputed").show();
             }
         });
     },
-    getMyInviteCode:function(){
+    getMyInviteCode: function () {
         contractsInstance.Invite.methods.getMyInviteCode(defaultAccount).call(function (e, r) {
-            console.log("getMyInviteCode="+r);
+            console.log("getMyInviteCode=" + r);
             if (r != 0) {
-                Invite.myInviteCode=r;
+                Invite.myInviteCode = r;
                 $("#myinvitecode").text(r);
                 $("#nocodetip").hide();
                 $("#myinvitecode").show();
@@ -97,20 +97,20 @@ Invite = {
     updateRatio: function () {
         $("#claimratioup").text(100 * Invite.claimRatio + "%");
     },
-    inputCode:function(){
+    inputCode: function () {
         var code = $("#inviteInput").val();
-        console.log("code="+code);
+        console.log("code=" + code);
         var regex = /^\d+$/;
         if (regex.test(code)) {
-            if(code==Invite.myInviteCode){
+            if (code == Invite.myInviteCode) {
                 toastAlert(getString('inputyourcode'));
-            }else if(code<1000){
+            } else if (code < 1000) {
                 toastAlert(getString('inputwrong'));
-            }else
-            contractsInstance.Invite.methods.inputCode(code).send({from:defaultAccount},function(e,r){
-                afterSendTx(e,r);
-            });
-        }else{
+            } else
+                contractsInstance.Invite.methods.inputCode(code).send({ from: defaultAccount }, function (e, r) {
+                    afterSendTx(e, r);
+                });
+        } else {
             toastAlert(getString('inputwrong'));
         }
     },

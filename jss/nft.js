@@ -37,7 +37,7 @@ NFT = {
                 canUse = false;
 
                 let fomoTime = Math.floor(delay);
-                console.log("charger time=" + fomoTime+",id="+nft.id);
+                console.log("charger time=" + fomoTime + ",id=" + nft.id);
                 nodeavailable = $("<span></span>");
                 var nodetime0 = $("<span  data-lang='charging'></span>").text(getString('charging'));
                 nodeavailable.append(nodetime0);
@@ -175,24 +175,24 @@ UserNFT = {
     gotoMyPage: function () {
 
     },
-    nftBorrowed:function(object){
+    nftBorrowed: function (object) {
         var borrower = object.borrower;
         var tokenId = parseInt(object.tokenId);
-        if(borrower==defaultAccount){
+        if (borrower == defaultAccount) {
             console.log("I borrow this nft");
             UserNFT.borrowIds.push(tokenId);
             var borrow = NFT.createNFTInfo(tokenId, object.owner);
             borrow.grade = parseInt(object.grade);
-            borrow.borrowed=true;
-            borrow.borrowEndTime=parseInt(object.start) + parseInt(object.borrowDays)*86400;
+            borrow.borrowed = true;
+            borrow.borrowEndTime = parseInt(object.start) + parseInt(object.borrowDays) * 86400;
             UserNFT.borrowNFTs[tokenId] = borrow;
-            contractsInstance.NFTHotPot.methods.getUseTime(tokenId).call(function(e,r){
-                if(!e){
-                    UserNFT.borrowNFTs[tokenId].usetime=parseInt(r);
+            contractsInstance.NFTHotPot.methods.getUseTime(tokenId).call(function (e, r) {
+                if (!e) {
+                    UserNFT.borrowNFTs[tokenId].usetime = parseInt(r);
                 }
             });
             UserNFT.updateNFTTable();
-            contractsInstance.NFTHotPot.events.UseTicket({ filter:{tokenId: tokenId} }, function (e, r) {
+            contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: tokenId } }, function (e, r) {
                 if (UserNFT.eventBlocks.has(r.blockNumber)) {
                     return;
                 }
@@ -203,12 +203,12 @@ UserNFT = {
                 UserNFT.borrowNFTs[id].usetime = time;
                 UserNFT.updateNFTTable();
             });
-        }else{
+        } else {
             var nft = nftInfos[tokenId];
-            if(nft.id!=0){
+            if (nft.id != 0) {
                 console.log("My nft is borrowed");
                 nft.borrowed = true;
-                nft.borrowEndTime = parseInt(object.start) + parseInt(object.borrowDays)*86400;
+                nft.borrowEndTime = parseInt(object.start) + parseInt(object.borrowDays) * 86400;
                 UserNFT.updateNFTTable();
             }
         }
@@ -217,22 +217,22 @@ UserNFT = {
         if (nft.borrower == defaultAccount) {
             var id = nft.id;
             var timenow = Math.floor((new Date()).getTime() / 1000);
-            if(nft.borrowEndTime<timenow){
+            if (nft.borrowEndTime < timenow) {
                 return;
             }
             UserNFT.borrowIds.push(nft.id);
             var borrow = NFT.createNFTInfo(nft.id, nft.owner);
             borrow.grade = nft.grade;
-            borrow.borrowed=true;
-            borrow.borrowEndTime=nft.borrowEndTime;
+            borrow.borrowed = true;
+            borrow.borrowEndTime = nft.borrowEndTime;
             UserNFT.borrowNFTs[nft.id] = borrow;
-            contractsInstance.NFTHotPot.methods.getUseTime(id).call(function(e,r){
-                if(!e){
-                    UserNFT.borrowNFTs[id].usetime=parseInt(r);
+            contractsInstance.NFTHotPot.methods.getUseTime(id).call(function (e, r) {
+                if (!e) {
+                    UserNFT.borrowNFTs[id].usetime = parseInt(r);
                 }
             });
-            console.log("checkMyBorrowed ="+id);
-            contractsInstance.NFTHotPot.events.UseTicket({ filter:{tokenId: id} }, function (e, r) {
+            console.log("checkMyBorrowed =" + id);
+            contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: id } }, function (e, r) {
                 if (UserNFT.eventBlocks.has(r.blockNumber)) {
                     return;
                 }
@@ -245,13 +245,13 @@ UserNFT = {
             });
         }
     },
-    addLoanList:function(tokenId){
-        console.log("addLoanList "+tokenId);
+    addLoanList: function (tokenId) {
+        console.log("addLoanList " + tokenId);
         UserNFT.nftInfos[tokenId].loan = true;
         UserNFT.updateNFTTable();
     },
     removeLoanList: function (tokenId) {
-        console.log("removeLoanList "+tokenId);
+        console.log("removeLoanList " + tokenId);
         UserNFT.nftInfos[tokenId].loan = false;
         UserNFT.updateNFTTable();
     },
@@ -285,10 +285,10 @@ UserNFT = {
         var nft = UserNFT.nftInfos[id];
         return NFT.isAvailable(nft.usetime);
     },
-    updateMysell:function(){
+    updateMysell: function () {
         $(".mysell").text(sellIds.length);
     },
-    updateMyLoan:function(){
+    updateMyLoan: function () {
         $(".myloan").text();
     },
     updateTotalNFT: function () {
@@ -351,7 +351,7 @@ UserNFT = {
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
             UserNFT.updateUserNFT();
         });
-        contractsInstance.NFTHotPot.events.UseTicket({ filter:{owner: defaultAccount} }, function (e, r) {
+        contractsInstance.NFTHotPot.events.UseTicket({ filter: { owner: defaultAccount } }, function (e, r) {
 
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
