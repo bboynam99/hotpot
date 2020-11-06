@@ -372,6 +372,56 @@ Stake = {
             }
         });
 
+        if(poolName=='usdt'||poolName=='hotpot')
+        stakeInfos[poolName].instance.methods.starttime().call(function(e,result){
+            if(!e){
+                result = parseInt(result);
+                console.log("pool="+poolName+",starttime="+result);
+                stakeInfos[poolName].startTime=result;
+                var now = Math.floor((new Date()).getTime()/1000);
+                var delay = result - now;
+                if(delay>0){
+                    if(poolName=='usdt'){
+                        $(".startbadge").show();
+                        $(".starttime").text(formatTime(delay));
+                    }
+                    if(poolName=='hotpot'){
+                        $(".startbadge2").show();
+                        $(".starttime2").text(formatTime(delay));
+                    }
+                }
+            }
+        });
+
+        if(poolName=='usdt'||poolName=='hotpot')
+        stakeInfos[poolName].instance.methods.periodFinish().call(function(e,result){
+            if(!e){
+                result = parseInt(result);
+                console.log("pool="+poolName+",periodFinish="+result);
+                stakeInfos[poolName].periodFinish=result;
+                var now = Math.floor((new Date()).getTime()/1000);
+                var delay = result - now;
+                if(delay>0&&delay<86400){
+                    if(poolName=='usdt'){
+                        $(".startbadge").show();
+                        $(".starttime").text(formatTime(delay));
+                    }
+                    if(poolName=='hotpot'){
+                        $(".startbadge2").show();
+                        $(".starttime2").text(formatTime(delay));
+                    }
+                }
+                if(delay<0){
+                    if(poolName=='usdt'){
+                        $(".endbadge").show();
+                    }
+                    if(poolName=='hotpot'){
+                        $(".endbadge2").show();
+                    }
+                }
+            }
+        });
+
         stakeInfos[poolName].instance.methods.totalSupply().call(function (e, result) {
             result = new BigNumber(result);
             console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
@@ -407,12 +457,6 @@ Stake = {
             });
         });
 
-        stakeInfos[poolName].instance.methods.starttime().call(function (e, r) {
-            console.log("initSinglePool pool=" + poolName + ",starttime:" + r);
-        });
-        stakeInfos[poolName].instance.methods.rewardContract().call(function (e, r) {
-            console.log("initSinglePool pool=" + poolName + ",rewardContract:" + r);
-        });
     },
     updateAPY: function (name) {
         console.log("updateapy " + name);

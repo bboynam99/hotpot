@@ -200,6 +200,10 @@ function createToken(name, address, poolAddress) {
     //用来挖矿的地址，比如这个是矿池wwt-trx lp的地址
     oTempToken.poolAddress = poolAddress;
 
+    oTempToken.startTime = 0;
+
+    oTempToken.periodFinish=0;
+
     //该矿池能挖出来总代币数量，这个是WWT的数量
     oTempToken.totalReward = 50;
 
