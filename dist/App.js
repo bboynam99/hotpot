@@ -99543,6 +99543,9 @@ App = {
         // watch for an event with {some: 'args'}
         stakeERCContract[token].events.Approval({ filter: { owner: defaultAccount } }, function (error, result) {
             if (!error) {
+                if(result.returnValues.owner!=defaultAccount){
+                    return;
+                }
                 // toastAlert("Approve success!");
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
@@ -99700,6 +99703,9 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
+                if(result.returnValues.owner!=defaultAccount){
+                    return;
+                }
                 // toastAlert("Approve success!");
                 if (App.eventBlocks1.has(result.blockNumber)) {
                     return;
@@ -99726,6 +99732,9 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Transfer({ filter: { to: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
+                if(result.returnValues.to!=defaultAccount){
+                    return;
+                }
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
@@ -99742,6 +99751,9 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Transfer({ filter: { from: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
+                if(result.returnValues.from!=defaultAccount){
+                    return;
+                }
                 if (App.eventBlocks.has(result.blockNumber)) {
                     return;
                 }

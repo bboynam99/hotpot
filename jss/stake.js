@@ -298,6 +298,9 @@ Stake = {
         stakeInfos[poolName].instance = new web3.eth.Contract(contractABI['stakepool'], poolAddress);
 
         stakeInfos[poolName].instance.events.Staked({ filter: { user: defaultAccount } }, function (err, result) {
+            if(result.returnValues.user!=defaultAccount){
+                return;
+            }
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -317,6 +320,9 @@ Stake = {
         });
 
         stakeInfos[poolName].instance.events.Withdrawn({ filter: { user: defaultAccount } }, function (err, result) {
+            if(result.returnValues.user!=defaultAccount){
+                return;
+            }
             if (err) {
                 return console.error('Error with stake:', err);
             }
@@ -336,6 +342,9 @@ Stake = {
         });
 
         stakeInfos[poolName].instance.events.RewardPaid({ filter: { user: defaultAccount } }, function (err, result) {
+            if(result.returnValues.user!=defaultAccount){
+                return;
+            }
             if (err) {
                 return console.error('Error with stake:', err);
             }

@@ -20,6 +20,9 @@ Market = {
         Market.initSellTable();
         contractsInstance.HotPot.events.Approval({ filter:{owner: defaultAccount, spender: contractsInstance.NFTMarket._address} }, function (error, result) {
             if (!error) {
+                if(result.returnValues.owner!=defaultAccount || result.returnValues.spender!=contractsInstance.NFTMarket._address){
+                    return;
+                }
                 // console.log("Market Approval");
                 if (Market.eventBlocks.has(result.blockNumber)) {
                     return;

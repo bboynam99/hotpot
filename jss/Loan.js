@@ -10,6 +10,9 @@ Loan = {
         Loan.initLoanTable();
         contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount, spender: contractsInstance.Loan._address } }, function (error, result) {
             if (!error) {
+                if(result.returnValues.owner!=defaultAccount || result.returnValues.spender!=contractsInstance.Loan._address){
+                    return;
+                }
                 if (Loan.eventBlocks.has(result.blockNumber)) {
                     return;
                 }

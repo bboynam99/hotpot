@@ -193,6 +193,9 @@ UserNFT = {
             });
             UserNFT.updateNFTTable();
             contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: tokenId } }, function (e, r) {
+                if(result.returnValues.tokenId!=tokenId){
+                    return;
+                }
                 if (UserNFT.eventBlocks.has(r.blockNumber)) {
                     return;
                 }
@@ -233,6 +236,9 @@ UserNFT = {
             });
             console.log("checkMyBorrowed =" + id);
             contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: id } }, function (e, r) {
+                if(result.returnValues.tokenId!=id){
+                    return;
+                }
                 if (UserNFT.eventBlocks.has(r.blockNumber)) {
                     return;
                 }
@@ -331,6 +337,9 @@ UserNFT = {
         // event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
         // Transfer
         contractsInstance.NFTHotPot.events.Transfer({ filter: { from: defaultAccount } }, function (e, r) {
+            if(result.returnValues.from!=defaultAccount){
+                return;
+            }
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -342,6 +351,9 @@ UserNFT = {
             UserNFT.updateUserNFT();
         });
         contractsInstance.NFTHotPot.events.Transfer({ filter: { to: defaultAccount } }, function (e, r) {
+            if(result.returnValues.to!=defaultAccount){
+                return;
+            }
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }
@@ -352,7 +364,9 @@ UserNFT = {
             UserNFT.updateUserNFT();
         });
         contractsInstance.NFTHotPot.events.UseTicket({ filter: { owner: defaultAccount } }, function (e, r) {
-
+            if(result.returnValues.owner!=defaultAccount){
+                return;
+            }
             if (UserNFT.eventBlocks.has(r.blockNumber)) {
                 return;
             }

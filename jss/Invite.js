@@ -8,6 +8,9 @@ Invite = {
 
         contractsInstance.Invite.events.InviteCreated({ filter: { creator: defaultAccount } }, function (error, result) {
             if (!error) {
+                if(result.returnValues.creator!=defaultAccount){
+                    return;
+                }
                 if (Invite.eventBlocks1.has(result.blockNumber)) {
                     return;
                 }
@@ -19,6 +22,9 @@ Invite = {
 
         contractsInstance.Invite.events.InviteInput({ filter: { user: defaultAccount } }, function (error, result) {
             if (!error) {
+                if(result.returnValues.user!=defaultAccount){
+                    return;
+                }
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
                 }
@@ -29,6 +35,9 @@ Invite = {
         });
         contractsInstance.Invite.events.InviteValidate({ filter: { validator: defaultAccount } }, function (error, result) {
             if (!error) {
+                if(result.returnValues.validator!=defaultAccount){
+                    return;
+                }
                 if (Invite.eventBlocks.has(result.blockNumber)) {
                     return;
                 }

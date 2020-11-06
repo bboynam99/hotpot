@@ -42,6 +42,9 @@ Reward = {
         console.log("rewardByNFT : " + id);
         contractsInstance.Reward.events.WithdrawReward({ filter: { sender: defaultAccount } }, function (e, result) {
             if (!e) {
+                if(result.returnValues.sender!=defaultAccount){
+                    return;
+                }
                 toastAlert(getString('rewardsuccess'));
             }
         });
