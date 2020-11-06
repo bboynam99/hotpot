@@ -131,7 +131,7 @@ Loan = {
         node.append(nodeblock);
         $("#tableloanhistory").append(node);
 
-        contractsInstance.Loan.events.allEvents({ filter: { event: 'TokenBorrowed' }, fromBlock: 0, toBlock: 'latest' }, function (e, r) {
+        contractsInstance.Loan.getPastEvents('TokenBorrowed',{fromBlock: 0, toBlock: 'latest' }, function (e, r) {
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'TokenBorrowed') {
@@ -197,15 +197,18 @@ Loan = {
 
         node.append(nodetdbtn);
 
-        var timestamp = web3.eth.getBlock(nft.blockNumber).timestamp;
-        var now = Math.floor((new Date()).getTime() / 1000);
-        var delay = now - timestamp;
-        var delaystr = formatTime2Min(delay) + " " + getString('ago');
+        web3.eth.getBlock(nft.blockNumber,function(e,r){
+            var timestamp = r.timestamp;
+            var now = Math.floor((new Date()).getTime() / 1000);
+            var delay = now - timestamp;
+            var delaystr = formatTime2Min(delay) + " " + getString('ago');
+    
+            var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
+            node.append(nodeblockNumber);
+    
+            $("#tableloanhistory").append(node);
+        });
 
-        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
-        node.append(nodeblockNumber);
-
-        $("#tableloanhistory").append(node);
     },
     getNFTInfo: function (id) {
         console.log("getNFTInfo id=" + id);

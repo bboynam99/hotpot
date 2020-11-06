@@ -217,6 +217,9 @@ function formatTime2Min(t) {
     } else {
         const h = Math.floor(times / 3600);
         const m = Math.floor((times % 3600) / 60);
+        if(h==0){
+            return m+" m";
+        }else
         return h + "h " + m + "m ";
     }
     // console.log("formatFomoTime : "+t)

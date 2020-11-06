@@ -116,7 +116,7 @@ Market = {
         node.append(nodeblock);
         $("#tablesellhistory").append(node);
 
-        contractsInstance.NFTMarket.events.allEvents({ filter: { event: 'Swapped' }, fromBlock: 0, toBlock: 'latest' }, function (e, r) {
+        contractsInstance.NFTMarket.getPastEvents('Swapped',{fromBlock: 0, toBlock: 'latest' }, function (e, r) {
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'Swapped') {
@@ -176,15 +176,18 @@ Market = {
 
         node.append(nodetdbtn);
 
-        var timestamp = web3.eth.getBlock(nft.blockNumber).timestamp;
-        var now = Math.floor((new Date()).getTime() / 1000);
-        var delay = now - timestamp;
-        var delaystr = formatTime2Min(delay) + " " + getString('ago');
+        web3.eth.getBlock(nft.blockNumber,function(e,r){
+            var timestamp = r.timestamp;
+            var now = Math.floor((new Date()).getTime() / 1000);
+            var delay = now - timestamp;
+            var delaystr = formatTime2Min(delay) + " " + getString('ago');
+    
+            var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
+            node.append(nodeblockNumber);
+    
+            $("#tablesellhistory").append(node);
+        });
 
-        var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
-        node.append(nodeblockNumber);
-
-        $("#tablesellhistory").append(node);
     },
     removeNFT: function (tokenId) {
         console.log("removeNFT=" + tokenId);
