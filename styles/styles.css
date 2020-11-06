@@ -91,6 +91,13 @@ body:not(.web3) .web3true {
 	font-size: 20px;
 }
 
+.time-badge{
+	position: absolute;
+	left: -10px;
+	top: -10px;
+	font-size: 18px;	
+}
+
 body.approved .not-approved-spend {
 	display: none
 }
