@@ -185,7 +185,12 @@ Loan = {
         var nodeprice = $("<td></td>").text(price.toFixed(2));
         node.append(nodeprice);
 
-        var nodeendtime = $("<td></td>").text(nft.borrowDays + getString('day'));
+        var nodedays = $("<span></span>").text(nft.borrowDays+" ");
+        var nodeday = $("<span data-lang='day'></span>").text(getString('day'));
+        var nodeendtime = $("<td></td>");
+        nodeendtime.append(nodedays);
+        nodeendtime.append(nodeday);
+
         node.append(nodeendtime);
 
         var pre = nft.borrower.substr(0, 5);
@@ -201,9 +206,11 @@ Loan = {
             var timestamp = r.timestamp;
             var now = Math.floor((new Date()).getTime() / 1000);
             var delay = now - timestamp;
-            var delaystr = formatTime2Min(delay) + " " + getString('ago');
-    
-            var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
+            var delaynode = $("<span></span>").text(formatTime2Min(delay) + " ");
+            var agonode = $("<span data-lang='ago'></span>").text(getString('ago'));
+            var nodeblockNumber = $("<td style='text-align: center;'></td>");
+            nodeblockNumber.append(delaynode);
+            nodeblockNumber.append(agonode);
             node.append(nodeblockNumber);
     
             $("#tableloanhistory").append(node);

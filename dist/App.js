@@ -99321,6 +99321,7 @@ App = {
     uniV2PairABI: null,
     eventBlocks: new Set(),
     eventBlocks1: new Set(),
+    enableWalletConnect:false,
     init: function () {
         return App.initWeb3();
     },
@@ -99332,6 +99333,10 @@ App = {
         }
     },
     connectWallet: async function () {
+        if(!App.enableWalletConnect){
+            toastAlert(getString('comingsoon'));
+            return;
+        }
         //  Create WalletConnect Provider
         const provider = new WalletConnectProvider({
             infuraId: "3c4e7e3302614427bd0afc40b7e332db" // Required
@@ -99429,6 +99434,7 @@ App = {
             ETHENV.init(chain);
             return App.initWallet();
         } else {
+            if(App.enableWalletConnect)
             App.connectWallet();
         }
     },
