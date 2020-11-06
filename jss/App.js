@@ -5,7 +5,7 @@ App = {
     web3Provider: null,
     erc20ABI: null,
     uniV2PairABI: null,
-    enableWalletConnect:false,
+    enableWalletConnect: false,
     init: function () {
         return App.initWeb3();
     },
@@ -17,7 +17,7 @@ App = {
         }
     },
     connectWallet: async function () {
-        if(!App.enableWalletConnect){
+        if (!App.enableWalletConnect) {
             toastAlert(getString('comingsoon'));
             return;
         }
@@ -27,24 +27,24 @@ App = {
         });
         // Subscribe to accounts change
         provider.on("accountsChanged", (accounts) => {
-            if(printLog)console.log(accounts);
+            if (printLog) console.log(accounts);
             // window.location.reload();
         });
 
         // Subscribe to chainId change
         provider.on("chainChanged", (chainId) => {
-            if(printLog)console.log(chainId);
+            if (printLog) console.log(chainId);
             // window.location.reload();
         });
 
         // Subscribe to session connection
         provider.on("connect", () => {
-            if(printLog)console.log("connect");
+            if (printLog) console.log("connect");
         });
 
         // Subscribe to session disconnection
         provider.on("disconnect", (code, reason) => {
-            if(printLog)console.log(code, reason);
+            if (printLog) console.log(code, reason);
             // window.location.reload();
         });
         //  Enable session (triggers QR Code modal)
@@ -76,24 +76,24 @@ App = {
             chain = ChainId[2];
         }
         ETHENV.init(chain);
-        if(printLog)console.log("account=" + accounts[0]);
+        if (printLog) console.log("account=" + accounts[0]);
         // await provider.disconnect();
 
         // if(printLog)console.log("address Yes:" + window.tronWeb.defaultAddress.base58)
         defaultAccount = accounts[0];
-        if(printLog)console.log("chainid=" + chainId + ",account=" + defaultAccount);
+        if (printLog) console.log("chainid=" + chainId + ",account=" + defaultAccount);
         return App.initContract();
     },
     initWeb3: function () {
         // Initialize web3 and set the provider to the testRPC.
         if (typeof window.ethereum != 'undefined') {
-            if(printLog)console.log("Metamask is installed!");
+            if (printLog) console.log("Metamask is installed!");
             App.web3Provider = window.ethereum;
             web3 = new Web3(window.ethereum);
             window.ethereum.on('accountsChanged', (accounts) => {
                 // Handle the new accounts, or lack thereof.
                 // "accounts" will always be an array, but it can be empty.
-                if(printLog)console.log("accountsChanged");
+                if (printLog) console.log("accountsChanged");
                 window.location.reload();
             });
 
@@ -101,10 +101,10 @@ App = {
                 // Handle the new chain.
                 // Correctly handling chain changes can be complicated.
                 // We recommend reloading the page unless you have a very good reason not to.
-                if(printLog)console.log("chainChanged");
+                if (printLog) console.log("chainChanged");
                 window.location.reload();
             });
-            if(printLog)console.log("chainid=" + window.ethereum.chainId);
+            if (printLog) console.log("chainid=" + window.ethereum.chainId);
             var chainId = window.ethereum.chainId;
             ////chainId === "0x1" main, chainId === "0x3" ropsten, chainId === "0x4" rinkey
             var chain = ChainId[0];
@@ -118,24 +118,24 @@ App = {
             ETHENV.init(chain);
             return App.initWallet();
         } else {
-            if(App.enableWalletConnect)
-            App.connectWallet();
+            if (App.enableWalletConnect)
+                App.connectWallet();
         }
     },
 
     initWallet: async function () {
-        if(printLog)console.log("initWallet");
+        if (printLog) console.log("initWallet");
         if (web3 != null) {
             $('body').addClass('web3');
         }
         var v = web3.version;
-        if(printLog)console.log("web3 version=" + v);
+        if (printLog) console.log("web3 version=" + v);
         let accounts = await ethereum.request(
             {
                 method: 'eth_requestAccounts'
             }
         );
-        if(printLog)console.log("account=" + accounts[0]);
+        if (printLog) console.log("account=" + accounts[0]);
         defaultAccount = web3.utils.toChecksumAddress(accounts[0]);
         return App.initContract();
     },
@@ -143,7 +143,7 @@ App = {
         $("#divloading").show();
         $.getJSON('contracts/StakePool.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            if(printLog)console.log("StakePool create");
+            if (printLog) console.log("StakePool create");
             // contractsInstance.StakePool = new web3.eth.Contract(data.abi);
             contractABI['stakepool'] = data.abi;
             return App.getStakePools();
@@ -154,6 +154,19 @@ App = {
             erc20ABI = data.abi;
             // erc20Contract = new web3.eth.Contract(data.abi,contractAddress.hotpot);
             // contractsInstance.HotPot = contractsInstance.HotPot.at(contractAddress.hotpot);
+
+            $.getJSON('contracts/Loan.json', function (data) {
+                // Get the necessary contract artifact file and instantiate it with truffle-contract.
+                contractsInstance.Loan = new web3.eth.Contract(data.abi, contractAddress['loan']);
+                // contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
+
+                $.getJSON('contracts/NFTokenHotPot.json', function (data) {
+                    contractsInstance.NFTHotPot = new web3.eth.Contract(data.abi, contractAddress.nft);
+                    // contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
+                    return UserNFT.getNFTBalances();
+                });
+                return Loan.getLoan();
+            });
             return App.getBalances();
         });
 
@@ -171,18 +184,6 @@ App = {
             return Gacha.getGacha();
         });
 
-        $.getJSON('contracts/Loan.json', function (data) {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract.
-            contractsInstance.Loan = new web3.eth.Contract(data.abi, contractAddress['loan']);
-            // contractsInstance.Loan = contractsInstance.Loan.at(contractAddress['loan']);
-
-            $.getJSON('contracts/NFTokenHotPot.json', function (data) {
-                contractsInstance.NFTHotPot = new web3.eth.Contract(data.abi, contractAddress.nft);
-                // contractsInstance.NFTHotPot = contractsInstance.NFTHotPot.at(contractAddress.nft);
-                return UserNFT.getNFTBalances();
-            });
-            return Loan.getLoan();
-        });
 
         $.getJSON('contracts/NFTMarket.json', function (data) {
             // Get the necessary contract artifact file and instantiate it with truffle-contract.
@@ -201,7 +202,7 @@ App = {
     getUniV2Pairs: function () {
         for (var i = 0; i < allPoolTokens.length; i++) {
             var token = allPoolTokens[i];
-            if(printLog)console.log("getUniV2Pairs " + token);
+            if (printLog) console.log("getUniV2Pairs " + token);
             if (token == 'eth/usdt' || token == "hotpot/eth" || token == "wbtc/eth") {
                 App.getUniV2Pair(token);
             }
@@ -214,14 +215,14 @@ App = {
             return;
         }
         stakeERCContract[token] = new web3.eth.Contract(erc20ABI, stakeERCAddress[token]);
-        if(printLog)console.log("getStakeERCInfo token=" + token);
+        if (printLog) console.log("getStakeERCInfo token=" + token);
         stakeERCContract[token].methods.balanceOf(defaultAccount).call(function (e, result) {
             stakeInfos[token].userBalance = new BigNumber(result);
-            if(printLog)console.log("getStakeERCInfo balance=" + result + ",name=" + token);
+            if (printLog) console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].methods.decimals().call(function (e, result) {
                 stakeInfos[token].decimals = parseInt(result);
                 stakeERCContract[token].methods.allowance(defaultAccount, stakePoolAddress[token]).call(function (e, result) {
-                    if(printLog)console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
+                    if (printLog) console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
                     stakeInfos[token].allowance = new BigNumber(result);
                     if (currentPagePoolID != "") {
                         Stake.initpooldata(currentPagePoolID);
@@ -233,20 +234,20 @@ App = {
         // watch for an event with {some: 'args'}
         stakeERCContract[token].events.Approval({ filter: { owner: defaultAccount } }, function (error, result) {
             if (!error) {
-                if(result.returnValues.owner!=defaultAccount){
+                if (result.returnValues.owner != defaultAccount) {
                     return;
                 }
-                if(checkSameEvent(result)){
+                if (checkSameEvent(result)) {
                     return;
                 }
 
                 result.returnValues.value = new BigNumber(result.returnValues.value);
                 if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
-                    if(printLog)console.log("stakeERCContract Approval less");
+                    if (printLog) console.log("stakeERCContract Approval less");
                     return;
                 }
 
-                if(printLog)console.log(token + ":approval " + result.returnValues);
+                if (printLog) console.log(token + ":approval " + result.returnValues);
                 hideTopMsg();
 
                 stakeInfos[token].allowance = result.returnValues.value;
@@ -265,11 +266,11 @@ App = {
     },
     updateUserBalance: function () {
         var b = (defaultBalance.div(Math.pow(10, 18)).toFixed(2));
-        if(printLog)console.log("updateUserBalance " + b);
+        if (printLog) console.log("updateUserBalance " + b);
         $('.mybalance').text(b);
     },
     getUniV2Pair: function (pair) {
-        if(printLog)console.log("getUniV2Pair=" + pair);
+        if (printLog) console.log("getUniV2Pair=" + pair);
         univ2PairInfo[pair] = createPairInfo(pair);
         if (stakeERCAddress[pair] == null || stakeERCAddress[pair] == "") {
             return;
@@ -277,17 +278,17 @@ App = {
         univ2PairInfo[pair].contractInstance = new web3.eth.Contract(App.uniV2PairABI, stakeERCAddress[pair]);
         univ2PairInfo[pair].contractInstance.methods.token0().call(function (e, r) {
             univ2PairInfo[pair].token0 = r;
-            if(printLog)console.log("getUniV2Pair pair=" + pair + ", token0=" + r);
+            if (printLog) console.log("getUniV2Pair pair=" + pair + ", token0=" + r);
         });
         univ2PairInfo[pair].contractInstance.methods.token1().call(function (e, r) {
             univ2PairInfo[pair].token1 = r;
-            if(printLog)console.log("getUniV2Pair pair=" + pair + ",token1=" + r);
+            if (printLog) console.log("getUniV2Pair pair=" + pair + ",token1=" + r);
         });
         univ2PairInfo[pair].contractInstance.methods.decimals().call(function (e, result) {
-            if(printLog)console.log("getUniV2Pair decimals=" + result + ",name=" + pair);
+            if (printLog) console.log("getUniV2Pair decimals=" + result + ",name=" + pair);
             univ2PairInfo[pair].decimals = parseInt(result);
             univ2PairInfo[pair].contractInstance.methods.getReserves().call(function (e, result) {
-                if(printLog)console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
+                if (printLog) console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
                 var reserve0 = new BigNumber(result[0]);
                 var reserve1 = new BigNumber(result[1]);
                 if (reserve0 == 0) {
@@ -300,14 +301,14 @@ App = {
                 univ2PairInfo[pair].reserve1 = reserve1;
 
                 univ2PairInfo[pair].contractInstance.methods.totalSupply().call(function (e, result) {
-                    if(printLog)console.log("getUniV2Pair totalSupply=" + result + ",name=" + pair);
+                    if (printLog) console.log("getUniV2Pair totalSupply=" + result + ",name=" + pair);
                     result = new BigNumber(result);
                     if (result == 0) {
                         result = result.plus(1);
                     }
                     univ2PairInfo[pair].totalSupply = result;
                     univ2PairInfo[pair].lpPrice = univ2PairInfo[pair].reserve1.div(Math.pow(10, 18)).times(2).div(univ2PairInfo[pair].totalSupply.div(Math.pow(10, univ2PairInfo[pair].decimals)));
-                    if(printLog)console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
+                    if (printLog) console.log("pair=" + pair + ",lp price=" + univ2PairInfo[pair].lpPrice);
                     App.checkAllUni();
                 });
             });
@@ -325,7 +326,7 @@ App = {
         App.calTokenPrice();
     },
     calTokenPrice: function () {
-        if(printLog)console.log("calTokenPrice");
+        if (printLog) console.log("calTokenPrice");
         var ethusdt = univ2PairInfo["eth/usdt"];
         var vEth = ethusdt.reserve0.div(Math.pow(10, 18));
         var vUsdt = ethusdt.reserve1.div(Math.pow(10, 6));
@@ -335,7 +336,7 @@ App = {
         }
 
         var priceEth = vUsdt.div(vEth);
-        if(printLog)console.log("calTokenPrice price eth=" + priceEth);
+        if (printLog) console.log("calTokenPrice price eth=" + priceEth);
 
 
         var hotpoteth = univ2PairInfo["hotpot/eth"];
@@ -343,7 +344,7 @@ App = {
         var vE = hotpoteth.reserve1.div(Math.pow(10, 18));
 
         var priceHot = vE.div(vHot).times(priceEth);
-        if(printLog)console.log("calTokenPrice eth price=" + priceEth + ",hot price=" + priceHot);
+        if (printLog) console.log("calTokenPrice eth price=" + priceEth + ",hot price=" + priceHot);
 
 
         var btceth = univ2PairInfo["wbtc/eth"];
@@ -351,7 +352,7 @@ App = {
         var vE2 = btceth.reserve1.div(Math.pow(10, 18));
 
         var pricebtc = vE2.div(vbtc).times(priceEth);
-        if(printLog)console.log("calTokenPrice eth price=" + priceEth + ",btc price=" + pricebtc);
+        if (printLog) console.log("calTokenPrice eth price=" + priceEth + ",btc price=" + pricebtc);
 
         //usdt
         stakeInfos["usdt"].price = 1;
@@ -364,7 +365,7 @@ App = {
             if (name == 'eth/usdt' || name == "hotpot/eth" || name == "wbtc/eth") {
                 stakeInfos[name].price = univ2PairInfo[name].lpPrice.times(priceEth);
             }
-            if(printLog)console.log("calTokenPrice stake token price name:" + name + ",price=" + stakeInfos[name].price);
+            if (printLog) console.log("calTokenPrice stake token price name:" + name + ",price=" + stakeInfos[name].price);
         }
         delete allPoolTokens[allPoolTokens.length - 1];
         Stake.initStakePool();
@@ -386,34 +387,34 @@ App = {
         });
 
     },
-    refreshBalances:function(){
+    refreshBalances: function () {
         contractsInstance.HotPot.methods.balanceOf(defaultAccount).call(function (e, result) {
             if (e) {
-                if(printLog)console.log("HotPot.balanceOf error : " + e);
+                if (printLog) console.log("HotPot.balanceOf error : " + e);
                 return;
             }
             defaultBalance = new BigNumber(result);
-            if(printLog)console.log("balanceOf " + result / 10 ** 18);
+            if (printLog) console.log("balanceOf " + result / 10 ** 18);
             App.updateUserBalance();
         });
     },
     getBalances: async function () {
-        if(printLog)console.log('Getting balances...');
+        if (printLog) console.log('Getting balances...');
 
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
-                if(result.returnValues.owner!=defaultAccount){
+                if (result.returnValues.owner != defaultAccount) {
                     return;
                 }
                 // toastAlert("Approve success!");
-                if(checkSameEvent(result)){
+                if (checkSameEvent(result)) {
                     return;
                 }
-                if(printLog)console.log("approval spender=" + result.returnValues.spender);
+                if (printLog) console.log("approval spender=" + result.returnValues.spender);
                 result.returnValues.value = new BigNumber(result.returnValues.value);
                 if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
-                    if(printLog)console.log("approval less");
+                    if (printLog) console.log("approval less");
                     return;
                 }
 
@@ -431,15 +432,15 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Transfer({ filter: { to: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
-                if(result.returnValues.to!=defaultAccount){
+                if (result.returnValues.to != defaultAccount) {
                     return;
                 }
-                if(checkSameEvent(result)){
+                if (checkSameEvent(result)) {
                     return;
                 }
                 // toastAlert("Approve success!");
-                if(printLog)console.log("Transfer in=" + result.returnValues.value);
-                if(printLog)console.log("to =" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
+                if (printLog) console.log("Transfer in=" + result.returnValues.value);
+                if (printLog) console.log("to =" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
 
                 defaultBalance = defaultBalance.plus(new BigNumber(result.returnValues.value));
                 stakeInfos['hotpot'].userBalance = defaultBalance;
@@ -450,16 +451,16 @@ App = {
         // watch for an event with {some: 'args'}
         contractsInstance.HotPot.events.Transfer({ filter: { from: defaultAccount }, fromBlock: 'latest', toBlock: 'latest' }, function (error, result) {
             if (!error) {
-                if(result.returnValues.from!=defaultAccount){
+                if (result.returnValues.from != defaultAccount) {
                     return;
                 }
-                if(checkSameEvent(result)){
+                if (checkSameEvent(result)) {
                     return;
                 }
                 // toastAlert("Approve success!");
                 // if(printLog)console.log("Transfer out=" + result.returnValues.value);
 
-                if(printLog)console.log("out  to=" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
+                if (printLog) console.log("out  to=" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
                 defaultBalance = defaultBalance.minus(new BigNumber(result.returnValues.value));
                 App.updateUserBalance();
             }
@@ -470,12 +471,12 @@ App = {
         // call constant function
         contractsInstance.HotPot.methods.balanceOf(defaultAccount).call(function (e, result) {
             if (e) {
-                if(printLog)console.log("HotPot.balanceOf error : " + e);
+                if (printLog) console.log("HotPot.balanceOf error : " + e);
                 return;
             }
             defaultBalance = new BigNumber(result);
             balanceOfHotpot['total'] = new BigNumber(1000000 * 10 ** 18);
-            if(printLog)console.log("balanceOf " + result / 10 ** 18);
+            if (printLog) console.log("balanceOf " + result / 10 ** 18);
             App.updateUserBalance();
             contractsInstance.HotPot.methods.allowance(defaultAccount, contractAddress.gacha).call(function (e, result) {
                 var allowance = result;
@@ -624,7 +625,7 @@ window.testFunction = () => {
 
     for (var i = 0; i < allPoolTokens.length; i++) {
         var token = allPoolTokens[i];
-        if(!token){
+        if (!token) {
             continue;
         }
         Stake.notifyRewardAmount(token, 70000);
