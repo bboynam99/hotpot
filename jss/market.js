@@ -180,9 +180,12 @@ Market = {
             var timestamp = r.timestamp;
             var now = Math.floor((new Date()).getTime() / 1000);
             var delay = now - timestamp;
-            var delaystr = formatTime2Min(delay) + " " + getString('ago');
-    
-            var nodeblockNumber = $("<td style='text-align: center;'></td>").text(delaystr);
+
+           var delaynode = $("<span></span>").text(formatTime2Min(delay) + " ");
+            var agonode = $("<span data-lang='ago'></span>").text(getString('ago'));
+            var nodeblockNumber = $("<td style='text-align: center;'></td>");
+            nodeblockNumber.append(delaynode);
+            nodeblockNumber.append(agonode);
             node.append(nodeblockNumber);
     
             $("#tablesellhistory").append(node);
