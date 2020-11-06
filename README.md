@@ -1,2 +1,2 @@
 # hotpot
-HotPot Dex project
+HotPot project
