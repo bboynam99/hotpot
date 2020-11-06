@@ -241,7 +241,7 @@ App = {
                     return;
                 }
 
-                console.log(token + ":approval " + result.args);
+                console.log(token + ":approval " + result.returnValues);
                 hideTopMsg();
 
                 stakeInfos[token].allowance = result.returnValues.value;

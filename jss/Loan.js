@@ -43,6 +43,10 @@ Loan = {
         });
 
         contractsInstance.Loan.events.TokenDeposit(function (e, result) {
+            if (Loan.eventBlocks.has(result.blockNumber)) {
+                return;
+            }
+            Loan.eventBlocks.add(result.blockNumber);
             console.log("TokenDeposit");
             Loan.listIds.push(result.returnValues.tokenId);
             Loan.getNFTInfo(result.returnValues.tokenId);

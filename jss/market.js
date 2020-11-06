@@ -60,8 +60,10 @@ Market = {
             Market.eventBlocks.add(result.blockNumber);
             
             if (e) {
+                if(result.returnValues._seller==defaultAccount)
                 toastAlert("Error:" + e.message);
             } else {
+                if(result.returnValues._seller==defaultAccount)
                 showTopMsg("List Success", 4000);
                 var id = parseInt(result.returnValues._tokenId);
                 var price = result.returnValues._price;
@@ -80,7 +82,6 @@ Market = {
                         }
                     }
                 });
-
             }
         });
         console.log("Unlisted");
@@ -94,6 +95,8 @@ Market = {
                 UserNFT.removeSellList(parseInt(result.returnValues._tokenId));
             }
             Market.removeNFT(parseInt(result.returnValues._tokenId));
+            if(result.returnValues._seller==defaultAccount)
+            showTopMsg("Unlist Success", 4000);
         });
         Market.addHistory();
     },

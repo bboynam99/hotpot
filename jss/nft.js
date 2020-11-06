@@ -37,7 +37,7 @@ NFT = {
                 canUse = false;
 
                 let fomoTime = Math.floor(delay);
-                console.log("charger time=" + fomoTime);
+                console.log("charger time=" + fomoTime+",id="+nft.id);
                 nodeavailable = $("<span></span>");
                 var nodetime0 = $("<span  data-lang='charging'></span>").text(getString('charging'));
                 nodeavailable.append(nodetime0);
@@ -273,6 +273,7 @@ UserNFT = {
         UserNFT.updateUserNFT();
     },
     addSellList: function (nft) {
+        var id = nft.id;
         console.log("addSellList id=" + nft.id);
         UserNFT.sellNFTs[id] = nft;
         UserNFT.sellNFTs[id].sell = true;

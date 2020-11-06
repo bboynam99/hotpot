@@ -350,11 +350,14 @@ Stake = {
                 stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.minus(result.returnValues.reward);
                 
                 console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
-                if (result.returnValues.percent < 7) {
-                    stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
-                }
-                if (currentPagePoolID == poolName)
-                    Stake.initpooldata(currentPagePoolID);
+                // stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
+                stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call( function (e, r) {
+                    console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
+                    stakeInfos[poolName].lastRewardTime = r;
+                    if (currentPagePoolID == poolName)
+                        Stake.initpooldata(currentPagePoolID);
+                });
+
             }
         });
 
