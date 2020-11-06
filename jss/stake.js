@@ -5,7 +5,7 @@ Stake = {
         var amount = web3.utils.numberToHex(new BigNumber(amount * 10 ** 18));
         stakeInfos[token].instance.methods.notifyRewardAmount(amount).send({from:defaultAccount},function (e, result) {
             if (e) {
-                console.log("stake approve error " + e);
+                if(printLog)console.log("stake approve error " + e);
             } else {
                 var url = "https://etherscan.io/tx/" + result;
                 if (ETHENV.chainId == '0x1') {
@@ -19,7 +19,7 @@ Stake = {
         });
     },
     claimByNFT: function (id) {
-        console.log("claimByNFT " + id);
+        if(printLog)console.log("claimByNFT " + id);
         var token = stakeInfos[currentPagePoolID];
         if (token.userEarn == 0) {
             toastAlert(getString('noearned'));
@@ -31,10 +31,10 @@ Stake = {
         }
     },
     approve: function () {
-        console.log("stake approve:" + currentPagePoolID);
+        if(printLog)console.log("stake approve:" + currentPagePoolID);
         if (currentPagePoolID != "") {
             var stakeToken = stakeERCContract[currentPagePoolID];
-            console.log("approve " + stakeToken._address);
+            if(printLog)console.log("approve " + stakeToken._address);
             var num = new BigNumber(10 ** 30);
             stakeToken.methods.approve(stakePoolAddress[currentPagePoolID], web3.utils.numberToHex(num)).send({ from: defaultAccount }, function (e, result) {
                 afterSendTx(e, result);
@@ -80,7 +80,7 @@ Stake = {
         }
     },
     stake: function () {
-        console.log("stake");
+        if(printLog)console.log("stake");
         if (stakeInfos[currentPagePoolID].userBalance == 0) {
             toastAlert(getString('noenoughstake'));
             return;
@@ -94,7 +94,7 @@ Stake = {
         showAlert();
     },
     withdraw: function () {
-        console.log("stake");
+        if(printLog)console.log("stake");
         if (stakeInfos[currentPagePoolID].userStake == 0) {
             toastAlert(getString('noenoughwithdraw'));
             return;
@@ -110,7 +110,7 @@ Stake = {
 
     maxStake: function () {
         var max = $('#maxAvaliable').text();
-        // console.log("maxStake=" + max);
+        // if(printLog)console.log("maxStake=" + max);
         document.getElementById('stakeInput').value = max
     },
     withdrawSure: function () {
@@ -161,11 +161,11 @@ Stake = {
         }
     },
     getSinglePoolBalance: function (name) {
-        console.log("getSinglePoolBalance name=" + name);
+        if(printLog)console.log("getSinglePoolBalance name=" + name);
         var poolAddress = stakePoolAddress[name];
         if (poolAddress)
             contractsInstance.HotPot.methods.balanceOf(poolAddress).call(function (e, result) {
-                console.log("pool balance name=" + name + ",balance=" + result);
+                if(printLog)console.log("pool balance name=" + name + ",balance=" + result);
                 balanceOfHotpot[name] = new BigNumber(result);
                 Stake.count++;
                 if (Stake.count == allPoolTokens.length - 1) {
@@ -175,7 +175,7 @@ Stake = {
     },
     getFreeRewardRatio: function () {
         stakeInfos['usdt'].instance.methods.freeRewardRatio().call(function (e, r) {
-            console.log("freeRewardRatio=" + r);
+            if(printLog)console.log("freeRewardRatio=" + r);
             $(".cliamratio").text(r + "%");
         });
     },
@@ -188,7 +188,7 @@ Stake = {
         }
         total = total.minus(200000 * 10 ** 18);
         total = total.div(Math.pow(10, 18));
-        console.log("calTotalCirculation=" + total);
+        if(printLog)console.log("calTotalCirculation=" + total);
         $("#totalcir").text(total.toFixed(2));
     },
     initpooldata: function (name) {
@@ -211,13 +211,13 @@ Stake = {
 
         var stakeDecimals = token.decimals;
         let totalStake = token.poolTotalStake;
-        // console.log("totalStake=" + totalStake);
+        // if(printLog)console.log("totalStake=" + totalStake);
 
         $('.totalstake').text((totalStake.div(Math.pow(10, stakeDecimals))).toFixed(2) + " " + name);
         // pools[name].poolTotalStake = totalStake;
 
         let userStake = token.userStake;
-        // console.log("userStake=" + userStake);
+        // if(printLog)console.log("userStake=" + userStake);
         $('.stakedbalance').text((userStake.div(Math.pow(10, stakeDecimals))).toFixed(2) + " " + name);
 
         $('#stakeToken').text(name + " ");
@@ -229,7 +229,7 @@ Stake = {
         var lastRewardTime = parseInt((token.lastRewardTime).valueOf());
         var now = Math.floor(((new Date()).getTime()) / 1000);
         var delay = lastRewardTime + 86400 - now;
-        console.log("lastRewardTime=" + lastRewardTime + ",delay=" + delay + ",token=" + name);
+        if(printLog)console.log("lastRewardTime=" + lastRewardTime + ",delay=" + delay + ",token=" + name);
         if (delay > 0) {
             $("#claimtimep").show();
             Stake.cliamTimer = setInterval(() => {
@@ -245,7 +245,7 @@ Stake = {
         }
     },
     initStakePool: function () {
-        console.log("initStakePool");
+        if(printLog)console.log("initStakePool");
 
         for (var i = 0; i < allPoolTokens.length; i++) {
             var poolName = allPoolTokens[i];
@@ -280,12 +280,12 @@ Stake = {
             }
             var stake = stakeInfos[poolName].poolTotalStake;
             if (stakeInfos[poolName])
-                console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);
+                if(printLog)console.log("checkTotalStaked: pool=" + poolName + ",price=" + stakeInfos[poolName].price + ",stake=" + stake);
             if (stake == 0) {
                 continue;
             }
             var stakePrice = stake.div(Math.pow(10, stakeInfos[poolName].decimals)).times(stakeInfos[poolName].price);
-            console.log("checkTotalStaked: pool=" + poolName + ",stake price=" + stakePrice);
+            if(printLog)console.log("checkTotalStaked: pool=" + poolName + ",stake price=" + stakePrice);
             totalPrice = totalPrice.plus(stakePrice);
         }
         Stake.totalStake = totalPrice;
@@ -293,7 +293,7 @@ Stake = {
     },
     initSinglePool: function (poolName) {
         var poolAddress = stakePoolAddress[poolName];
-        console.log("initSinglePool poolname=" + poolName);
+        if(printLog)console.log("initSinglePool poolname=" + poolName);
         stakeInfos[poolName].instance = new web3.eth.Contract(contractABI['stakepool'], poolAddress);
 
         stakeInfos[poolName].instance.events.Staked({ filter: { user: defaultAccount } }, function (err, result) {
@@ -307,9 +307,9 @@ Stake = {
                 if(checkSameEvent(result)){
                     return;
                 }
-                // console.log('eventResult:', eventResult);
+                // if(printLog)console.log('eventResult:', eventResult);
                 toastAlert("Stake success!");
-                console.log("Staked");
+                if(printLog)console.log("Staked");
                 stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.plus(result.returnValues.amount);
                 stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.plus(result.returnValues.amount);
                 if (currentPagePoolID == poolName)
@@ -325,12 +325,12 @@ Stake = {
                 return console.error('Error with stake:', err);
             }
             if (result) {
-                // console.log('eventResult:', eventResult);
+                // if(printLog)console.log('eventResult:', eventResult);
                 if(checkSameEvent(result)){
                     return;
                 }
                 toastAlert("Withdraw success!");
-                console.log("Withdrawn");
+                if(printLog)console.log("Withdrawn");
                 stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.minus(result.returnValues.amount);
                 stakeInfos[poolName].poolTotalStake = stakeInfos[poolName].poolTotalStake.minus(result.returnValues.amount);
                 if (currentPagePoolID == poolName)
@@ -349,16 +349,16 @@ Stake = {
                 if(checkSameEvent(result)){
                     return;
                 }
-                // console.log('eventResult:', eventResult);
+                // if(printLog)console.log('eventResult:', eventResult);
                 // toastAlert("Withdraw success!");
-                console.log("RewardPaid");
+                if(printLog)console.log("RewardPaid");
                 toastAlert(getString('getreward'));
                 stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.minus(result.returnValues.reward);
 
-                console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
+                if(printLog)console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
                 // stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
                 stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
-                    console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
+                    if(printLog)console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                     r = parseInt(r);
                     stakeInfos[poolName].lastRewardTime = r;
                     if (currentPagePoolID == poolName)
@@ -372,7 +372,7 @@ Stake = {
         stakeInfos[poolName].instance.methods.starttime().call(function(e,result){
             if(!e){
                 result = parseInt(result);
-                console.log("pool="+poolName+",starttime="+result);
+                if(printLog)console.log("pool="+poolName+",starttime="+result);
                 stakeInfos[poolName].startTime=result;
                 var now = Math.floor((new Date()).getTime()/1000);
                 var delay = result - now;
@@ -393,7 +393,7 @@ Stake = {
         stakeInfos[poolName].instance.methods.periodFinish().call(function(e,result){
             if(!e){
                 result = parseInt(result);
-                console.log("pool="+poolName+",periodFinish="+result);
+                if(printLog)console.log("pool="+poolName+",periodFinish="+result);
                 stakeInfos[poolName].periodFinish=result;
                 var now = Math.floor((new Date()).getTime()/1000);
                 var delay = result - now;
@@ -420,32 +420,32 @@ Stake = {
 
         stakeInfos[poolName].instance.methods.totalSupply().call(function (e, result) {
             result = new BigNumber(result);
-            console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
+            if(printLog)console.log("initSinglePool pool=" + poolName + ",totalSupply:" + result);
             stakeInfos[poolName].poolTotalStake = result;
             stakeInfos[poolName].instance.methods.balanceOf(defaultAccount).call(function (e, result) {
-                console.log("initSinglePool pool=" + poolName + ",balanceOf:" + result);
+                if(printLog)console.log("initSinglePool pool=" + poolName + ",balanceOf:" + result);
                 stakeInfos[poolName].userStake = new BigNumber(result);
                 stakeInfos[poolName].instance.methods.earned(defaultAccount).call(function (e, result) {
-                    console.log("initSinglePool pool=" + poolName + ",earned:" + result);
+                    if(printLog)console.log("initSinglePool pool=" + poolName + ",earned:" + result);
 
                     stakeInfos[poolName].userEarn = new BigNumber(result);
                     stakeInfos[poolName].instance.methods.rewardRate().call(function (e, result) {
-                        console.log("initSinglePool pool=" + poolName + ",rewardRate:" + result);
+                        if(printLog)console.log("initSinglePool pool=" + poolName + ",rewardRate:" + result);
                         stakeInfos[poolName].rewardRate = new BigNumber(result);
                         Stake.updateAPY(poolName);
 
-                        console.log("initSinglePool poolName=" + poolName + ",currentPagePoolID=" + currentPagePoolID);
+                        if(printLog)console.log("initSinglePool poolName=" + poolName + ",currentPagePoolID=" + currentPagePoolID);
                         if (currentPagePoolID === poolName) {
                             Stake.initpooldata(currentPagePoolID);
                         }
                         stakeInfos[poolName].instance.methods.periodFinish().call(function (e, r) {
-                            console.log("initSinglePool pool=" + poolName + ",periodFinish:" + r);
+                            if(printLog)console.log("initSinglePool pool=" + poolName + ",periodFinish:" + r);
                             stakeInfos[poolName].periodFinish = parseInt(r);
 
                             Stake.checkTotalStaked();
                         });
                         stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
-                            console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
+                            if(printLog)console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
                             stakeInfos[poolName].lastRewardTime = parseInt(r);
                         });
                     });
@@ -455,11 +455,11 @@ Stake = {
 
     },
     updateAPY: function (name) {
-        console.log("updateapy " + name);
+        if(printLog)console.log("updateapy " + name);
         var hotpotDecimals = 18;
         //池子每s产出wwt数量
         let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10, hotpotDecimals));
-        console.log("rewardRate=" + rewardRate);
+        if(printLog)console.log("rewardRate=" + rewardRate);
 
         //每s能挖出的wwt总价格
         let rewardPrice = rewardRate * stakeInfos["hotpot"].price;
@@ -470,7 +470,7 @@ Stake = {
 
         let totalStakePrice = totalStake.div(Math.pow(10, stakeToken.decimals)).times(stakeToken.price);
 
-        console.log("updateapy token price=" + stakeToken.price + ",total price=" + totalStakePrice);
+        if(printLog)console.log("updateapy token price=" + stakeToken.price + ",total price=" + totalStakePrice);
 
         //每s，每u能产出的产率
         let aps = 1;
@@ -479,7 +479,7 @@ Stake = {
 
         let apy = aps * 60 * 60 * 24 * 365;
 
-        console.log("totalStakePrice=" + totalStakePrice + ",apy=" + apy);
+        if(printLog)console.log("totalStakePrice=" + totalStakePrice + ",apy=" + apy);
 
         stakeToken.apy = apy;
 
@@ -498,7 +498,7 @@ Stake = {
         if (name == "wbtc/eth") name = "wbtceth";
 
         var apyp = ".poolyield" + name;
-        console.log("apy str=" + apyStr);
+        if(printLog)console.log("apy str=" + apyStr);
         $(apyp).animateNumbers(apyStr);
 
         $("#divloading").hide();

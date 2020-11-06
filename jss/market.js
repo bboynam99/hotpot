@@ -1,6 +1,6 @@
 function getPriceBytes(price) {
     var p = (new BigNumber(price)).times(10 ** 18);
-    console.log("p=" + p.toString());
+    if(printLog)console.log("p=" + p.toString());
     return web3.utils.padLeft(web3.utils.numberToHex(p.toString()), 64)
 }
 
@@ -13,7 +13,7 @@ Market = {
     historyTimes:[],
     historyLength:0,
     initMarketInfo: function () {
-        console.log("initMarketInfo");
+        if(printLog)console.log("initMarketInfo");
 
         Market.initSellTable();
         contractsInstance.HotPot.events.Approval({ filter:{owner: defaultAccount, spender: contractsInstance.NFTMarket._address} }, function (error, result) {
@@ -31,7 +31,7 @@ Market = {
                 }
 
                 Market.allowance = result.returnValues.value;
-                console.log("approval spender=" + result.returnValues.spender);
+                if(printLog)console.log("approval spender=" + result.returnValues.spender);
                 Market.initSellTable();
             }
         });
@@ -40,7 +40,7 @@ Market = {
                 Market.allowance = new BigNumber(r);
             }
             contractsInstance.NFTMarket.methods.getListToken().call(function (e, r) {
-                console.log("market getListToken=" + r);
+                if(printLog)console.log("market getListToken=" + r);
                 for (var i = 0; i < r.length; i++) {
                     Market.listIds.push(parseInt(r[i]));
                     Market.getNFTInfo(parseInt(r[i]));
@@ -48,7 +48,7 @@ Market = {
             });
         });
         contractsInstance.NFTMarket.methods.getListSize().call(function (e, r) {
-            console.log("market size=" + r);
+            if(printLog)console.log("market size=" + r);
             Market.listSize = parseInt(r);
         });
 
@@ -75,7 +75,7 @@ Market = {
                 if(result.returnValues._seller==defaultAccount)
                 toastAlert("Error:" + e.message);
             } else {
-                console.log("Listed "+result.returnValues._tokenId);
+                if(printLog)console.log("Listed "+result.returnValues._tokenId);
                 if(result.returnValues._seller==defaultAccount)
                 showTopMsg("List Success", 4000);
 
@@ -99,12 +99,12 @@ Market = {
                 });
             }
         });
-        console.log("Unlisted");
+        if(printLog)console.log("Unlisted");
         contractsInstance.NFTMarket.events.Unlisted(function (e, result) {
             if(checkSameEvent(result)){
                 return;
             }
-            console.log("Unlisted block num=" + result.blockNumber);
+            if(printLog)console.log("Unlisted block num=" + result.blockNumber);
             if(result.returnValues._seller==defaultAccount){
                 UserNFT.removeSellList(parseInt(result.returnValues._tokenId));
             }
@@ -115,7 +115,7 @@ Market = {
         Market.addHistory();
     },
     addHistory: function () {
-        console.log("addHistory");
+        if(printLog)console.log("addHistory");
         $("#tablesellhistory").empty();
         var node = $("<tr  style='height:60px!important;'></tr>");
         var nodeid = $("<td>ID</td>");
@@ -135,7 +135,7 @@ Market = {
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'Swapped') {
-                    console.log("Swapped");
+                    if(printLog)console.log("Swapped");
                     var info = Market.createSellInfo(event.returnValues._buyer, event.returnValues._tokenId,
                         new BigNumber(event.returnValues._price), event.transactionHash, event.blockNumber);
                     Market.addSellInfo(info);
@@ -220,7 +220,7 @@ Market = {
         }
     },
     removeNFT: function (tokenId) {
-        console.log("removeNFT=" + tokenId);
+        if(printLog)console.log("removeNFT=" + tokenId);
         var position = -1;
         for (var i = 0; i < Market.listIds.length; i++) {
             if (tokenId == Market.listIds[i]) {
@@ -241,13 +241,13 @@ Market = {
         });
     },
     cancelSell: function (id) {
-        console.log("cancleSell " + id);
+        if(printLog)console.log("cancleSell " + id);
         contractsInstance.NFTMarket.methods.unlist(id).send({ from: defaultAccount }, function (e, r) {
             afterSendTx(e, r);
         });
     },
     buyNFT: function (id) {
-        console.log("buyNFT " + id);
+        if(printLog)console.log("buyNFT " + id);
         var price = Market.listTokens[id].price;
         if (defaultBalance.lt(price)) {
             toastAlert(getString('hotnotenough'));
@@ -271,7 +271,7 @@ Market = {
     },
     sellSure: function () {
         var id = getSellAlertId();
-        console.log("sell sure id=" + id);
+        if(printLog)console.log("sell sure id=" + id);
 
         hideSellAlert();
         var input = $('.stakeInput').val();
@@ -292,7 +292,7 @@ Market = {
         });
     },
     getNFTInfo: async function (id) {
-        console.log("getNFTInfo id=" + id);
+        if(printLog)console.log("getNFTInfo id=" + id);
         contractsInstance.NFTMarket.methods.sellerOf(id).call(function (e, r) {
             if (r == defaultAccount) {
                 var nft = NFT.createNFTInfo(id, defaultAccount);
@@ -324,7 +324,7 @@ Market = {
     },
 
     initSellTable: function () {
-        console.log("initSellTable");
+        if(printLog)console.log("initSellTable");
         $("#tablesell").empty();
         var node = $("<tr></tr>");
         var nodeid = $("<td>ID</td>");
@@ -340,7 +340,7 @@ Market = {
         for (var i = 0; i < Market.listIds.length; i++) {
             var id = Market.listIds[i];
             var nft = Market.listTokens[id];
-            console.log("i="+i+",id="+id+",nft id="+nft.id);
+            if(printLog)console.log("i="+i+",id="+id+",nft id="+nft.id);
             Market.addNFTToTable(nft);
         }
     },

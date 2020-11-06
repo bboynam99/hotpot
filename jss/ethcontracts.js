@@ -155,20 +155,20 @@ var mainStakeERC = {
 
 function setChainId(chainId){
     if (chainId === ChainId[0]) {
-        console.log("connect main");
+        if(printLog)console.log("connect main");
         contractAddress = mainContracts;
         stakePoolAddress = mainPool;
         stakeERCAddress = mainStakeERC;
         ethAddress="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
     }else if(chainId === ChainId[1]){
-        console.log("connect ropsten")
+        if(printLog)console.log("connect ropsten")
         contractAddress = ropstenContracts;
         stakePoolAddress = ropstenPool;
         stakeERCAddress = ropstenStakeERC;
         ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
     }
      else if (chainId === ChainId[2]) {
-        console.log("connect rinkeby");
+        if(printLog)console.log("connect rinkeby");
 
         contractAddress = rinkebyContracts;
         stakePoolAddress = rinkebyPool;
@@ -176,7 +176,7 @@ function setChainId(chainId){
         ethAddress="0xc778417e063141139fce010982780140aa0cd5ab";
 
     } else if (chainId === "0x29a") {
-        console.log("connect ganache");
+        if(printLog)console.log("connect ganache");
         contractAddress = ganacheContracts;
         stakePoolAddress = ganachePool;
         stakeERCAddress = ganacheStakeERC;

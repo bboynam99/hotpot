@@ -12,7 +12,7 @@ Invite = {
                 if(checkSameEvent(result)){
                     return;
                 }
-                console.log("InviteCreated");
+                if(printLog)console.log("InviteCreated");
                 Invite.getMyInviteCode();
             }
         });
@@ -25,7 +25,7 @@ Invite = {
                 if(checkSameEvent(result)){
                     return;
                 }
-                console.log("InviteInput");
+                if(printLog)console.log("InviteInput");
                 Invite.getInputInviteCode();
             }
         });
@@ -37,7 +37,7 @@ Invite = {
                 if(checkSameEvent(result)){
                     return;
                 }
-                console.log("InviteValidate");
+                if(printLog)console.log("InviteValidate");
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();
                 Invite.claimRatio += 0.01;
@@ -53,14 +53,14 @@ Invite = {
         });
         contractsInstance.Invite.methods.calRatioUpdate(defaultAccount).call(function (e, r) {
             var ratio = parseInt(r) / 1000;
-            console.log("calRatioUpdate=" + ratio);
+            if(printLog)console.log("calRatioUpdate=" + ratio);
             Invite.claimRatio += ratio;
             Invite.updateRatio();
         });
         Invite.getInputInviteCode();
 
         contractsInstance.Invite.methods.checkValidated(defaultAccount).call(function (e, r) {
-            console.log("checkValidated=" + r);
+            if(printLog)console.log("checkValidated=" + r);
             Invite.inputvalidated = r;
             if (r) {
                 $("#invitevalidated").show();
@@ -72,7 +72,7 @@ Invite = {
     },
     getInputInviteCode: function () {
         contractsInstance.Invite.methods.getInputInviteCode(defaultAccount).call(function (e, r) {
-            console.log("getInputInviteCode=" + r);
+            if(printLog)console.log("getInputInviteCode=" + r);
             if (parseInt(r) == 0) {
                 $("#inputinvitecode").show();
                 $("#inviteinputed").hide();
@@ -86,7 +86,7 @@ Invite = {
     getMyInviteCode: function () {
         contractsInstance.Invite.methods.getMyInviteCode(defaultAccount).call(function (e, r) {
             r = parseInt(r);
-            console.log("getMyInviteCode=" + r);
+            if(printLog)console.log("getMyInviteCode=" + r);
             if (r != 0) {
                 Invite.myInviteCode = r;
                 $("#myinvitecode").text(r);
@@ -104,7 +104,7 @@ Invite = {
     },
     inputCode: function () {
         var code = $("#inviteInput").val();
-        console.log("code=" + code);
+        if(printLog)console.log("code=" + code);
         var regex = /^\d+$/;
         if (regex.test(code)) {
             if (code == Invite.myInviteCode) {

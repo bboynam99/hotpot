@@ -2,19 +2,19 @@
 
 Reward = {
     gotoPage: function () {
-        console.log("Reward gotoPage");
+        if(printLog)console.log("Reward gotoPage");
         Reward.getRewardInfo();
     },
     getRewardInfo: function () {
-        console.log("getReward");
+        if(printLog)console.log("getReward");
 
         // call constant function
         contractsInstance.Reward.methods.getBalance().call(function (error, result) {
             if (error) {
-                console.log("Reward.getBalance error : " + error);
+                if(printLog)console.log("Reward.getBalance error : " + error);
                 return;
             }
-            console.log("reward balanceOf=" + result) // '0x25434534534'
+            if(printLog)console.log("reward balanceOf=" + result) // '0x25434534534'
             var total = (result / Math.pow(10, 18)).toFixed(2);
             $(".totalreward").text(total + " HotPot");
         });
@@ -25,7 +25,7 @@ Reward = {
             }
 
             var total = (result / Math.pow(10, 18)).toFixed(2);
-            console.log("calReward " + total);
+            if(printLog)console.log("calReward " + total);
             $("#rewardpercard").text(total);
         });
     },
@@ -39,7 +39,7 @@ Reward = {
         }
     },
     rewardByNFT: function (id) {
-        console.log("rewardByNFT : " + id);
+        if(printLog)console.log("rewardByNFT : " + id);
         contractsInstance.Reward.events.WithdrawReward({ filter: { sender: defaultAccount } }, function (e, result) {
             if (!e) {
                 if(result.returnValues.sender!=defaultAccount){

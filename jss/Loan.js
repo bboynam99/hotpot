@@ -22,7 +22,7 @@ Loan = {
                     return;
                 }
                 Loan.allowance = result.returnValues.value;
-                console.log("approval spender=" + result.returnValues.spender);
+                if(printLog)console.log("approval spender=" + result.returnValues.spender);
                 Loan.initLoanTable();
             }
         });
@@ -31,7 +31,7 @@ Loan = {
                 Loan.allowance = new BigNumber(r);
             }
             contractsInstance.Loan.methods.getLoanList().call(function (e, r) {
-                console.log("market getListToken=" + r);
+                if(printLog)console.log("market getListToken=" + r);
                 for (var i = 0; i < r.length; i++) {
                     Loan.listIds.push(parseInt(r[i]));
                     Loan.getNFTInfo(parseInt(r[i]));
@@ -40,7 +40,7 @@ Loan = {
         });
         contractsInstance.Loan.methods.getLoanSize().call(function (e, r) {
             r = parseInt(r);
-            console.log("getLoanSize=" + r);
+            if(printLog)console.log("getLoanSize=" + r);
             if (!e) {
                 Loan.listSize = r;
             }
@@ -50,7 +50,7 @@ Loan = {
             if(checkSameEvent(result)){
                 return;
             }
-            console.log("TokenDeposit");
+            if(printLog)console.log("TokenDeposit");
             Loan.listIds.push(parseInt(result.returnValues.tokenId));
             Loan.getNFTInfo(parseInt(result.returnValues.tokenId));
             if (result.returnValues.owner == defaultAccount) {
@@ -62,7 +62,7 @@ Loan = {
             if(checkSameEvent(result)){
                 return;
             }
-            console.log("TokenCancelDeposit block num=" + result.blockNumber);
+            if(printLog)console.log("TokenCancelDeposit block num=" + result.blockNumber);
 
             if (result.returnValues.owner == defaultAccount) {
                 UserNFT.removeLoanList(parseInt(result.returnValues.tokenId));
@@ -73,7 +73,7 @@ Loan = {
             if(checkSameEvent(result)){
                 return;
             }
-            console.log("TokenBorrowed block num=" + result.blockNumber);
+            if(printLog)console.log("TokenBorrowed block num=" + result.blockNumber);
 
             Loan.removeNFT(parseInt(result.returnValues.tokenId));
 
@@ -109,7 +109,7 @@ Loan = {
         Loan.initLoanTable();
     },
     addHistory: function () {
-        console.log("addHistory");
+        if(printLog)console.log("addHistory");
         $("#tableloanhistory").empty();
         var node = $("<tr  style='height:60px!important;'></tr>");
 
@@ -132,7 +132,7 @@ Loan = {
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'TokenBorrowed') {
-                    console.log("TokenBorrowed");
+                    if(printLog)console.log("TokenBorrowed");
                     // grade
                     var borrow = Loan.createBorrowInfo(event.returnValues.borrower, event.returnValues.tokenId,
                         new BigNumber(event.returnValues.pricePerDay), event.returnValues.borrowDays, event.transactionHash, event.blockNumber);
@@ -224,7 +224,7 @@ Loan = {
         }
     },
     getNFTInfo: function (id) {
-        console.log("getNFTInfo id=" + id);
+        if(printLog)console.log("getNFTInfo id=" + id);
         contractsInstance.NFTHotPot.methods.getGrade(id).call(function (e, r) {
             var grade = parseInt(r);
             var nft = Loan.createLoanNft(id, grade);
@@ -257,7 +257,7 @@ Loan = {
         });
     },
     initLoanTable: function () {
-        console.log("initLoanTable");
+        if(printLog)console.log("initLoanTable");
         $("#tableloan").empty();
         var node = $("<tr></tr>");
         var nodeid = $("<td>ID</td>");
@@ -282,11 +282,11 @@ Loan = {
         var lasttime = nft.days * (86400) + (nft.startTime);
         var timenow = Math.floor((new Date()).getTime() / 1000);
         if (timenow > lasttime) {
-            console.log("this token is out of date");
+            if(printLog)console.log("this token is out of date");
             return;
         }
         if (nft.borrowEndTime > timenow) {
-            console.log("This token is borrowed");
+            if(printLog)console.log("This token is borrowed");
             return;
         }
 
@@ -344,7 +344,7 @@ Loan = {
         $("#tableloan").append(node);
     },
     cancelDeposit: function (id) {
-        console.log("cancelDeposit " + id);
+        if(printLog)console.log("cancelDeposit " + id);
         var timenow = Math.floor((new Date()).getTime() / 1000);
         if (UserNFT.nftInfos[id].borrowEndTime > timenow) {
             toastAlert(getString('isborrowed'));
@@ -355,13 +355,13 @@ Loan = {
         });
     },
     borrowNFT: function (id) {
-        console.log("borrowNFT " + id);
+        if(printLog)console.log("borrowNFT " + id);
         showBorrowAlert(id);
     },
     borrowSure: function () {
-        console.log("borrowSure");
+        if(printLog)console.log("borrowSure");
         var id = getSellAlertId();
-        console.log("loan sure id=" + id);
+        if(printLog)console.log("loan sure id=" + id);
 
         hideSellAlert();
 
@@ -430,7 +430,7 @@ Loan = {
     },
     loanSure: function () {
         var id = getSellAlertId();
-        console.log("loan sure id=" + id);
+        if(printLog)console.log("loan sure id=" + id);
 
         hideSellAlert();
         var input = $('.stakeInput').val();

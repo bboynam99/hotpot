@@ -2,12 +2,13 @@ var defaultAccount = null;
 var defaultBalance = 0;
 var currentPagePoolID = "";
 var currentPage = "";
+var printLog = true;
 
 function formatFomoTime(t) {
     if (t < 0) {
         return 'error';
     }
-    // console.log("formatFomoTime : "+t)
+    // if(printLog)console.log("formatFomoTime : "+t)
     const times = Math.floor(t);
     const h = Math.floor(times / 3600);
     const m = Math.floor((times % 3600) / 60);
@@ -86,7 +87,7 @@ function getString(id) {
 
 function afterSendTx(error, result) {
     if (error) {
-        console.log("stake approve error " + error);
+        if(printLog)console.log("stake approve error " + error);
         toastAlert("Error:" + error);
     } else {
         showTopMsg("Pending...", 0, getEthersanUrl(result));
@@ -107,18 +108,18 @@ function getEthersanUrl(tx) {
 }
 
 function startListenTX(tx) {
-    console.log("startListenTX");
+    if(printLog)console.log("startListenTX");
     var internal = setInterval(function () {
         web3.eth.getTransactionReceipt(tx, function (e, result) {
             if (e) {
-                console.log("tx error:" + e);
+                if(printLog)console.log("tx error:" + e);
                 toastAlert("Error : " + e);
             } else {
-                console.log("tx result:" + result);
+                if(printLog)console.log("tx result:" + result);
             }
             if (result) {
                 clearInterval(internal);
-                console.log("getTransactionReceipt ");
+                if(printLog)console.log("getTransactionReceipt ");
                 hideTopMsg();
                 if (result.status == '0x0') {
                     showTopMsg(getString('txfail'), 5000, getEthersanUrl(result.transactionHash));
@@ -148,7 +149,7 @@ function hideTopMsg() {
 
 //importantmsg
 function showImportantMsg(msg, url) {
-    console.log("importantmsg = " + msg);
+    if(printLog)console.log("importantmsg = " + msg);
     $("#importantmsg").text(msg);
     $("#importantmsg").show();
     $("#importantmsg").attr("href", url);
@@ -159,7 +160,7 @@ function showImportantMsg(msg, url) {
 }
 
 function toastAlert(msg) {
-    console.log("toastAlert:" + msg);
+    if(printLog)console.log("toastAlert:" + msg);
     document.getElementById('alertdiv').style.display = 'block';
     document.getElementById('alertdiv').innerHTML = msg;
     setTimeout(function () {
@@ -196,7 +197,7 @@ function formatTime(t) {
         const s = times % 60;
         return h + "h " + m + "m " + ' ' + + s + "s";
     }
-    // console.log("formatFomoTime : "+t)
+    // if(printLog)console.log("formatFomoTime : "+t)
 }
 
 
@@ -222,7 +223,7 @@ function formatTime2Min(t) {
         }else
         return h + "h " + m + "m ";
     }
-    // console.log("formatFomoTime : "+t)
+    // if(printLog)console.log("formatFomoTime : "+t)
 }
 
 var eventBlocks=new Set();
