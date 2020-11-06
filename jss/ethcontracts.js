@@ -24,7 +24,7 @@ var balanceOfHotpot={};
 
 var contractsInstance = {};
 
-var contractList = ['nft','hotpot','gacha','loan','market','reward','stakepool','invite','reverse'];
+var contractList = ['nft','hotpot','gacha','loan','market','reward','stakepool','invite','reserve'];
 
 var contractURL = {
     "nft": "https://etherscan.io/",
@@ -35,7 +35,7 @@ var contractURL = {
     "reward": "https://etherscan.io/",
     "stakepool":"https://etherscan.io/",
     "invite":"https://etherscan.io/",
-    "reverse":"https://etherscan.io/"
+    "reserve":"https://etherscan.io/"
 }
 
 var mainContracts = {
@@ -46,7 +46,7 @@ var mainContracts = {
     "market": "0xAcbda85F41362768834144Ab24B9103f3A524E08",
     "reward": "0x215E9C18A19D5b0DaFfa83e9C4f122BB260F12D3",
     "invite":"",
-    "reverse":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
+    "reserve":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
 }
 
 var ropstenContracts = {
@@ -57,7 +57,7 @@ var ropstenContracts = {
     "market": "0xE6C549f4599E051889699a616AC1816d8D2c0Be7",
     "reward": "0xEDcdDD6ED6DD29c7bfe4b7eF6Cc05B7b064506Cb",
     'invite':'0xEECc6288566CFAb69df891894cC85eeE24dEa9d5',
-    "reverse":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
+    "reserve":"0xd5e25a61533a7b89d25422215927FC38fdb0bD9b",
 }
 
 var rinkebyContracts = {
@@ -68,7 +68,7 @@ var rinkebyContracts = {
     "market": "0xcD17D75901df2533380f0251a1Ee7B6a40bdD67E",
     "reward": "0xFE5792Cf698A2E596cE3d72d5960a0Ba7b920131",
     'invite':'0xa2980A0c5F0536A958DB63C635B4847D094da7ed',
-    "reverse":"0x3019eD2f702281448f09Fc612c224C772e27af07",
+    "reserve":"0x3019eD2f702281448f09Fc612c224C772e27af07",
 }
 
 var ganacheContracts = {

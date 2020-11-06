@@ -14,9 +14,6 @@ Market = {
     initMarketInfo: function () {
         console.log("initMarketInfo");
 
-        Market.listIds.push(3);
-        Market.listIds.splice(0, 1);
-
         Market.initSellTable();
         contractsInstance.HotPot.events.Approval({ filter:{owner: defaultAccount, spender: contractsInstance.NFTMarket._address} }, function (error, result) {
             if (!error) {
@@ -41,19 +38,19 @@ Market = {
         });
         contractsInstance.HotPot.methods.allowance(defaultAccount, contractsInstance.NFTMarket._address).call(function (e, r) {
             if (!e) {
-                Market.allowance = r;
+                Market.allowance = new BigNumber(r);
             }
             contractsInstance.NFTMarket.methods.getListToken().call(function (e, r) {
                 console.log("market getListToken=" + r);
                 for (var i = 0; i < r.length; i++) {
-                    Market.listIds.push(r[i]);
-                    Market.getNFTInfo(r[i]);
+                    Market.listIds.push(parseInt(r[i]));
+                    Market.getNFTInfo(parseInt(r[i]));
                 }
             });
         });
         contractsInstance.NFTMarket.methods.getListSize().call(function (e, r) {
             console.log("market size=" + r);
-            Market.listSize = r;
+            Market.listSize = parseInt(r);
         });
         console.log("Listed");
         contractsInstance.NFTMarket.events.Listed(function (e, result) {
@@ -78,7 +75,7 @@ Market = {
                 nft.seller = seller;
                 contractsInstance.NFTHotPot.methods.getGrade(id).call(function (e, r) {
                     if (!e) {
-                        nft.grade = r;
+                        nft.grade = parseInt(r);
                         Market.addNFTToTable(nft);
                         if(nft.seller==defaultAccount){
                             UserNFT.addSellList(nft);
@@ -273,9 +270,9 @@ Market = {
                 UserNFT.updateUserNFT();
             }
             contractsInstance.NFTHotPot.methods.getGrade(id).call(function (e, r) {
-                var grade = r;
+                var grade = parseInt(r);
                 if (UserNFT.sellNFTs[id])
-                    UserNFT.sellNFTs[id].grade = r;
+                    UserNFT.sellNFTs[id].grade = grade;
                 var nft = Market.createSellNft(id, grade);
                 Market.listTokens[id] = nft;
 
@@ -310,6 +307,7 @@ Market = {
         for (var i = 0; i < Market.listIds.length; i++) {
             var id = Market.listIds[i];
             var nft = Market.listTokens[id];
+            console.log("i="+i+",id="+id+",nft id="+nft.id);
             Market.addNFTToTable(nft);
         }
     },

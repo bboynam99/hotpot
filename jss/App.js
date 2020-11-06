@@ -212,13 +212,13 @@ App = {
         stakeERCContract[token] = new web3.eth.Contract(erc20ABI, stakeERCAddress[token]);
         console.log("getStakeERCInfo token=" + token);
         stakeERCContract[token].methods.balanceOf(defaultAccount).call(function (e, result) {
-            stakeInfos[token].userBalance = result;
+            stakeInfos[token].userBalance = new BigNumber(result);
             console.log("getStakeERCInfo balance=" + result + ",name=" + token);
             stakeERCContract[token].methods.decimals().call(function (e, result) {
-                stakeInfos[token].decimals = result;
+                stakeInfos[token].decimals = parseInt(result);
                 stakeERCContract[token].methods.allowance(defaultAccount, stakePoolAddress[token]).call(function (e, result) {
                     console.log("getStakeERCInfo allowance=" + result + ",name=" + token);
-                    stakeInfos[token].allowance = result;
+                    stakeInfos[token].allowance = new BigNumber(result);
                     if (currentPagePoolID != "") {
                         Stake.initpooldata(currentPagePoolID);
                     }
@@ -282,7 +282,7 @@ App = {
         });
         univ2PairInfo[pair].contractInstance.methods.decimals().call(function (e, result) {
             console.log("getUniV2Pair decimals=" + result + ",name=" + pair);
-            univ2PairInfo[pair].decimals = result;
+            univ2PairInfo[pair].decimals = parseInt(result);
             univ2PairInfo[pair].contractInstance.methods.getReserves().call(function (e, result) {
                 console.log("getUniV2Pair getReserves=" + result + ",name=" + pair);
                 var reserve0 = new BigNumber(result[0]);
@@ -383,6 +383,17 @@ App = {
         });
 
     },
+    refreshBalances:function(){
+        contractsInstance.HotPot.methods.balanceOf(defaultAccount).call(function (e, result) {
+            if (e) {
+                console.log("HotPot.balanceOf error : " + e);
+                return;
+            }
+            defaultBalance = new BigNumber(result);
+            console.log("balanceOf " + result / 10 ** 18);
+            App.updateUserBalance();
+        });
+    },
     getBalances: async function () {
         console.log('Getting balances...');
 
@@ -430,6 +441,7 @@ App = {
                 console.log("to =" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
 
                 defaultBalance = defaultBalance.plus(new BigNumber(result.returnValues.value));
+                stakeInfos['hotpot'].userBalance = defaultBalance;
                 App.updateUserBalance();
             }
         });
@@ -532,6 +544,7 @@ function nav(classname) {
     }
     if (classname === "home") {
         $("#infodiv").show();
+        App.refreshBalances();
     } else {
         $("#infodiv").hide();
     }
@@ -552,6 +565,7 @@ function nav(classname) {
     if (classname === "reward") {
         Reward.gotoPage();
     } else if (classname === "me") {
+        App.refreshBalances();
         UserNFT.initNFTTable(nftUse[2]);
         showTable(true);
     }

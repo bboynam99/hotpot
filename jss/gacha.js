@@ -5,8 +5,9 @@ Gacha = {
         console.log("getGacha init");
         contractsInstance.Gacha.methods.getPosibilityNow().call(function(e,r){
             if(!e){
+                r = parseInt(r);
                 $("#posibilitynow").text("1/"+r);
-                $("#posibilitylater").text("1/"+r/100);
+                $("#posibilitylater").text("1/"+(r*2));
             }
         });
         contractsInstance.Gacha.events.GachaTicket(function (error, result) {
@@ -35,14 +36,18 @@ Gacha = {
             }
         });
         console.log("getGacha");
-        contractsInstance.Gacha.events.GachaNothing({
+        contractsInstance.Gacha.events.GachaNothing({filter:{_owner:defaultAccount},
             fromBlock: 'latest',
             toBlock: 'latest'
         }, function (e, result) {
+            if(result.returnValues._owner!=defaultAccount){
+                return;
+            }
             if (e) {
                 console.log("GachaTicket error " + e);
             } else {
                 // console.log("GachaNothing block num=" + result.blockNumber);
+
                 if (Gacha.eventBlocks.has(result.blockNumber)) {
                     return;
                 }

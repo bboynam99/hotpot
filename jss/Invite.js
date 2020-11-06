@@ -57,7 +57,7 @@ Invite = {
             $("#validateinvite").text(r);
         });
         contractsInstance.Invite.methods.calRatioUpdate(defaultAccount).call(function (e, r) {
-            var ratio = r / 1000;
+            var ratio = parseInt(r) / 1000;
             console.log("calRatioUpdate=" + ratio);
             Invite.claimRatio += ratio;
             Invite.updateRatio();
@@ -66,7 +66,7 @@ Invite = {
 
         contractsInstance.Invite.methods.checkValidated(defaultAccount).call(function (e, r) {
             console.log("checkValidated=" + r);
-            Invite.inputvalidated = r;
+            Invite.inputvalidated = parseInt(r);
             if (r) {
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();
@@ -78,7 +78,7 @@ Invite = {
     getInputInviteCode: function () {
         contractsInstance.Invite.methods.getInputInviteCode(defaultAccount).call(function (e, r) {
             console.log("getInputInviteCode=" + r);
-            if (r == 0) {
+            if (parseInt(r) == 0) {
                 $("#inputinvitecode").show();
                 $("#inviteinputed").hide();
             } else {
@@ -90,6 +90,7 @@ Invite = {
     },
     getMyInviteCode: function () {
         contractsInstance.Invite.methods.getMyInviteCode(defaultAccount).call(function (e, r) {
+            r = parseInt(r);
             console.log("getMyInviteCode=" + r);
             if (r != 0) {
                 Invite.myInviteCode = r;

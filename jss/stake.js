@@ -4,7 +4,7 @@ Stake = {
     eventBlocks: new Set(),
     notifyRewardAmount: function (token, amount) {
         var amount = web3.utils.numberToHex(new BigNumber(amount * 10 ** 18));
-        stakeInfos[token].instance.methods.notifyRewardAmount(amount).call(function (e, result) {
+        stakeInfos[token].instance.methods.notifyRewardAmount(amount).send({from:defaultAccount},function (e, result) {
             if (e) {
                 console.log("stake approve error " + e);
             } else {
@@ -167,7 +167,7 @@ Stake = {
         if (poolAddress)
             contractsInstance.HotPot.methods.balanceOf(poolAddress).call(function (e, result) {
                 console.log("pool balance name=" + name + ",balance=" + result);
-                balanceOfHotpot[name] = result;
+                balanceOfHotpot[name] = new BigNumber(result);
                 Stake.count++;
                 if (Stake.count == allPoolTokens.length - 1) {
                     Stake.calTotalCirculation();
@@ -356,12 +356,14 @@ Stake = {
                 // console.log('eventResult:', eventResult);
                 // toastAlert("Withdraw success!");
                 console.log("RewardPaid");
+                toastAlert(getString('getreward'));
                 stakeInfos[poolName].userEarn = stakeInfos[poolName].userEarn.minus(result.returnValues.reward);
 
                 console.log("currentPagePoolID=" + currentPagePoolID + ",poolName=" + poolName);
                 // stakeInfos[poolName].lastRewardTime = Math.floor((new Date()).getTime() / 1000);
                 stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
                     console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
+                    r = parseInt(r);
                     stakeInfos[poolName].lastRewardTime = r;
                     if (currentPagePoolID == poolName)
                         Stake.initpooldata(currentPagePoolID);
@@ -392,13 +394,13 @@ Stake = {
                         }
                         stakeInfos[poolName].instance.methods.periodFinish().call(function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",periodFinish:" + r);
-                            stakeInfos[poolName].periodFinish = r;
+                            stakeInfos[poolName].periodFinish = parseInt(r);
 
                             Stake.checkTotalStaked();
                         });
                         stakeInfos[poolName].instance.methods.lastRewardTime(defaultAccount).call(function (e, r) {
                             console.log("initSinglePool pool=" + poolName + ",lastRewardTime:" + r);
-                            stakeInfos[poolName].lastRewardTime = r;
+                            stakeInfos[poolName].lastRewardTime = parseInt(r);
                         });
                     });
                 });

@@ -39,6 +39,7 @@ Loan = {
             });
         });
         contractsInstance.Loan.methods.getLoanSize().call(function (e, r) {
+            r = parseInt(r);
             console.log("getLoanSize=" + r);
             if (!e) {
                 Loan.listSize = r;
@@ -51,8 +52,8 @@ Loan = {
             }
             Loan.eventBlocks.add(result.blockNumber);
             console.log("TokenDeposit");
-            Loan.listIds.push(result.returnValues.tokenId);
-            Loan.getNFTInfo(result.returnValues.tokenId);
+            Loan.listIds.push(parseInt(result.returnValues.tokenId));
+            Loan.getNFTInfo(parseInt(result.returnValues.tokenId));
             if (result.returnValues.owner == defaultAccount) {
                 UserNFT.addLoanList(parseInt(result.returnValues.tokenId));
             }
@@ -209,13 +210,12 @@ Loan = {
     getNFTInfo: function (id) {
         console.log("getNFTInfo id=" + id);
         contractsInstance.NFTHotPot.methods.getGrade(id).call(function (e, r) {
-            var grade = r;
+            var grade = parseInt(r);
             var nft = Loan.createLoanNft(id, grade);
             Loan.listTokens[id] = nft;
 
             contractsInstance.Loan.methods.reservations(id).call(function (e, r) {
                 var tokenId = r[0];
-                var owner = r[1];
                 var borrower = r[2];
                 var borrowEndTime = r[3];
                 var pricePerDay = r[4];
@@ -230,9 +230,13 @@ Loan = {
                 nft.startTime = parseInt(start);
                 nft.borrower = borrower;
                 nft.borrowEndTime = parseInt(borrowEndTime);
-                nft.owner = owner;
-                Loan.addNFTToTable(nft);
-                UserNFT.checkMyBorrowed(nft);
+                contractsInstance.NFTHotPot.methods.ownerOf(id).call(function(e,r){
+                    if(!e){
+                        nft.owner = r;
+                        Loan.addNFTToTable(nft);
+                        UserNFT.checkMyBorrowed(nft);
+                    }
+                });
             });
         });
     },
