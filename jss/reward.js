@@ -45,6 +45,9 @@ Reward = {
                 if(result.returnValues.sender!=defaultAccount){
                     return;
                 }
+                if(checkSameEvent(result)){
+                    return;
+                }
                 toastAlert(getString('rewardsuccess'));
             }
         });

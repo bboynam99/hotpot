@@ -171,7 +171,6 @@ UserNFT = {
     borrowNFTs: {},
     totalNFT: 0,
     userBalance: 0,
-    eventBlocks: new Set(),
     gotoMyPage: function () {
 
     },
@@ -196,10 +195,9 @@ UserNFT = {
                 if(r.returnValues.tokenId!=tokenId){
                     return;
                 }
-                if (UserNFT.eventBlocks.has(r.blockNumber)) {
+                if(checkSameEvent(r)){
                     return;
                 }
-                UserNFT.eventBlocks.add(r.blockNumber);
                 console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
                 var id = parseInt(r.returnValues.tokenId);
                 var time = parseInt(r.returnValues.useTime);
@@ -239,10 +237,9 @@ UserNFT = {
                 if(r.returnValues.tokenId!=id){
                     return;
                 }
-                if (UserNFT.eventBlocks.has(r.blockNumber)) {
+                if(checkSameEvent(r)){
                     return;
                 }
-                UserNFT.eventBlocks.add(r.blockNumber);
                 console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
                 var id = parseInt(r.returnValues.tokenId);
                 var time = parseInt(r.returnValues.useTime);
@@ -345,10 +342,9 @@ UserNFT = {
             if(r.returnValues.from!=defaultAccount){
                 return;
             }
-            if (UserNFT.eventBlocks.has(r.blockNumber)) {
+            if(checkSameEvent(r)){
                 return;
             }
-            UserNFT.eventBlocks.add(r.blockNumber);
             console.log("nft out tokenid=" + r.returnValues.tokenId + ",to " + r.returnValues.to);
             console.log("nft block num=" + r.blockNumber);
             UserNFT.deleteNFT(r.returnValues.tokenId);
@@ -359,10 +355,9 @@ UserNFT = {
             if(r.returnValues.to!=defaultAccount){
                 return;
             }
-            if (UserNFT.eventBlocks.has(r.blockNumber)) {
+            if(checkSameEvent(r)){
                 return;
             }
-            UserNFT.eventBlocks.add(r.blockNumber);
             console.log("nft in tokenid=" + r.returnValues.tokenId + ",from " + r.returnValues.from);
             UserNFT.addNFT(parseInt(r.returnValues.tokenId));
             UserNFT.userBalance = UserNFT.userBalance.plus(1);
@@ -372,10 +367,9 @@ UserNFT = {
             if(r.returnValues.owner!=defaultAccount){
                 return;
             }
-            if (UserNFT.eventBlocks.has(r.blockNumber)) {
+            if(checkSameEvent(r)){
                 return;
             }
-            UserNFT.eventBlocks.add(r.blockNumber);
             console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
             var id = parseInt(r.returnValues.tokenId);
             var time = parseInt(r.returnValues.useTime);

@@ -1,7 +1,6 @@
 Stake = {
     count: 0,
     cliamTimer: null,
-    eventBlocks: new Set(),
     notifyRewardAmount: function (token, amount) {
         var amount = web3.utils.numberToHex(new BigNumber(amount * 10 ** 18));
         stakeInfos[token].instance.methods.notifyRewardAmount(amount).send({from:defaultAccount},function (e, result) {
@@ -305,10 +304,9 @@ Stake = {
                 return console.error('Error with stake:', err);
             }
             if (result) {
-                if (Stake.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Stake.eventBlocks.add(result.blockNumber);
                 // console.log('eventResult:', eventResult);
                 toastAlert("Stake success!");
                 console.log("Staked");
@@ -328,10 +326,9 @@ Stake = {
             }
             if (result) {
                 // console.log('eventResult:', eventResult);
-                if (Stake.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Stake.eventBlocks.add(result.blockNumber);
                 toastAlert("Withdraw success!");
                 console.log("Withdrawn");
                 stakeInfos[poolName].userStake = stakeInfos[poolName].userStake.minus(result.returnValues.amount);
@@ -349,10 +346,9 @@ Stake = {
                 return console.error('Error with stake:', err);
             }
             if (result) {
-                if (Stake.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Stake.eventBlocks.add(result.blockNumber);
                 // console.log('eventResult:', eventResult);
                 // toastAlert("Withdraw success!");
                 console.log("RewardPaid");
@@ -383,11 +379,11 @@ Stake = {
                 if(delay>0){
                     if(poolName=='usdt'){
                         $(".startbadge").show();
-                        $(".starttime").text(formatTime(delay));
+                        $(".starttime").text(formatTime2Min(delay));
                     }
                     if(poolName=='hotpot'){
                         $(".startbadge2").show();
-                        $(".starttime2").text(formatTime(delay));
+                        $(".starttime2").text(formatTime2Min(delay));
                     }
                 }
             }
@@ -403,12 +399,12 @@ Stake = {
                 var delay = result - now;
                 if(delay>0&&delay<86400){
                     if(poolName=='usdt'){
-                        $(".startbadge").show();
-                        $(".starttime").text(formatTime(delay));
+                        $(".decresebadge").show();
+                        $(".reducetime").text(formatTime2Min(delay));
                     }
                     if(poolName=='hotpot'){
-                        $(".startbadge2").show();
-                        $(".starttime2").text(formatTime(delay));
+                        $(".decresebadge2").show();
+                        $(".reducetime2").text(formatTime2Min(delay));
                     }
                 }
                 if(delay<0){

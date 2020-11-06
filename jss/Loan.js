@@ -4,8 +4,9 @@ Loan = {
     listIds: [],
     listTokens: {},
     allowance: 0,
-    eventBlocks: new Set(),
-    eventBlocks1: new Set(),
+    historyList:{},
+    historyTimes:[],
+    historyLength:0,
     getLoan: function () {
         Loan.initLoanTable();
         contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount, spender: contractsInstance.Loan._address } }, function (error, result) {
@@ -13,10 +14,9 @@ Loan = {
                 if(result.returnValues.owner!=defaultAccount || result.returnValues.spender!=contractsInstance.Loan._address){
                     return;
                 }
-                if (Loan.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Loan.eventBlocks.add(result.blockNumber);
                 result.returnValues.value = new BigNumber(result.returnValues.value);
                 if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
                     return;
@@ -47,10 +47,9 @@ Loan = {
         });
 
         contractsInstance.Loan.events.TokenDeposit(function (e, result) {
-            if (Loan.eventBlocks.has(result.blockNumber)) {
+            if(checkSameEvent(result)){
                 return;
             }
-            Loan.eventBlocks.add(result.blockNumber);
             console.log("TokenDeposit");
             Loan.listIds.push(parseInt(result.returnValues.tokenId));
             Loan.getNFTInfo(parseInt(result.returnValues.tokenId));
@@ -60,10 +59,9 @@ Loan = {
         });
 
         contractsInstance.Loan.events.TokenCancelDeposit(function (e, result) {
-            if (Loan.eventBlocks.has(result.blockNumber)) {
+            if(checkSameEvent(result)){
                 return;
             }
-            Loan.eventBlocks.add(result.blockNumber);
             console.log("TokenCancelDeposit block num=" + result.blockNumber);
 
             if (result.returnValues.owner == defaultAccount) {
@@ -72,11 +70,9 @@ Loan = {
             Loan.removeNFT(parseInt(result.returnValues.tokenId));
         });
         contractsInstance.Loan.events.TokenBorrowed(function (e, result) {
-            console.log("TokenBorrowed");
-            if (Loan.eventBlocks.has(result.blockNumber)) {
+            if(checkSameEvent(result)){
                 return;
             }
-            Loan.eventBlocks.add(result.blockNumber);
             console.log("TokenBorrowed block num=" + result.blockNumber);
 
             Loan.removeNFT(parseInt(result.returnValues.tokenId));
@@ -132,6 +128,7 @@ Loan = {
         $("#tableloanhistory").append(node);
 
         contractsInstance.Loan.getPastEvents('TokenBorrowed',{fromBlock: 0, toBlock: 'latest' }, function (e, r) {
+            Loan.historyLength=r.length;
             for (var i = 0; i < r.length; i++) {
                 var event = r[i];
                 if (event.event == 'TokenBorrowed') {
@@ -156,9 +153,6 @@ Loan = {
         return info;
     },
     addBorrowInfo: function (nft) {
-        // var h = $("<p></p>").text(info.borrower+" borrowed ID="+info.tokenId+",price per day "+info.pricePerDay/10**18+" HotPot");
-        // $("#loanhistory").append(h);
-
         var node = $("<tr style='height:60px!important;'></tr>");
 
         var nodeid = $("<td></td>").text(formatZero(nft.id, 3));
@@ -212,10 +206,22 @@ Loan = {
             nodeblockNumber.append(delaynode);
             nodeblockNumber.append(agonode);
             node.append(nodeblockNumber);
-    
-            $("#tableloanhistory").append(node);
+            Loan.historyList[timestamp] = node;
+            Loan.historyTimes.push(timestamp);
+            if(Loan.historyTimes.length == Loan.historyLength){
+                Loan.addAllHistory();
+            }
+            
         });
 
+    },
+    addAllHistory:function(){
+        Loan.historyTimes.sort();
+        for(var i=Loan.historyTimes.length-1;i>=0;i--){
+            var time = Loan.historyTimes[i];
+            var node = Loan.historyList[time];
+            $("#tableloanhistory").append(node);
+        }
     },
     getNFTInfo: function (id) {
         console.log("getNFTInfo id=" + id);

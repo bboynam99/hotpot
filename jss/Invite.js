@@ -2,8 +2,6 @@ Invite = {
     claimRatio: 0,
     myInviteCode: 0,
     inputvalidated: false,
-    eventBlocks: new Set(),
-    eventBlocks1: new Set(),
     initInviteInfo: function () {
 
         contractsInstance.Invite.events.InviteCreated({ filter: { creator: defaultAccount } }, function (error, result) {
@@ -11,10 +9,9 @@ Invite = {
                 if(result.returnValues.creator!=defaultAccount){
                     return;
                 }
-                if (Invite.eventBlocks1.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Invite.eventBlocks1.add(result.blockNumber);
                 console.log("InviteCreated");
                 Invite.getMyInviteCode();
             }
@@ -25,10 +22,9 @@ Invite = {
                 if(result.returnValues.user!=defaultAccount){
                     return;
                 }
-                if (Invite.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Invite.eventBlocks.add(result.blockNumber);
                 console.log("InviteInput");
                 Invite.getInputInviteCode();
             }
@@ -38,10 +34,9 @@ Invite = {
                 if(result.returnValues.validator!=defaultAccount){
                     return;
                 }
-                if (Invite.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Invite.eventBlocks.add(result.blockNumber);
                 console.log("InviteValidate");
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();
@@ -66,7 +61,7 @@ Invite = {
 
         contractsInstance.Invite.methods.checkValidated(defaultAccount).call(function (e, r) {
             console.log("checkValidated=" + r);
-            Invite.inputvalidated = parseInt(r);
+            Invite.inputvalidated = r;
             if (r) {
                 $("#invitevalidated").show();
                 $("#inviteinputed").hide();

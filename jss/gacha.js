@@ -1,6 +1,5 @@
 Gacha = {
     gachaHx: null,
-    eventBlocks: new Set(),
     getGacha: function () {
         console.log("getGacha init");
         contractsInstance.Gacha.methods.getPosibilityNow().call(function(e,r){
@@ -14,10 +13,9 @@ Gacha = {
             if (error) { console.log("GachaTicket error " + error); }
             else {
                 // console.log("GachaTicket block num=" + result.blockNumber);
-                if (Gacha.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Gacha.eventBlocks.add(result.blockNumber);
                 console.log("GachaTicket " + result.returnValues);
                 $("#globalmsg").show();
 
@@ -48,10 +46,9 @@ Gacha = {
             } else {
                 // console.log("GachaNothing block num=" + result.blockNumber);
 
-                if (Gacha.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                Gacha.eventBlocks.add(result.blockNumber);
 
                 console.log("GachaNothing " + result.returnValues);
                 showImportantMsg(getString('GachaNothing'), getEthersanUrl(result.transactionHash));

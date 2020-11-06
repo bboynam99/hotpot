@@ -225,4 +225,15 @@ function formatTime2Min(t) {
     // console.log("formatFomoTime : "+t)
 }
 
+var eventBlocks=new Set();
+function checkSameEvent(event){
+    var transactionHash = event.transactionHash;
+    var name = event.event;
+    var check = transactionHash+name;
 
+    if (eventBlocks.has(check)) {
+        return true;
+    }
+    eventBlocks.add(check);
+    return false;
+}

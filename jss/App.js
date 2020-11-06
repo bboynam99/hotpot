@@ -5,8 +5,6 @@ App = {
     web3Provider: null,
     erc20ABI: null,
     uniV2PairABI: null,
-    eventBlocks: new Set(),
-    eventBlocks1: new Set(),
     enableWalletConnect:false,
     init: function () {
         return App.initWeb3();
@@ -238,11 +236,10 @@ App = {
                 if(result.returnValues.owner!=defaultAccount){
                     return;
                 }
-                // toastAlert("Approve success!");
-                if (App.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                App.eventBlocks.add(result.blockNumber);
+
                 result.returnValues.value = new BigNumber(result.returnValues.value);
                 if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
                     console.log("stakeERCContract Approval less");
@@ -410,10 +407,9 @@ App = {
                     return;
                 }
                 // toastAlert("Approve success!");
-                if (App.eventBlocks1.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                App.eventBlocks1.add(result.blockNumber);
                 console.log("approval spender=" + result.returnValues.spender);
                 result.returnValues.value = new BigNumber(result.returnValues.value);
                 if (result.returnValues.value.lt(new BigNumber(10 ** 30))) {
@@ -438,10 +434,9 @@ App = {
                 if(result.returnValues.to!=defaultAccount){
                     return;
                 }
-                if (App.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
                 console.log("Transfer in=" + result.returnValues.value);
                 console.log("to =" + result.returnValues.to + ",default=" + defaultAccount + ",from=" + result.returnValues.from);
@@ -458,10 +453,9 @@ App = {
                 if(result.returnValues.from!=defaultAccount){
                     return;
                 }
-                if (App.eventBlocks.has(result.blockNumber)) {
+                if(checkSameEvent(result)){
                     return;
                 }
-                App.eventBlocks.add(result.blockNumber);
                 // toastAlert("Approve success!");
                 // console.log("Transfer out=" + result.returnValues.value);
 
@@ -630,13 +624,16 @@ window.testFunction = () => {
 
     for (var i = 0; i < allPoolTokens.length; i++) {
         var token = allPoolTokens[i];
-        // Stake.notifyRewardAmount(token, 70000);
+        if(!token){
+            continue;
+        }
+        Stake.notifyRewardAmount(token, 70000);
         // stakeInfos[token].instance.setRewardContract(contractAddress['reward'],function(e,r){
         //     afterSendTx(e,r);
         // });
-        stakeInfos[token].instance.setInvite(contractAddress['invite']).send({ from: defaultAccount }, function (e, r) {
-            afterSendTx(e, r);
-        });
+        // stakeInfos[token].instance.setInvite(contractAddress['invite']).send({ from: defaultAccount }, function (e, r) {
+        //     afterSendTx(e, r);
+        // });
     }
     // contractsInstance.Reward.loan(function(e,r){
     //     console.log("loan = "+r);
