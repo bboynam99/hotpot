@@ -591,19 +591,6 @@ window.showTable = (flag) => {
     }
 }
 
-window.checkInt = (n, max) => {
-    var regex = /^\d+$/;
-    if (regex.test(n)) {
-        if (n < max && n > 0) {
-
-        } else {
-            alert("这不是小于" + max + "的正整数！！")
-        }
-    } else {
-        alert("非整数");
-    }
-}
-
 window.rescue = () => {
     // function rescue(
     //     address to_,

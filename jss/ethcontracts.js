@@ -6,9 +6,7 @@ var stakeERCAddress = {}
 
 var stakeERCContract = {}
 
-var contractABI = {
-
-}
+var contractABI = {}
 
 //createToken
 var stakeInfos = {}
@@ -144,12 +142,12 @@ var mainPool = {
 }
 
 var mainStakeERC = {
-    "usdt": "0xdac17f958d2ee523a2206206994597c13d831ec7",  //usdt
-    "eth/usdt": "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852", //eth/usdt
-    "usdc": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",   //usdc
-    "wbtc": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",  //wbtc
-    "hotpot/eth": "0xd3d2e2692501a5c9ca623199d38826e513033a17",
-    "wbtc/eth": "0xbb2b8038a1640196fbe3e38816f3e67cba72d940" //wbtc/eth
+    "usdt": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "eth/usdt": "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+    "usdc": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "wbtc": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "wbtc/eth": "0xbb2b8038a1640196fbe3e38816f3e67cba72d940",
+    "hotpot/eth": "0xA2E5899152eE46f4720397130f15F99bA8A57F63",
 }
 
 
@@ -191,35 +189,34 @@ function createToken(name, address, poolAddress) {
     //contract instance of this token's stake pool
     oTempToken.instance = null;
 
-    //用来质押的代币名称
+    //stake token name
     oTempToken.name = name;
 
-    //用来质押的代币地址，比如这个是wwt-trx lp 地址
+    //stake token address
     oTempToken.address = address;
 
-    //用来挖矿的地址，比如这个是矿池wwt-trx lp的地址
+    //satke pool address
     oTempToken.poolAddress = poolAddress;
 
     oTempToken.startTime = 0;
 
     oTempToken.periodFinish = 0;
 
-    //该矿池能挖出来总代币数量，这个是WWT的数量
-    oTempToken.totalReward = 50;
+    oTempToken.totalReward = 0;
 
-    //该矿池目前质押的总数量
+    //this pool total stake token
     oTempToken.poolTotalStake = 0;
 
-    //该矿池这个用户质押了多少
+    //this pool user stake amount
     oTempToken.userStake = 0;
 
-    //该矿池用来挖矿的代币，用户有多少，单位是wei，即需要除以10^decimals，才是用户看的
+    //user balance of this stake token
     oTempToken.userBalance = 0;
 
-    //用户当前挖出来多少代币
+    //user earned in this pool
     oTempToken.userEarn = 0;
 
-    //该矿池的挖矿币的价格
+    //stake token price
     oTempToken.price = 0;
 
     //The pool's end time
@@ -227,10 +224,8 @@ function createToken(name, address, poolAddress) {
 
     oTempToken.priceNormalize = false;
 
-    //该矿池的挖矿币的精度
     oTempToken.decimals = 18;
 
-    //该矿池的APY
     oTempToken.apy = 0;
 
     oTempToken.allowance = 0;

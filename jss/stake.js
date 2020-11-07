@@ -457,14 +457,13 @@ Stake = {
     updateAPY: function (name) {
         if (printLog) console.log("updateapy " + name);
         var hotpotDecimals = 18;
-        //池子每s产出wwt数量
+        //pool reward per second
         let rewardRate = stakeInfos[name].rewardRate.div(Math.pow(10, hotpotDecimals));
         if (printLog) console.log("rewardRate=" + rewardRate);
 
-        //每s能挖出的wwt总价格
+        //pool reward price per second
         let rewardPrice = rewardRate * stakeInfos["hotpot"].price;
 
-        //用来质押的代币
         let stakeToken = stakeInfos[name];
         let totalStake = stakeToken.poolTotalStake;
 
@@ -472,7 +471,6 @@ Stake = {
 
         if (printLog) console.log("updateapy token price=" + stakeToken.price + ",total price=" + totalStakePrice);
 
-        //每s，每u能产出的产率
         let aps = 1;
         if (totalStakePrice != 0)
             aps = rewardPrice / totalStakePrice;

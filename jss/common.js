@@ -29,7 +29,7 @@ function hideAlert() {
 function showSellAlert(id) {
     document.getElementById("popTitle").innerHTML = "Sell";
     document.getElementById('stakeInput').value = 0;
-    $("#sellToken").text("出售会员卡ID: " + id);
+    $("#sellToken").text(getString('sellnftid')+" : " + id);
     $(".popTitle").text(getString('selltitle'));
     $(".popTitle").attr('data-lang', 'selltitle');
     $("#loandiv").hide();
@@ -43,7 +43,7 @@ function showSellAlert(id) {
 
 function showLoanAlert(id) {
     document.getElementById('stakeInput').value = 0;
-    $("#sellToken").text("租赁会员卡ID: " + id);
+    $("#sellToken").text(getString('loannftid')+" : " + id);
     $(".popTitle").text(getString('loantitlepop'));
     $(".popTitle").attr('data-lang', 'loantitlepop');
     $("#loandiv").show();
@@ -58,7 +58,7 @@ function showLoanAlert(id) {
 
 function showBorrowAlert(id) {
     document.getElementById('stakeInput').value = 0;
-    $("#sellToken").text("租赁会员卡ID: " + id);
+    $("#sellToken").text(getString('loannftid')+" : " + id);
     $(".popTitle").text(getString('loantitlepop'));
     $(".popTitle").attr('data-lang', 'loantitlepop');
     $("#loandiv").hide();
