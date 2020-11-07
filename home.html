@@ -83,12 +83,12 @@
 </head>
 
 <body class="text-center">
-	
+
 	<div class="content">
 		<div class="alert_content" id="alertdiv"></div>
 
 		<div id="light" class="white_content">
-			<span style="color: black;text-align: center;font-size: 24px;" id="popTitle" ></span>　　　
+			<span style="color: black;text-align: center;font-size: 24px;" id="popTitle"></span>　　　
 			<button style="height: 40px;width: 40px; position: absolute;right: 20px;border-style: none;"
 				onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">X</button>
 			<div style="color: black;margin-top: 10%;">
@@ -123,19 +123,21 @@
 			<button style="height: 40px;width: 40px; position: absolute;right: 20px;border-style: none;"
 				onclick="document.getElementById('divsell').style.display='none';document.getElementById('fade').style.display='none'">X</button>
 
-				<div id="priceinputdiv">
-					<div style="color: black;margin-top: 10%;">
-						<span id="sellToken"> </span> , <span data-lang="inputprice">请输入价格：</span>
-					</div>　　
-					<input  name="name" type="number" style="width: 50%;margin-top: 5%;" autofocus="autofocus" value="0" class="stakeInput"> <span style="color: black;" id='priceunit'>HotPot</span>
-		
-				</div>
-			
+			<div id="priceinputdiv">
+				<div style="color: black;margin-top: 10%;">
+					<span id="sellToken"> </span> , <span data-lang="inputprice">请输入价格：</span>
+				</div>　　
+				<input name="name" type="number" style="width: 50%;margin-top: 5%;" autofocus="autofocus" value="0"
+					class="stakeInput"> <span style="color: black;" id='priceunit'>HotPot</span>
+
+			</div>
+
 			<div class="divloan">
 				<p style="color: black;margin-top: 2%;" data-lang="inputtime">请输入借贷时长：</p>
-				<input  name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" class="loanInput"> <span style="color: black;">Day</span>	
+				<input name="name" type="number" style="width: 50%;" autofocus="autofocus" value="0" class="loanInput">
+				<span style="color: black;">Day</span>
 			</div>
-			
+
 			<div id='iddiv' hidden></div>
 			<div id="selldiv">
 				<a data-lang="sell" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Market.sellSure()"
@@ -144,14 +146,14 @@
 				</a>
 			</div>
 			<div id="loandiv">
-				<a data-lang="loan" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
-					onclick="Loan.loanSure()" class="card-link btn btn-primary btn-lg">
+				<a data-lang="loan" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Loan.loanSure()"
+					class="card-link btn btn-primary btn-lg">
 					Loan
 				</a>
 			</div>
 			<div id="borrowdiv">
-				<a data-lang="borrow" style="width: 60%;margin-bottom: 10%;margin-top: 10%;"
-					onclick="Loan.borrowSure()" class="card-link btn btn-primary btn-lg">
+				<a data-lang="borrow" style="width: 60%;margin-bottom: 10%;margin-top: 10%;" onclick="Loan.borrowSure()"
+					class="card-link btn btn-primary btn-lg">
 					Borrow
 				</a>
 			</div>
@@ -163,7 +165,7 @@
 				</a>
 			</div>
 		</div>
-		
+
 
 		<div id="fade" class="black_overlay"></div>
 
@@ -187,7 +189,8 @@
 						<a id="aexchange" class="nav-link" href="#exchange" onclick="nav('exchange')"
 							data-lang="exchange">EXCHANGE</a>
 						<a id="ame" class="nav-link" href="#me" onclick="nav('me')" data-lang="me">MY</a>
-						<a id="ainvite" class="nav-link" href="#invite" onclick="nav('invite')" data-lang="invite">INVITE</a>
+						<a id="ainvite" class="nav-link" href="#invite" onclick="nav('invite')"
+							data-lang="invite">INVITE</a>
 						<a id="aabout" class="nav-link" href="#about" onclick="nav('about')" data-lang="about">ABOUT</a>
 						<a class="nav-link" href="#" onclick="changelang()" id="changelang">EN</a>
 					</nav>
@@ -226,7 +229,7 @@
 				<p class="lead"></p>
 				<p class="lead web3false" onclick="App.connectMetamask()">
 					<img loading="lazy" src="images/metamask.png" alt="MetaMask" width="42" height="42">
-					<button class='green button' >MetaMask</button>
+					<button class='green button'>MetaMask</button>
 
 				</p>
 				<p class="lead web3false" style="margin-top: 5%;" onclick="App.connectWallet()">
@@ -234,7 +237,7 @@
 					<button class='green button'>WalletConnect</button>
 
 				</p>
-				
+
 				<div class="cover-container mx-auto">
 					<div class="card swapcard hide web3true">
 						<div class="card-body">
@@ -319,7 +322,7 @@
 			</main>
 
 			<main role="main" class="inner cover about" STYLE="DISPLAY:NONE">
-				<p class="aboutp" data-lang="about1" style="margin-top: 10%;">
+				<p class="aboutp" data-lang="about1" style="margin-top: 5%;">
 
 				</p>
 				<p class="aboutp" data-lang="about2">
@@ -335,6 +338,103 @@
 				<p class="aboutp" data-lang="about5">
 
 				</p>
+				<p style="margin-top: 5%;font-size: 30px;">HotPot Dex RoadMap</p>
+				<section id="cd-timeline" class="cd-container" style="text-align: left;">
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-movie">
+						</div> <!-- cd-timeline-img -->
+
+						<div class="cd-timeline-content">
+							<h2>Project Launched</h2>
+							<p>Genesis Mining started. Project beta launched. All function starts, such as HotPot liquid
+								mining, NFT member card gacha, NFT market and loan, member card dividends.</p>
+							<ul class="content-skills">
+								<li>Liquidity Mining</li>
+								<li>NFT Gacha</li>
+								<li>Market</li>
+								<li>Loan</li>
+								<li>Dividends</li>
+								<li>Invite</li>
+							</ul>
+							<span class="cd-date">Launched</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-picture">
+						</div> <!-- cd-timeline-img -->
+
+						<div class="cd-timeline-content">
+							<h2>New Frontend Launched</h2>
+							<p>The whole new frontend will launch. The new systems and user interface have been
+								optimised.</p>
+							<span class="cd-date">2 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-location">
+						</div> <!-- cd-timeline-img -->
+
+						<div class="cd-timeline-content">
+							<h2>Audit</h2>
+							<p>Get the project contract audit result. The project will be formally launched. </p>
+							<span class="cd-date">4 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-location">
+						</div>
+
+						<div class="cd-timeline-content">
+							<h2>Vote for New Mining Pool</h2>
+							<p>Two new mining pool will be launched. The stake token will be choosen by community
+								voting.</p>
+							<span class="cd-date">4 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-movie">
+						</div> <!-- cd-timeline-img -->
+
+						<div class="cd-timeline-content">
+							<h2>Partner Project Put on Market</h2>
+							<p>Our cooperation partners will launch their NFT project on HotPot Dex. The HotPot will be
+								the official token. The transaction fees is transferred to dividends pool. </p>
+							<span class="cd-date">6 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-location">
+						</div>
+
+						<div class="cd-timeline-content">
+							<h2>Vote for New Mining Pool</h2>
+							<p>Last two new mining pool will be launched. The stake token will be choosen by community
+								voting.</p>
+							<span class="cd-date">8 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+					<div class="cd-timeline-block">
+						<div class="cd-timeline-img cd-location">
+						</div>
+
+						<div class="cd-timeline-content">
+							<h2>Decentralized Protocol for Automated NFT Liquidity Provision</h2>
+							<p>Our goal is making NFT selling and loaning more funny and profitable. We want to create a
+								new protocol for NFT liquidity provision. Now it's the time to show it. </p>
+							<span class="cd-date">12 Weeks</span>
+						</div> <!-- cd-timeline-content -->
+					</div> <!-- cd-timeline-block -->
+
+				</section> <!-- cd-timeline -->
 			</main>
 
 			<main role="main" class="inner cover invite" STYLE="DISPLAY:NONE">
@@ -349,22 +449,26 @@
 					<div class="card hide web3true swapcard2" style="height: 180px;">
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="invitecount"></h6>
-							<p class="card-text tvl" ><span data-lang="totalinvite"></span> : <span id='totalinvite'></span></p>
-							<p class="card-text tvl"><span data-lang="validateinvite"></span> : <span id='validateinvite'></span></p>
-							<p class="card-text tvl"><span data-lang="claimratioup"></span> : <span id='claimratioup'></span></p>
+							<p class="card-text tvl"><span data-lang="totalinvite"></span> : <span
+									id='totalinvite'></span></p>
+							<p class="card-text tvl"><span data-lang="validateinvite"></span> : <span
+									id='validateinvite'></span></p>
+							<p class="card-text tvl"><span data-lang="claimratioup"></span> : <span
+									id='claimratioup'></span></p>
 						</div>
 					</div>
 
 				</div>
 				<div style="margin-top: 2%;" id='inputinvitecode'>
-					<input name="name" type="number" style="width: 200px;" autofocus="autofocus" value="" id="inviteInput">
+					<input name="name" type="number" style="width: 200px;" autofocus="autofocus" value=""
+						id="inviteInput">
 					<button class='green button' data-lang='btninvite' onclick="Invite.inputCode()"></button>
 				</div>
 				<div style="margin-top: 2%;display: none;" data-lang="inviteinputed" id='inviteinputed'>
-					
+
 				</div>
 				<div style="margin-top: 2%;display: none;" data-lang="invitevalidated" id='invitevalidated'>
-				  	
+
 				</div>
 
 				<p style="margin-top: 10%;" data-lang="inviteinto0"></p>
@@ -382,7 +486,8 @@
 							<span class="ticketbalance">0</span>
 							<span data-lang="ticketdw">TICKET</span>
 						</H3>
-						<p style="margin-top: 10%;"><span data-lang="posibilityinfo"></span><span id='posibilitynow'>1/8</span></p>
+						<p style="margin-top: 10%;"><span data-lang="posibilityinfo"></span><span
+								id='posibilitynow'>1/8</span></p>
 						<p><span data-lang="posibilityinfo1"></span><span id='posibilitylater'>1/16</span></p>
 					</div>
 				</div>
@@ -424,8 +529,9 @@
 
 				<table cellspacing="0">
 					<tr style="height: 50px!important;">
-						<th class='selectth tableselect' data-lang="selectbuy" id='selectbuy' onclick="App.selectBuy()">Buy</th>
-						<th class='selectth' data-lang="selectloan"  id='selectloan' onclick="App.selectLoan()">Loan</th>
+						<th class='selectth tableselect' data-lang="selectbuy" id='selectbuy' onclick="App.selectBuy()">
+							Buy</th>
+						<th class='selectth' data-lang="selectloan" id='selectloan' onclick="App.selectLoan()">Loan</th>
 					</tr>
 				</table>
 
@@ -438,25 +544,25 @@
 				<div class="table-users" id="divloantable" style="display: none;">
 					<p data-lang="loanmin"></p>
 					<table cellspacing="0" id="tableloan">
-						
+
 					</table>
-					
+
 				</div>
 
 				<div id='sellhistory' style="display: block;">
 					<p style="margin-top: 5%;color: wheat;font-size:larger!important;" data-lang="sellhistory"></p>
 					<table cellspacing="0" id="tablesellhistory">
-						
+
 					</table>
 				</div>
 
 				<div id='loanhistory' style="display: none;">
 					<p style="margin-top: 5%;color: wheat;font-size:larger!important;" data-lang="loanhistory"></p>
 					<table cellspacing="0" id="tableloanhistory">
-						
+
 					</table>
 				</div>
-				
+
 
 			</main>
 
@@ -467,7 +573,8 @@
 						<H3 class="card-text totalreward">-.----</H3>
 						<a class="card-link btn btn-primary btn-lg" onclick="Reward.claim()"
 							data-lang="reward">Reward</a>
-						<p style="margin-top: 5%;"><span data-lang="memberinfo">当前普通会员卡每日可领取分红：</span><span id="rewardpercard">100.0</span> HotPot</p>
+						<p style="margin-top: 5%;"><span data-lang="memberinfo">当前普通会员卡每日可领取分红：</span><span
+								id="rewardpercard">100.0</span> HotPot</p>
 					</div>
 				</div>
 				<div class="card swapcard  web3true">
@@ -476,9 +583,12 @@
 						<H3 class="card-text "><span class="myticketbalance">0</span> <span
 								data-lang="ticketdw">TICKET</span></H3>
 
-						<p><span data-lang="normalcard">普通会员卡</span> : <span id="grade1num">0</span> (<span data-lang="available">可使用</span> : <span id="grade1unuse">0</span>)</p>
-						<p><span data-lang="goldcard">金色会员卡</span> : <span id="grade2num">0</span> (<span data-lang="available">可使用</span> : <span id="grade2unuse">0</span>)</p>
-						<p><span data-lang="epiccard">紫金会员卡</span> : <span id="grade3num">0</span> (<span data-lang="available">可使用</span> : <span id="grade3unuse">0</span>)</p>
+						<p><span data-lang="normalcard">普通会员卡</span> : <span id="grade1num">0</span> (<span
+								data-lang="available">可使用</span> : <span id="grade1unuse">0</span>)</p>
+						<p><span data-lang="goldcard">金色会员卡</span> : <span id="grade2num">0</span> (<span
+								data-lang="available">可使用</span> : <span id="grade2unuse">0</span>)</p>
+						<p><span data-lang="epiccard">紫金会员卡</span> : <span id="grade3num">0</span> (<span
+								data-lang="available">可使用</span> : <span id="grade3unuse">0</span>)</p>
 					</div>
 				</div>
 
@@ -529,9 +639,12 @@
 				<div class="cover-container mx-auto" style="max-width: 62em;">
 					<div class="card swapcard">
 						<span class="badge badge-warning yield-badge">16x</span>
-						<span class="badge badge-success time-badge decresebadge2" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime2">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge startbadge2" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime2">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge endbadge2" style="display: none;"><span data-lang="endbadge"></span></span>
+						<span class="badge badge-success time-badge decresebadge2" style="display: none;"><span
+								data-lang="decrease"></span> : <span class="reducetime2">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge startbadge2" style="display: none;"><span
+								data-lang="starttime"></span> : <span class="starttime2">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge endbadge2" style="display: none;"><span
+								data-lang="endbadge"></span></span>
 						<div class="card-body">
 							<div class="tokenpair">
 								<div class="token1 hotpot"></div>
@@ -553,9 +666,12 @@
 					<div class="card swapcard">
 						<div class="card-body">
 							<span class="badge badge-warning yield-badge">5x</span>
-							<span class="badge badge-success time-badge decresebadge2" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime2">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge startbadge2" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime2">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge endbadge2" style="display: none;"><span data-lang="endbadge"></span></span>
+							<span class="badge badge-success time-badge decresebadge2" style="display: none;"><span
+									data-lang="decrease"></span> : <span class="reducetime2">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge startbadge2" style="display: none;"><span
+									data-lang="starttime"></span> : <span class="starttime2">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge endbadge2" style="display: none;"><span
+									data-lang="endbadge"></span></span>
 							<div class="token hotpot"></div>
 							<h6 class="card-subtitle mb-2 text-warning">HotPot</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldhotpot">---.-%</span></H3>
@@ -573,9 +689,12 @@
 					<div class="card swapcard">
 						<div class="card-body">
 							<span class="badge badge-warning yield-badge">2x</span>
-							<span class="badge badge-success time-badge decresebadge" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge startbadge" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge endbadge" style="display: none;"><span data-lang="endbadge"></span></span>
+							<span class="badge badge-success time-badge decresebadge" style="display: none;"><span
+									data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge startbadge" style="display: none;"><span
+									data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge endbadge" style="display: none;"><span
+									data-lang="endbadge"></span></span>
 							<div class="token usdt"></div>
 							<h6 class="card-subtitle mb-2 text-warning">USDT</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldusdt">---.-%</span></H3>
@@ -590,9 +709,12 @@
 					<div class="card swapcard">
 						<div class="card-body">
 							<span class="badge badge-warning yield-badge">2x</span>
-							<span class="badge badge-success time-badge decresebadge" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge startbadge" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
-							<span class="badge badge-success time-badge endbadge" style="display: none;"><span data-lang="endbadge"></span></span>
+							<span class="badge badge-success time-badge decresebadge" style="display: none;"><span
+									data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge startbadge" style="display: none;"><span
+									data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
+							<span class="badge badge-success time-badge endbadge" style="display: none;"><span
+									data-lang="endbadge"></span></span>
 							<div class="token usdc"></div>
 							<h6 class="card-subtitle mb-2 text-warning">USDC</h6>
 							<H3 class="card-text apy0">APY <span class="poolyieldusdc">---.-%</span></H3>
@@ -606,9 +728,12 @@
 
 					<div class="card swapcard ">
 						<span class="badge badge-warning yield-badge">2x</span>
-						<span class="badge badge-success time-badge decresebadge" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge startbadge" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge endbadge" style="display: none;"><span data-lang="endbadge"></span></span>
+						<span class="badge badge-success time-badge decresebadge" style="display: none;"><span
+								data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge startbadge" style="display: none;"><span
+								data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge endbadge" style="display: none;"><span
+								data-lang="endbadge"></span></span>
 						<div class="card-body">
 							<div class="tokenpair">
 								<div class="token wbtc"></div>
@@ -628,9 +753,12 @@
 
 					<div class="card swapcard ">
 						<span class="badge badge-warning yield-badge">2x</span>
-						<span class="badge badge-success time-badge decresebadge" style="display: none;"><span data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge startbadge" style="display: none;"><span data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
-						<span class="badge badge-success time-badge endbadge" style="display: none;"><span data-lang="endbadge"></span></span>
+						<span class="badge badge-success time-badge decresebadge" style="display: none;"><span
+								data-lang="decrease"></span> : <span class="reducetime">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge startbadge" style="display: none;"><span
+								data-lang="starttime"></span> : <span class="starttime">12h20m30s</span> </span>
+						<span class="badge badge-success time-badge endbadge" style="display: none;"><span
+								data-lang="endbadge"></span></span>
 						<div class="card-body">
 							<div class="tokenpair">
 								<div class="token1 eth"></div>
@@ -660,9 +788,10 @@
 						<div class="card-body">
 							<h6 class="card-subtitle mb-2 text-warning" data-lang="tokenclaim">HOTPOT CLAIM</h6>
 							<H3 class="card-text rewardbalance">-.----</H3>
-							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimFree()"
-								><span data-lang="claimfree">CLAIM</span></a>
-								<p id="claimtimep">(<span data-lang="claimtime">距离下次领取</span> ：<span id="claimtime">23h10m</span>)</p>
+							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimFree()"><span
+									data-lang="claimfree">CLAIM</span></a>
+							<p id="claimtimep">(<span data-lang="claimtime">距离下次领取</span> ：<span
+									id="claimtime">23h10m</span>)</p>
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.claimNFT()"
 								data-lang="claimnft">CLAIM</a>
 						</div>
@@ -689,15 +818,16 @@
 							<a href="#" class="card-link btn btn-primary btn-lg" onclick="Stake.withdraw()"
 								data-lang="withdraw">WITHDRAW</a>
 						</div>
-						
+
 					</div>
-					
+
 				</div>
 				<p style="margin-top: 3%!important;" data-lang="stakeinfo"></p>
-				<p style="margin-top: 1%;"><span  data-lang="inviteintro"></span> <span class="cliamratio"> 5%</span><span data-lang="inviteinfo1"></span></p>
+				<p style="margin-top: 1%;"><span data-lang="inviteintro"></span> <span class="cliamratio">
+						5%</span><span data-lang="inviteinfo1"></span></p>
 				<p style="margin-top: 1%;" data-lang="inviteinfo2"></p>
 
-				<button class='green button' data-lang='invitea' onclick="nav('invite')" hidden >INVITE</button>
+				<button class='green button' data-lang='invitea' onclick="nav('invite')" hidden>INVITE</button>
 			</main>
 
 
@@ -723,15 +853,15 @@
 								<th style="background-color: white!important;">
 									<div data-lang='sell' class='pricingTable-firstTable_table__getstart'></div>
 								</th>
-							  </tr>
+							</tr>
 						</table>
 					</li>
 				</ul>
 			</div>
 		</div>
 
-		<button class='green button' onclick="testFunction()" hidden >测试</button>		
-		<button class='green button' onclick="rescue()" hidden>测试rescue</button>	
+		<button class='green button' onclick="testFunction()" hidden>测试</button>
+		<button class='green button' onclick="rescue()" hidden>测试rescue</button>
 	</div>
 
 
@@ -739,7 +869,7 @@
 		<div class="inner">
 			<p>
 				<select id="selectcontract"></select>
-			  
+
 				<br /><br />
 				<a href="https://twitter.com/dex_hot" target="_blank">Twitter</a>&mdash;
 				<a href="https://t.me/hotpotdex" target="_blank">Telegram</a>&mdash;
@@ -748,8 +878,7 @@
 					data-lang="whitepaper">Whitepaper</a>
 		</div>
 	</footer>
-	<style>
-	</style>
+
 </body>
 <script src="js/jquery.i18n.properties-1.0.9.js"></script>
 
@@ -769,11 +898,11 @@
 				$("#awhitepaper").attr('href', "http://docs.hotpotdex.io/");
 			}
 			jQuery.i18n.properties({
-				name: 'strings', 
-				path: 'language/', 
+				name: 'strings',
+				path: 'language/',
 				language: tmp_lang,
 				cache: false,
-				mode: 'map', 
+				mode: 'map',
 				callback: function () {
 					for (var i in $.i18n.map) {
 						$('[data-lang="' + i + '"]').text($.i18n.map[i]);
@@ -787,7 +916,7 @@
 
 	function getSearchString(key, Url) {
 		var str = Url;
-		str = str.substring(1, str.length); 
+		str = str.substring(1, str.length);
 		var arr = str.split("&");
 		var obj = new Object();
 		for (var i = 0; i < arr.length; i++) {
@@ -821,22 +950,22 @@
 		createSeletcContract();
 	}
 
-	function createSeletcContract(){
-		var obj=document.getElementById('selectcontract');
+	function createSeletcContract() {
+		var obj = document.getElementById('selectcontract');
 		$("#selectcontract").unbind('change');
-		obj.options.length = 0; 
-		obj.options.add(new Option($.i18n.map['contractselet'],""));
-        for(var i=0;i<contractList.length;i++){
-            var contract = contractList[i];
-            var url = contractURL[contract];
-            var value = getString(contract+"contract");
-            obj.options.add(new Option(value,contract)); 
-        }
-        $("#selectcontract").change(function(){
+		obj.options.length = 0;
+		obj.options.add(new Option($.i18n.map['contractselet'], ""));
+		for (var i = 0; i < contractList.length; i++) {
+			var contract = contractList[i];
+			var url = contractURL[contract];
+			var value = getString(contract + "contract");
+			obj.options.add(new Option(value, contract));
+		}
+		$("#selectcontract").change(function () {
 			var val = $("#selectcontract").val();
-            window.open(contractURL[val]);
-        });
-    }
+			window.open(contractURL[val]);
+		});
+	}
 </script>
 
 </html>
