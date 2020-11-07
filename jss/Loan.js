@@ -7,6 +7,7 @@ Loan = {
     historyList: {},
     historyTimes: [],
     historyLength: 0,
+    threadtime:10*60,
     getLoan: function () {
         Loan.initLoanTable();
         contractsInstance.HotPot.events.Approval({ filter: { owner: defaultAccount, spender: contractsInstance.Loan._address } }, function (error, result) {
@@ -279,7 +280,7 @@ Loan = {
         }
     },
     addNFTToTable: function (nft) {
-        var lasttime = nft.days * (86400) + (nft.startTime);
+        var lasttime = nft.days * (86400) + (nft.startTime) - Loan.threadtime;
         var timenow = Math.floor((new Date()).getTime() / 1000);
         if (timenow > lasttime) {
             if (printLog) console.log("this token is out of date");
@@ -397,7 +398,7 @@ Loan = {
 
         var lasttime = nft.days * (86400) + (nft.startTime);
         var timenow = Math.floor((new Date()).getTime() / 1000);
-        var timedelay = lasttime - (timenow) - (30 * 60);
+        var timedelay = lasttime - (timenow) - Loan.threadtime;
         var loantime = (day - 1) * 86400;
         if (timedelay < loantime) {
             toastAlert(getString('cannotloanthislong'));

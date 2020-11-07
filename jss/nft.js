@@ -191,15 +191,19 @@ UserNFT = {
                 }
             });
             UserNFT.updateNFTTable();
+            if(printLog) console.log("UseTicket set id="+tokenId);
+
             contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: tokenId } }, function (e, r) {
-                if (r.returnValues.tokenId != tokenId) {
+                if(printLog) console.log("UseTicket id="+r.returnValues.tokenId);
+                var id = parseInt(r.returnValues.tokenId);
+                if (UserNFT.borrowNFTs[id].grade==0) {
                     return;
                 }
                 if (checkSameEvent(r)) {
                     return;
                 }
                 if (printLog) console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
-                var id = parseInt(r.returnValues.tokenId);
+                
                 var time = parseInt(r.returnValues.useTime);
                 UserNFT.borrowNFTs[id].usetime = time;
                 UserNFT.updateNFTTable();
@@ -232,16 +236,19 @@ UserNFT = {
                     UserNFT.borrowNFTs[id].usetime = parseInt(r);
                 }
             });
-            if (printLog) console.log("checkMyBorrowed =" + id);
+            if (printLog) console.log("checkMyBorrowed UseTicket=" + id);
+
             contractsInstance.NFTHotPot.events.UseTicket({ filter: { tokenId: id } }, function (e, r) {
-                if (r.returnValues.tokenId != id) {
+                var id = parseInt(r.returnValues.tokenId);
+                if(printLog) console.log("UseTicket id="+r.returnValues.tokenId);
+                if (UserNFT.borrowNFTs[id].grade==0) {
                     return;
                 }
                 if (checkSameEvent(r)) {
                     return;
                 }
                 if (printLog) console.log("nft UseTicket tokenid=" + r.returnValues.tokenId);
-                var id = parseInt(r.returnValues.tokenId);
+               
                 var time = parseInt(r.returnValues.useTime);
                 UserNFT.borrowNFTs[id].usetime = time;
                 UserNFT.updateNFTTable();
@@ -347,7 +354,7 @@ UserNFT = {
             }
             if (printLog) console.log("nft out tokenid=" + r.returnValues.tokenId + ",to " + r.returnValues.to);
             if (printLog) console.log("nft block num=" + r.blockNumber);
-            UserNFT.deleteNFT(r.returnValues.tokenId);
+            UserNFT.deleteNFT(parseInt(r.returnValues.tokenId));
             UserNFT.userBalance = UserNFT.userBalance.minus(1);
             UserNFT.updateUserNFT();
         });
